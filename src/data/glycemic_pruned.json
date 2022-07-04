@@ -1,0 +1,42 @@
+[
+  { "title": "Bran. wheat", "gi": 70, "carbs_per_100g": 26.8 },
+  { "title": "Peanuts. roasted and salted", "gi": 14, "carbs_per_100g": 7.1 },
+  { "title": "Peanuts and raisins", "gi": 21, "carbs_per_100g": 37.5 },
+  { "title": "Peanuts. plain", "gi": 14, "carbs_per_100g": 12.5 },
+  { "title": "Peanuts. dry roasted", "gi": 14, "carbs_per_100g": 10.3 },
+  {
+    "title": "Peanuts. plain. weighed with shells",
+    "gi": 14,
+    "carbs_per_100g": 8.6
+  },
+  { "title": "Peanuts, salted", "gi": 25, "carbs_per_100g": 10.8 },
+  { "title": "Peanuts, roasted and salted", "gi": 25, "carbs_per_100g": 10.8 },
+  { "title": "Spinach. raw", "gi": 45, "carbs_per_100g": 1.6 },
+  {
+    "title": "Spinach. frozen. boiled in unsalted water",
+    "gi": 45,
+    "carbs_per_100g": 0.5
+  },
+  {
+    "title": "Spinach. boiled in unsalted water",
+    "gi": 45,
+    "carbs_per_100g": 0.8
+  },
+  { "title": "Spinach. fresh. raw", "gi": 45, "carbs_per_100g": 3.7 },
+  { "title": "Spinach (leaves)", "gi": 45, "carbs_per_100g": 0.5 },
+  { "title": "Spinach", "gi": 45, "carbs_per_100g": 0.9 },
+  { "title": "Spinach, raw", "gi": 45, "carbs_per_100g": 1.5 },
+  { "title": "Spinach, baby spinach", "gi": 45, "carbs_per_100g": 1.5 },
+  {
+    "title": "Spinach. boiled in salted water",
+    "gi": 45,
+    "carbs_per_100g": 0.8
+  },
+  { "title": "Spinach,", "gi": 45, "carbs_per_100g": 0.9 },
+  { "title": "Vinegar", "gi": 70, "carbs_per_100g": 0.6 },
+  { "title": "Balsamico vinegar", "gi": 70, "carbs_per_100g": 0.6 },
+  { "title": "Vinegar, balsamico", "gi": 70, "carbs_per_100g": 0.6 },
+  { "title": "White wine vinegar (Tesco)", "gi": 70, "carbs_per_100g": 0.6 },
+  { "title": "Balsamic vinegar", "gi": 70, "carbs_per_100g": 15 },
+  { "title": "Red Wine Vinegar (Tesco)", "gi": 70, "carbs_per_100g": 0.6 }
+]
