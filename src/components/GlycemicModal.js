@@ -5,10 +5,10 @@ import {
   View,
   Pressable,
   Modal,
-  ImageBackground,
+  // ImageBackground,
 } from "react-native";
 
-import { withTheme } from "styled-components";
+import {withTheme} from "styled-components";
 
 // the filter
 const GlycemicModal = ({
@@ -30,35 +30,31 @@ const GlycemicModal = ({
 }) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {
         Alert.alert("Modal has been closed.");
         setModalVisible(!modalVisible);
-      }}
-    >
+      }}>
       <View
         style={{
           flex: 1,
           flexDirection: "row",
           marginTop: 22,
-        }}
-      >
+        }}>
         <View style={styles.modalView}>
           <View
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
-            }}
-          >
+            }}>
             <View
               style={{
                 width: "33%",
                 height: 40,
                 flexDirection: "row",
-              }}
-            >
+              }}>
               <Text style={styles.labelText}>GI:</Text>
               <Text style={styles.valueText}>8</Text>
             </View>
@@ -67,8 +63,7 @@ const GlycemicModal = ({
                 width: "33%",
                 height: 40,
                 flexDirection: "row",
-              }}
-            >
+              }}>
               <Text style={styles.labelText}>GI Load:</Text>
               <Text style={styles.valueText}>8</Text>
             </View>
@@ -104,8 +99,7 @@ const GlycemicModal = ({
 
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(!modalVisible)}
-          >
+            onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.textStyle}>Food added</Text>
           </Pressable>
         </View>

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
-import styled, {withTheme} from 'styled-components';
+import React, {useState} from "react";
+import styled, {withTheme} from "styled-components";
 // import TrackerContext from '../TrackerContext';
 
 import {
@@ -9,10 +9,10 @@ import {
   View,
   ImageBackground,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 
 // import {getGLResult} from '../utils/GlycemicUtils';
-import GlycemicModal from './GlycemicModal';
+import GlycemicModal from "./GlycemicModal";
 
 // Previous TouchableOpacity style was style={[styles.item]}
 // definition of the Item, which will be rendered in the FlatList
@@ -31,6 +31,7 @@ const GlycemicItem = ({
   energyAmt,
   sugarsAmt,
   sodiumAmt,
+  funk,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -38,34 +39,34 @@ const GlycemicItem = ({
    **Low**  **less than or equal to 55** and are characterised by a smaller rise and fall in blood glucose.
    **Medium** Value **between 56 and 69.**
    **High** GI foods and drinks have a GI value **greater than or equal to 70** and are characterised by faster and higher peaks and troughs in blood glucose levels.*/
-  let giImageToUse = require('../../assets/images/greenCircle.png');
+  let giImageToUse = require("../../assets/images/greenCircle.png");
   if (glAmt > 60) {
     //red
-    giImageToUse = require('../../assets/images/redCircle.png');
+    giImageToUse = require("../../assets/images/redCircle.png");
   } else if (glAmt > 30) {
     //orange
-    giImageToUse = require('../../assets/images/orangeCircle.png');
+    giImageToUse = require("../../assets/images/orangeCircle.png");
   }
 
   /* Glycemic Load ranges (GL)
   "Low-GL foods are those with a** GL of 10 and below**, medium are those between **11 and 19**, and high are those with a GL of **20 and above** (Mabel Blades. “The Glycemic Load Counter”.  */
-  let glImageToUse = require('../../assets/images/greenCircle.png');
+  let glImageToUse = require("../../assets/images/greenCircle.png");
   if (glAmt > 19) {
     //red
-    glImageToUse = require('../../assets/images/redCircle.png');
+    glImageToUse = require("../../assets/images/redCircle.png");
   } else if (glAmt > 10) {
     //orange
-    glImageToUse = require('../../assets/images/orangeCircle.png');
+    glImageToUse = require("../../assets/images/orangeCircle.png");
   }
 
   // Carb ranges (keto watch outs)
-  let carbImageToUse = require('../../assets/images/greenCircle.png');
+  let carbImageToUse = require("../../assets/images/greenCircle.png");
   if (carbAmt > 22) {
     //red
-    carbImageToUse = require('../../assets/images/redCircle.png');
+    carbImageToUse = require("../../assets/images/redCircle.png");
   } else if (carbAmt > 11) {
     //orange
-    carbImageToUse = require('../../assets/images/orangeCircle.png');
+    carbImageToUse = require("../../assets/images/orangeCircle.png");
   }
 
   // console.log(
@@ -88,7 +89,17 @@ const GlycemicItem = ({
             carbAmt: carbAmt,
             giAmt: giAmt,
             glAmt: glAmt,
+            fiberAmt: fiberAmt,
+            proteinAmt: proteinAmt,
+            fatAmt: fatAmt,
+            energyAmt: energyAmt,
+            sugarsAmt: sugarsAmt,
+            sodiumAmt: sodiumAmt,
+            giImageToUse: giImageToUse,
+            glImageToUse: glImageToUse,
+            carbImageToUse: carbImageToUse,
           },
+          //     },
         ]);
         let totalCarbs = 0;
         let totalGILoad = 0;
@@ -97,11 +108,14 @@ const GlycemicItem = ({
           totalGILoad += trackerItem.glAmt;
         });
 
-        console.log('TrackerItem, totalCarbs:' + totalCarbs);
-        console.log('TrackerItem, totalGILoad:' + totalGILoad);
+        console.log("TrackerItem, totalCarbs:" + totalCarbs);
+        console.log("TrackerItem, totalGILoad:" + totalGILoad);
         setTotalCarbs(totalCarbs);
         setTotalGILoad(totalGILoad);
-        setModalVisible(true);
+        // setModalVisible(true);
+
+        //Make the view appear here.
+        funk();
       }}>
       <ListItemContainer>
         <GlycemicModal
@@ -125,9 +139,9 @@ const GlycemicItem = ({
         <View>
           <View
             style={{
-              backgroundColor: 'black',
+              backgroundColor: "black",
               flex: 1,
-              alignItems: 'center',
+              alignItems: "center",
             }}>
             <ImageBackground
               source={giImageToUse}
@@ -140,9 +154,9 @@ const GlycemicItem = ({
         <View>
           <View
             style={{
-              backgroundColor: 'black',
+              backgroundColor: "black",
               flex: 1,
-              alignItems: 'center',
+              alignItems: "center",
             }}>
             <ImageBackground
               source={glImageToUse}
@@ -155,9 +169,9 @@ const GlycemicItem = ({
         <View>
           <View
             style={{
-              backgroundColor: 'black',
+              backgroundColor: "black",
               flex: 1,
-              alignItems: 'center',
+              alignItems: "center",
             }}>
             <ImageBackground
               source={carbImageToUse}
@@ -195,7 +209,7 @@ const ListItem = styled(Text)`
 const styles = StyleSheet.create({
   circleTextContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   image: {
     flex: 1,
@@ -204,12 +218,12 @@ const styles = StyleSheet.create({
     height: 26, //24
   },
   text: {
-    color: 'white',
+    color: "white",
     fontSize: 13,
     // lineHeight: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    justifyContent: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
+    justifyContent: "center",
     padding: 2,
     // backgroundColor: "#000000c0",
   },
@@ -219,9 +233,9 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: '#F194FF',
+    backgroundColor: "#F194FF",
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: "#2196F3",
   },
 });
