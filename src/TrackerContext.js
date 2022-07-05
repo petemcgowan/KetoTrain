@@ -7,6 +7,8 @@ const TrackerContext = React.createContext({
   setTotalCarbs: () => {},
   totalGILoad: 0,
   setTotalGILoad: () => {},
+  // trackerSelected: trackerItems[0];
+  // setTrackerSelected () => {},
 });
 
 export const TrackerProvider = TrackerContext.Provider;

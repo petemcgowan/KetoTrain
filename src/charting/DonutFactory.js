@@ -1,9 +1,9 @@
-import * as React from "react";
-import { Text, StatusBar, View, SafeAreaView, StyleSheet } from "react-native";
+import * as React from 'react';
+import {Text, StatusBar, View, SafeAreaView, StyleSheet} from 'react-native';
 // import Constants from "expo-constants";
-import Donut from "./Donut";
-import TrackerContext from "../TrackerContext";
-import { getTotalCarbs, getTotalGILoad } from "../utils/GlycemicUtils";
+import Donut from './Donut';
+import TrackerContext from '../TrackerContext';
+import {getTotalCarbs, getTotalGILoad} from '../utils/GlycemicUtils';
 
 // const data = [
 //   {
@@ -35,29 +35,28 @@ import { getTotalCarbs, getTotalGILoad } from "../utils/GlycemicUtils";
 export default function DonutFactory() {
   let totalCarbsCapped = getTotalCarbs();
   let totalGILoadCapped = getTotalGILoad();
-  let colorOfCarbChart = "aqua";
-  let colorOfGILoadChart = "aqua";
+  let colorOfCarbChart = 'aqua';
+  let colorOfGILoadChart = 'aqua';
   if (totalCarbsCapped > 50) {
     totalCarbsCapped = 50;
-    colorOfCarbChart = "tomato";
+    colorOfCarbChart = 'tomato';
   }
-  console.log("totalCarbsCapped:" + totalCarbsCapped);
+  console.log('totalCarbsCapped:' + totalCarbsCapped);
   if (totalGILoadCapped > 100) {
     totalGILoadCapped = 100;
-    colorOfGILoadChart = "tomato";
+    colorOfGILoadChart = 'tomato';
   }
-  console.log("totalGILoadCapped:" + totalGILoadCapped);
+  console.log('totalGILoadCapped:' + totalGILoadCapped);
 
   return (
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+        }}>
         <Donut
           key={1}
           percentage={totalCarbsCapped}
@@ -91,13 +90,13 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     // paddingTop: Constants.statusBarHeight,
     // backgroundColor: "#fff",
-    backgroundColor: "#000",
+    backgroundColor: '#000',
     padding: 8,
   },
   paragraph: {
     margin: 24,
     fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

@@ -7,7 +7,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import WeeklyLineChartContainer from '../components/WeeklyLineChartContainer';
+import WeeklyLineChartContainer from '../charting/WeeklyLineChartContainer';
 import TrackerContext from '../TrackerContext';
 
 function HelpScreen() {

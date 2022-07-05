@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 // import FlashMessage, { showMessage } from "react-native-flash-message";
-import DonutFactory from '../components/DonutFactory';
+import DonutFactory from '../charting/DonutFactory';
 import TrackerContext from '../TrackerContext';
 
 // import {
@@ -23,7 +23,7 @@ import TrackerContext from '../TrackerContext';
 // } from "../data/chartData";
 
 // import { StackedBarChart } from "react-native-chart-kit";
-import LineChartContainer from '../components/LineChartContainer';
+import LineChartContainer from '../charting/LineChartContainer';
 
 // for reference only, this is the old chart config
 const chartConfigs = [

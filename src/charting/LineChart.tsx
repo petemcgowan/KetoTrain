@@ -1,6 +1,5 @@
-
 import React, {FC} from 'react';
-import {StyleSheet, SafeAreaView, View, Text} from "react-native";
+import {StyleSheet, SafeAreaView, View, Text} from 'react-native';
 import Animated, {
   useAnimatedProps,
   useDerivedValue,
@@ -36,7 +35,7 @@ const LineChart: FC<LineChartProps> = ({
   const transition = useSharedValue(1);
 
   const onDayTapped = (day: number) => {
-    console.log ("LineChart, onDayTapped, day:" + day);
+    console.log('LineChart, onDayTapped, day:' + day);
     if (isAnimationComplete.value) {
       isAnimationComplete.value = false;
       transition.value = 0;
@@ -117,7 +116,7 @@ const LineChart: FC<LineChartProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   chartContainer: {
     justifyContent: 'center',
