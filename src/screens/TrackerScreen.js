@@ -86,8 +86,9 @@ export default withTheme(TrackerScreen);
 
 const styles = StyleSheet.create({
   root: {
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
+    flexDirection: "row",
     backgroundColor: "black",
     color: "#FFF",
     height: 300,
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   nutritionContainer: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "blue",
+    backgroundColor: "royalblue",
     color: "#FFF",
     height: 300,
   },

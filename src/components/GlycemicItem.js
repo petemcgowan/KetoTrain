@@ -32,6 +32,9 @@ const GlycemicItem = ({
   sugarsAmt,
   sodiumAmt,
   funk,
+  glycemicData,
+  setSearchItemSelected,
+  searchItemSelected,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -69,15 +72,6 @@ const GlycemicItem = ({
     carbImageToUse = require("../../assets/images/orangeCircle.png");
   }
 
-  // console.log(
-  //   "Glycemic Item: carbAmt:" +
-  //     carbAmt +
-  //     ", giAmt:" +
-  //     giAmt +
-  //     ", glAmt:" +
-  //     glAmt
-  // );
-
   return (
     <TouchableOpacity
       onPress={() => {
@@ -113,12 +107,26 @@ const GlycemicItem = ({
         setTotalCarbs(totalCarbs);
         setTotalGILoad(totalGILoad);
         // setModalVisible(true);
-
-        //Make the view appear here.
+        for (var i = 0; i < glycemicData.length; i++) {
+          if (glycemicData[i].description === description) {
+            console.log(
+              "Item found for info panel, i:" +
+                i +
+                ", trackerItems:" +
+                JSON.stringify(glycemicData[i]),
+            );
+            // const trackerSelected = trackerItems[i];
+            setSearchItemSelected(i);
+            console.log(
+              "trackerSelected:" + JSON.stringify(searchItemSelected),
+            );
+          }
+        }
+        // Make the nutritional panel appear briefly here
         funk();
       }}>
       <ListItemContainer>
-        <GlycemicModal
+        {/* <GlycemicModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           description={description}
@@ -134,7 +142,7 @@ const GlycemicItem = ({
           giImageToUse={giImageToUse}
           glImageToUse={glImageToUse}
           carbImageToUse={carbImageToUse}
-        />
+        /> */}
         <ListItem>{description}</ListItem>
         <View>
           <View

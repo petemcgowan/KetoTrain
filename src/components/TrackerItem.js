@@ -1,11 +1,22 @@
-import React, {useContext} from "react";
-import {StyleSheet, Text, FlatList, View, TouchableOpacity} from "react-native";
+import React, {useContext, useState} from "react";
+import {
+  StyleSheet,
+  Text,
+  FlatList,
+  View,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
 import styled, {withTheme} from "styled-components";
 import TrackerContext from "../TrackerContext";
 
 const TrackerItem = ({item, setTrackerSelected, trackerSelected}) => {
   const {trackerItems, setTrackerItems, setTotalCarbs, setTotalGILoad} =
     useContext(TrackerContext);
+  const [portion1, setPortion1] = useState("aqua");
+  const [portion2, setPortion2] = useState("marine");
+  const [portion3, setPortion3] = useState("maroon");
+  const [portion4, setPortion4] = useState("royalblue");
 
   const pressTrackerItem = () => {
     console.log(`item name is:${item.description}`);
@@ -39,7 +50,6 @@ const TrackerItem = ({item, setTrackerSelected, trackerSelected}) => {
         trackerItems.splice(i, 1);
       }
     }
-    // TODO I think I might have to copy to a different array to force re-render?
 
     setTrackerItems(trackerItems);
     setTrackerSelected(0);
@@ -54,19 +64,113 @@ const TrackerItem = ({item, setTrackerSelected, trackerSelected}) => {
     setTotalGILoad(totalGILoad);
   };
 
+  const pressPortion1 = () => {
+    setPortion1("black");
+    console.log(`pressPortion1`);
+  };
+  const pressPortion2 = () => {
+    setPortion2("black");
+    console.log(`pressPortion2`);
+  };
+  const pressPortion3 = () => {
+    setPortion3("black");
+    console.log(`pressPortion3`);
+  };
+  const pressPortion4 = () => {
+    setPortion4("black");
+    console.log(`pressPortion4`);
+  };
+  const pressDescription = () => {
+    console.log(`pressDescription`);
+  };
+  const pressCarbAmt = () => {
+    console.log(`pressCarbAmt`);
+  };
+
   return (
     <View>
-      <TouchableOpacity onPress={pressTrackerItem}>
+      <View
+        style={{
+          flexDirection: "row",
+          // justifyContents: "center",
+          // alignContent: "center",
+        }}>
+        <TouchableOpacity onPress={pressTrackerItem}>
+          <View
+            style={{
+              flexDirection: "row",
+              // justifyContents: "center",
+              // alignContent: "center",
+            }}>
+            {/* <Pressable onPress={pressDescription}> */}
+            <Text style={styles.description}>{item.description}</Text>
+            {/* </Pressable> */}
+            {/* <Pressable onPress={pressCarbAmt}> */}
+            <Text style={styles.description}>{item.carbAmt}</Text>
+            {/* </Pressable> */}
+          </View>
+        </TouchableOpacity>
         <View>
-          <Text style={styles.description}>{item.description}</Text>
-          <Text style={styles.description}>{item.carbAmt}</Text>
+          <TouchableOpacity onPress={deleteTrackerItem} style={[styles.item]}>
+            <View>
+              <Text style={styles.description}>X</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={deleteTrackerItem} style={[styles.item]}>
-        <View>
-          <Text style={styles.description}>X</Text>
+      </View>
+      <View>
+        <View style={{width: 96, height: 24, flexDirection: "row"}}>
+          <Text
+            style={{
+              position: "absolute",
+              width: 24,
+              height: 24,
+              // left: 0,
+              // right: 0,
+              // bottom: 0,
+              // top: 0,
+            }}>
+            test
+          </Text>
+          <Pressable onPress={pressPortion1}>
+            <View
+              style={{
+                width: 24,
+                height: 24,
+                // paddingRight: 2,
+                backgroundColor: {portion1},
+              }}></View>
+          </Pressable>
+          <Pressable onPress={pressPortion2}>
+            <View
+              style={{
+                width: 24,
+                height: 24,
+                // paddingRight: 2,
+                backgroundColor: {portion2},
+              }}></View>
+          </Pressable>
+          <Pressable onPress={pressPortion3}>
+            <View
+              style={{
+                width: 24,
+                height: 24,
+                // paddingRight: 2,
+                backgroundColor: {portion3},
+              }}></View>
+          </Pressable>
+          <Pressable onPress={pressPortion4}>
+            <View
+              style={{
+                width: 24,
+                height: 24,
+                // paddingRight: 2,
+                backgroundColor: {portion4},
+                // backgroundColor: "blue",
+              }}></View>
+          </Pressable>
         </View>
-      </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -76,10 +180,10 @@ export default withTheme(TrackerItem);
 const styles = StyleSheet.create({
   description: {
     // fontFamily: "Karla-Light",
-    width: "100%",
+    // width: "100%",
     color: "#FFF",
     marginTop: 5,
-    fontSize: 18,
+    fontSize: 16,
     // fontWeight: "bold",
     // marginLeft: "5%",
   },

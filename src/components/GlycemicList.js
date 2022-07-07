@@ -6,6 +6,7 @@ import {
   FlatList,
   Animated,
   SafeAreaView,
+  Easing,
 } from "react-native";
 
 import TrackerContext from "../TrackerContext";
@@ -17,20 +18,20 @@ import {getGLResult} from "../utils/GlycemicUtils";
 const GlycemicList = ({searchPhrase, glycemicData, setClicked}) => {
   const {trackerItems, setTrackerItems, setTotalCarbs, setTotalGILoad} =
     useContext(TrackerContext);
+  const [searchItemSelected, setSearchItemSelected] = useState(0);
 
-  console.log("List, searchPhrase:" + searchPhrase);
+  console.log("GlycemicList, searchPhrase:" + searchPhrase);
 
   let [opacityAnimatedValue, setOpacityAnimatedValue] = useState(
     new Animated.Value(0),
   );
 
   const funk = () => {
-    console.log("function");
-
     Animated.sequence([
       Animated.timing(opacityAnimatedValue, {
         toValue: 1,
-        duration: 1000,
+        easing: Easing.inOut(Easing.ease),
+        duration: 1200,
         useNativeDriver: true,
       }),
       Animated.timing(opacityAnimatedValue, {
@@ -40,6 +41,7 @@ const GlycemicList = ({searchPhrase, glycemicData, setClicked}) => {
       }),
     ]).start();
   };
+
   const animatedStyle = {
     opacity: opacityAnimatedValue,
   };
@@ -67,6 +69,9 @@ const GlycemicList = ({searchPhrase, glycemicData, setClicked}) => {
             sugarsAmt={item.sugarsAmt}
             sodiumAmt={item.sodiumAmt}
             funk={funk}
+            glycemicData={glycemicData}
+            setSearchItemSelected={setSearchItemSelected}
+            searchItemSelected={searchItemSelected}
           />
         </Row>
       );
@@ -95,6 +100,9 @@ const GlycemicList = ({searchPhrase, glycemicData, setClicked}) => {
             sugarsAmt={item.sugarsAmt}
             sodiumAmt={item.sodiumAmt}
             funk={funk}
+            glycemicData={glycemicData}
+            setSearchItemSelected={setSearchItemSelected}
+            searchItemSelected={searchItemSelected}
           />
         </Row>
       );
@@ -114,7 +122,63 @@ const GlycemicList = ({searchPhrase, glycemicData, setClicked}) => {
         />
       </View>
       <Animated.View style={[styles.box, animatedStyle]}>
-        <Text> Noots! </Text>
+        <View style={styles.nutritionElementBox}>
+          <Text>{glycemicData[searchItemSelected].description}</Text>
+        </View>
+        <View style={styles.nutritionElementBox}>
+          <Text style={styles.labelText}>GI:</Text>
+          <Text style={styles.valueText}>
+            {glycemicData[searchItemSelected].giAmt}
+          </Text>
+        </View>
+        <View style={styles.nutritionElementBox}>
+          <Text style={styles.labelText}>GI Load:</Text>
+          <Text style={styles.valueText}>
+            {glycemicData[searchItemSelected].glAmt}
+          </Text>
+        </View>
+        <View style={styles.nutritionElementBox}>
+          <Text style={styles.labelText}>Carb:</Text>
+          <Text style={styles.valueText}>
+            {glycemicData[searchItemSelected].carbAmt}
+          </Text>
+        </View>
+        <View style={styles.nutritionElementBox}>
+          <Text style={styles.labelText}>Fibre:</Text>
+          <Text style={styles.valueText}>
+            {glycemicData[searchItemSelected].fiberAmt}
+          </Text>
+        </View>
+        <View style={styles.nutritionElementBox}>
+          <Text style={styles.labelText}>Protein:</Text>
+          <Text style={styles.valueText}>
+            {glycemicData[searchItemSelected].proteinAmt}
+          </Text>
+        </View>
+        <View style={styles.nutritionElementBox}>
+          <Text style={styles.labelText}>Fat:</Text>
+          <Text style={styles.valueText}>
+            {glycemicData[searchItemSelected].fatAmt}
+          </Text>
+        </View>
+        <View style={styles.nutritionElementBox}>
+          <Text style={styles.labelText}>kCal:</Text>
+          <Text style={styles.valueText}>
+            {glycemicData[searchItemSelected].energyAmt}
+          </Text>
+        </View>
+        <View style={styles.nutritionElementBox}>
+          <Text style={styles.labelText}>Sugars:</Text>
+          <Text style={styles.valueText}>
+            {glycemicData[searchItemSelected].sugarsAmt}
+          </Text>
+        </View>
+        <View style={styles.nutritionElementBox}>
+          <Text style={styles.labelText}>Sodium:</Text>
+          <Text style={styles.valueText}>
+            {glycemicData[searchItemSelected].sodiumAmt}
+          </Text>
+        </View>
       </Animated.View>
     </SafeAreaView>
   );
@@ -130,6 +194,12 @@ align-items: center; */
 `;
 
 const styles = StyleSheet.create({
+  nutritionElementBox: {
+    flexDirection: "row",
+  },
+  labelText: {
+    fontWeight: "bold",
+  },
   list__container: {
     margin: 10,
     height: "85%",
@@ -142,7 +212,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     position: "absolute",
-    backgroundColor: "red",
+    backgroundColor: "lightgrey",
     color: "white",
     left: 70,
     top: 20,

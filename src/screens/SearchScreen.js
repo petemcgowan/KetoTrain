@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {Fragment, useState} from "react";
 import {
   StyleSheet,
   Text,
@@ -11,36 +11,136 @@ import GlycemicList from "../components/GlycemicList";
 import SearchBar from "../components/SearchBar";
 import glycemicData from "../data/usdaNutrition.json";
 import styled, {withTheme} from "styled-components";
+import {gql, useQuery} from "@apollo/client";
 
 const SearchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
+  // const {loading, error, data} = useQuery(EXCHANGE_RATES);
 
-  // console.log("glycemicData:" + JSON.stringify(glycemicData));
-  // order loaded usda info
-  glycemicData.sort((a, b) => a.description.localeCompare(b.description));
+  const GET_ALL_FOOD_NUTRITIONS = gql`
+    query {
+      foodnutritions {
+        foodCode
+        description
+        fiberAmt
+        giAmt
+        glAmt
+        carbAmt
+        protein
+        fatAmt
+        satFatAmt
+        monoFatAmt
+        polyFatAmt
+        energyAmt
+        sugarsAmt
+        sodiumAmt
+      }
+    }
+  `;
 
-  return (
-    <View>
+  // const glycemicDataNew = data.foodNutritions;
+  // const glycemicDataParsed = JSON.parse(glycemicDataNew);
+  // console.log("glycemicDataParsed" + JSON.stringify(glycemicDataParsed));
+  // const GET_ALL_FOOD_NUTRITIONS = gql`
+  //   query {
+  //     foodnutritions {
+  //       foodCode
+  //       description
+  //       fiberAmt
+  //       giAmt
+  //       glAmt
+  //       carbAmt
+  //       protein
+  //       fatAmt
+  //       satFatAmt
+  //       monoFatAmt
+  //       polyFatAmt
+  //       energyAmt
+  //       sugarsAmt
+  //       sodiumAmt
+  //     }
+  //   }
+  // `;
+  // Load GraphQL nutrition data
+  // console.log("Loading GraphQL nutrition data...");
+  // const client = new ApolloClient({
+  //   uri: "http://localhost:4000/graphql",
+  //   cache: new InMemoryCache(),
+  // });
+
+  function ExchangeRates() {
+    const {loading, error, data} = useQuery(GET_ALL_FOOD_NUTRITIONS);
+
+    if (loading) return <Text>Loading...</Text>;
+    if (error) return <Text>Error :(</Text>;
+
+    console.log("data:" + JSON.stringify(data));
+
+    let foodNutritionsNew = [];
+
+    data.foodnutritions.map(item => {
+      foodNutritionsNew.push(item);
+    });
+    foodNutritionsNew.sort((a, b) =>
+      a.description.localeCompare(b.description),
+    );
+
+    // prettier-ignore
+    return <Fragment>
       <SafeAreaView style={styles.searchPageContainer}>
         {!clicked && <ListTitle>Glycemic Index</ListTitle>}
 
-        <SearchBar
+         <SearchBar
           searchPhrase={searchPhrase}
           setSearchPhrase={setSearchPhrase}
           clicked={clicked}
           setClicked={setClicked}
         />
-        {!glycemicData ? (
+         {loading ? (
           <ActivityIndicator size="large" />
         ) : (
-          <GlycemicList
+            <GlycemicList
             searchPhrase={searchPhrase}
-            glycemicData={glycemicData}
+            glycemicData={foodNutritionsNew}
             setClicked={setClicked}
           />
-        )}
+        )
+         }
+         {/* {loading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <Text style={{color: "white"}}>{JSON.stringify(data.foodnutritions)}</Text>
+        )
+         } */}
+        {/* {loading ? (
+          <ActivityIndicator size="large" />
+        )
+         : (
+          {
+            <GlycemicList
+            searchPhrase={searchPhrase}
+            glycemicData={data.foodnutritions}
+            setClicked={setClicked}
+          />
+          }
+        )} */}
       </SafeAreaView>
+    </Fragment>;
+
+    // return data.foodnutritions.map(
+    //   ({description, fiberAmt}: {description: string, fiberAmt: number}) => (
+    //     <View key={description}>
+    //       <Text style={{color: "white"}}>
+    //         {description}: {fiberAmt}
+    //       </Text>
+    //     </View>
+    //   ),
+    // );
+  }
+  return (
+    <View>
+      <ExchangeRates />
     </View>
   );
 };

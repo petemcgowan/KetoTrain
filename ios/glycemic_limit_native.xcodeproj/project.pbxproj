@@ -15,6 +15,7 @@
 		15624E7136894192ACE69401 /* Karla-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C444CE53ECD34CDFBAAB1C97 /* Karla-Regular.ttf */; };
 		311C309DDFB5463998F3E4E2 /* fa-regular-400.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 22C094E977584222923CB197 /* fa-regular-400.ttf */; };
 		66118F20FA184E6EB3E5032D /* fa-solid-900.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 044030855CC246FCA5376586 /* fa-solid-900.ttf */; };
+		69D811478526C96FA6EDD096 /* libPods-glycemic_limit_native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87A978323C8FFBDAB0347C66 /* libPods-glycemic_limit_native.a */; };
 		768DE3CF4F584DE9B6617A2E /* CircularStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 161BC92523EA4F60BFC4AE2B /* CircularStd-Book.otf */; };
 		77CA6B52C0684196AADF81D8 /* fa-brands-400.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 461B558824DA4335862B1F58 /* fa-brands-400.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -22,9 +23,8 @@
 		AC55432CEF434B1C80CFF62E /* CircularStd-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = EF34BE2626B54805B528E880 /* CircularStd-Bold.otf */; };
 		BFF7795A81CE41C8A01206F8 /* CircularStd-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 176CDB975D784CAAB20650B3 /* CircularStd-Medium.otf */; };
 		D2683F53D69B4F83BC78C60E /* Karla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A6EC6E16B984C8A9363C2F5 /* Karla-Light.ttf */; };
-		E3BCA3B2E531B9E5EEDFE10B /* libPods-glycemic_limit_native.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F50CF8DF066169BC20B5B22 /* libPods-glycemic_limit_native.a */; };
+		DA5974419384A53FF32F3822 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C6E8085F48AC08F6A4E9B70 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a */; };
 		F717AA200CB2472B90FA5856 /* Modesta-Script.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FC466BFE4AC44F5848F3CE9 /* Modesta-Script.ttf */; };
-		F87A95D3B78F4D3A3292B9A4 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC514B61B7698C61B212381 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,20 +52,20 @@
 		176CDB975D784CAAB20650B3 /* CircularStd-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "CircularStd-Medium.otf"; path = "../assets/fonts/CircularStd-Medium.otf"; sourceTree = "<group>"; };
 		2174538BF54B4174A025D26C /* CircularStd-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "CircularStd-Black.otf"; path = "../assets/fonts/CircularStd-Black.otf"; sourceTree = "<group>"; };
 		22C094E977584222923CB197 /* fa-regular-400.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "fa-regular-400.ttf"; path = "../assets/fonts/fa-regular-400.ttf"; sourceTree = "<group>"; };
+		3C25CDC42F44C84F54AE6A21 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig"; path = "Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig"; sourceTree = "<group>"; };
 		461B558824DA4335862B1F58 /* fa-brands-400.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "fa-brands-400.ttf"; path = "../assets/fonts/fa-brands-400.ttf"; sourceTree = "<group>"; };
-		70FD5C387CD8F97AF8D8D287 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig"; path = "Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig"; sourceTree = "<group>"; };
+		5C6E8085F48AC08F6A4E9B70 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-glycemic_limit_native-glycemic_limit_nativeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A6EC6E16B984C8A9363C2F5 /* Karla-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-Light.ttf"; path = "../assets/fonts/Karla-Light.ttf"; sourceTree = "<group>"; };
 		7FC466BFE4AC44F5848F3CE9 /* Modesta-Script.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Modesta-Script.ttf"; path = "../assets/fonts/Modesta-Script.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = glycemic_limit_native/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8B67D83925E4603F9709478A /* Pods-glycemic_limit_native.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-glycemic_limit_native.release.xcconfig"; path = "Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native.release.xcconfig"; sourceTree = "<group>"; };
-		8EC514B61B7698C61B212381 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-glycemic_limit_native-glycemic_limit_nativeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9F50CF8DF066169BC20B5B22 /* libPods-glycemic_limit_native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-glycemic_limit_native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		87A978323C8FFBDAB0347C66 /* libPods-glycemic_limit_native.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-glycemic_limit_native.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		90FC7C581AD4E92FA9A2FAAE /* Pods-glycemic_limit_native.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-glycemic_limit_native.debug.xcconfig"; path = "Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native.debug.xcconfig"; sourceTree = "<group>"; };
 		A4224F3448DE48DE943C5F77 /* FontAwesome5Free-Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "FontAwesome5Free-Solid.ttf"; path = "../assets/fonts/FontAwesome5Free-Solid.ttf"; sourceTree = "<group>"; };
-		A59CA2F7764CD873B1C0D5C0 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig"; path = "Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C444CE53ECD34CDFBAAB1C97 /* Karla-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Karla-Regular.ttf"; path = "../assets/fonts/Karla-Regular.ttf"; sourceTree = "<group>"; };
+		C619ACD8C0884983165DFF33 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig"; path = "Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C9EE73D0FAB26016510AD6A8 /* Pods-glycemic_limit_native.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-glycemic_limit_native.release.xcconfig"; path = "Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EF34BE2626B54805B528E880 /* CircularStd-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "CircularStd-Bold.otf"; path = "../assets/fonts/CircularStd-Bold.otf"; sourceTree = "<group>"; };
-		F2238A54F64FBAA7C0BB38D1 /* Pods-glycemic_limit_native.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-glycemic_limit_native.debug.xcconfig"; path = "Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F87A95D3B78F4D3A3292B9A4 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a in Frameworks */,
+				DA5974419384A53FF32F3822 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3BCA3B2E531B9E5EEDFE10B /* libPods-glycemic_limit_native.a in Frameworks */,
+				69D811478526C96FA6EDD096 /* libPods-glycemic_limit_native.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,8 +122,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				9F50CF8DF066169BC20B5B22 /* libPods-glycemic_limit_native.a */,
-				8EC514B61B7698C61B212381 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a */,
+				87A978323C8FFBDAB0347C66 /* libPods-glycemic_limit_native.a */,
+				5C6E8085F48AC08F6A4E9B70 /* libPods-glycemic_limit_native-glycemic_limit_nativeTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -163,7 +163,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				4AE36A461E0C418ABD06ADA8 /* Resources */,
-				994204F48327AF34463755B3 /* Pods */,
+				BB0E83F4508EFB7F9BD620D4 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -179,13 +179,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		994204F48327AF34463755B3 /* Pods */ = {
+		BB0E83F4508EFB7F9BD620D4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F2238A54F64FBAA7C0BB38D1 /* Pods-glycemic_limit_native.debug.xcconfig */,
-				8B67D83925E4603F9709478A /* Pods-glycemic_limit_native.release.xcconfig */,
-				A59CA2F7764CD873B1C0D5C0 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig */,
-				70FD5C387CD8F97AF8D8D287 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig */,
+				90FC7C581AD4E92FA9A2FAAE /* Pods-glycemic_limit_native.debug.xcconfig */,
+				C9EE73D0FAB26016510AD6A8 /* Pods-glycemic_limit_native.release.xcconfig */,
+				C619ACD8C0884983165DFF33 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig */,
+				3C25CDC42F44C84F54AE6A21 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -198,12 +198,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "glycemic_limit_nativeTests" */;
 			buildPhases = (
-				636F599898D8758C9E371B71 /* [CP] Check Pods Manifest.lock */,
+				0C1A0B162950767827DC4892 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				08756C8A467C042F32E750A6 /* [CP] Embed Pods Frameworks */,
-				F58F5EDB87A146B449D144ED /* [CP] Copy Pods Resources */,
+				2BC56A16F8B579631871B309 /* [CP] Embed Pods Frameworks */,
+				5336816AA442A76B69E45799 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -219,14 +219,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "glycemic_limit_native" */;
 			buildPhases = (
-				13D4B384D72517F6600CCC07 /* [CP] Check Pods Manifest.lock */,
+				1B8DCCACDDE509C5ABEE9E5A /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				AC0D82A6E1EC9E2C28208DAB /* [CP] Embed Pods Frameworks */,
-				7D4BE9070FD57017D8499EF2 /* [CP] Copy Pods Resources */,
+				C44F0B4435E6F33121750220 /* [CP] Embed Pods Frameworks */,
+				21BCD0A506CEE4E096CFF746 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -318,46 +318,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		08756C8A467C042F32E750A6 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		13D4B384D72517F6600CCC07 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-glycemic_limit_native-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		636F599898D8758C9E371B71 /* [CP] Check Pods Manifest.lock */ = {
+		0C1A0B162950767827DC4892 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -379,7 +340,29 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7D4BE9070FD57017D8499EF2 /* [CP] Copy Pods Resources */ = {
+		1B8DCCACDDE509C5ABEE9E5A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-glycemic_limit_native-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		21BCD0A506CEE4E096CFF746 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -396,24 +379,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AC0D82A6E1EC9E2C28208DAB /* [CP] Embed Pods Frameworks */ = {
+		2BC56A16F8B579631871B309 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F58F5EDB87A146B449D144ED /* [CP] Copy Pods Resources */ = {
+		5336816AA442A76B69E45799 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -428,6 +411,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native-glycemic_limit_nativeTests/Pods-glycemic_limit_native-glycemic_limit_nativeTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C44F0B4435E6F33121750220 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-glycemic_limit_native/Pods-glycemic_limit_native-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -482,7 +482,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A59CA2F7764CD873B1C0D5C0 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig */;
+			baseConfigurationReference = C619ACD8C0884983165DFF33 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -509,7 +509,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 70FD5C387CD8F97AF8D8D287 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig */;
+			baseConfigurationReference = 3C25CDC42F44C84F54AE6A21 /* Pods-glycemic_limit_native-glycemic_limit_nativeTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -533,7 +533,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F2238A54F64FBAA7C0BB38D1 /* Pods-glycemic_limit_native.debug.xcconfig */;
+			baseConfigurationReference = 90FC7C581AD4E92FA9A2FAAE /* Pods-glycemic_limit_native.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -559,7 +559,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8B67D83925E4603F9709478A /* Pods-glycemic_limit_native.release.xcconfig */;
+			baseConfigurationReference = C9EE73D0FAB26016510AD6A8 /* Pods-glycemic_limit_native.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
