@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from "react";
 import styled, {withTheme} from "styled-components";
-// import TrackerContext from '../TrackerContext';
 
 import {
   StyleSheet,
@@ -43,34 +42,45 @@ const GlycemicItem = ({
    **Medium** Value **between 56 and 69.**
    **High** GI foods and drinks have a GI value **greater than or equal to 70** and are characterised by faster and higher peaks and troughs in blood glucose levels.*/
   let giImageToUse = require("../../assets/images/greenCircle.png");
+  let giBackgroundColor = "rgb(46,139,87)";
   if (glAmt > 60) {
     //red
     giImageToUse = require("../../assets/images/redCircle.png");
+    giBackgroundColor = "rgb(255,127,80)";
   } else if (glAmt > 30) {
     //orange
     giImageToUse = require("../../assets/images/orangeCircle.png");
+    giBackgroundColor = "rgb(240,230,140)";
   }
 
   /* Glycemic Load ranges (GL)
   "Low-GL foods are those with a** GL of 10 and below**, medium are those between **11 and 19**, and high are those with a GL of **20 and above** (Mabel Blades. “The Glycemic Load Counter”.  */
   let glImageToUse = require("../../assets/images/greenCircle.png");
+  let glBackgroundColor = "rgb(46,139,87)";
   if (glAmt > 19) {
     //red
     glImageToUse = require("../../assets/images/redCircle.png");
+    glBackgroundColor = "rgb(255,127,80)";
   } else if (glAmt > 10) {
     //orange
     glImageToUse = require("../../assets/images/orangeCircle.png");
+    glBackgroundColor = "rgb(240,230,140)";
   }
 
   // Carb ranges (keto watch outs)
   let carbImageToUse = require("../../assets/images/greenCircle.png");
+  let carbBackgroundColor = "rgb(46,139,87)";
   if (carbAmt > 22) {
     //red
     carbImageToUse = require("../../assets/images/redCircle.png");
+    carbBackgroundColor = "rgb(255,127,80)";
   } else if (carbAmt > 11) {
     //orange
     carbImageToUse = require("../../assets/images/orangeCircle.png");
+    carbBackgroundColor = "rgb(240,230,140)";
   }
+
+  console.log(carbBackgroundColor);
 
   return (
     <TouchableOpacity
@@ -147,7 +157,7 @@ const GlycemicItem = ({
         <View>
           <View
             style={{
-              backgroundColor: "black",
+              backgroundColor: {giBackgroundColor},
               flex: 1,
               alignItems: "center",
             }}>
@@ -162,22 +172,22 @@ const GlycemicItem = ({
         <View>
           <View
             style={{
-              backgroundColor: "black",
+              backgroundColor: {glBackgroundColor},
               flex: 1,
               alignItems: "center",
             }}>
-            <ImageBackground
+            {/* <ImageBackground
               source={glImageToUse}
               resizeMode="cover"
               style={styles.image}>
               <Text style={styles.text}>{glAmt}</Text>
-            </ImageBackground>
+            </ImageBackground> */}
           </View>
         </View>
         <View>
           <View
             style={{
-              backgroundColor: "black",
+              backgroundColor: {carbBackgroundColor},
               flex: 1,
               alignItems: "center",
             }}>
@@ -205,7 +215,7 @@ const ListItemContainer = styled(View)`
 `;
 
 const ListItem = styled(Text)`
-  font-family: CircularStd-Medium;
+  /* font-family: CircularStd-Medium; */
   margin: 3px;
   width: 60%;
   /* font-family: Modesta-Script; */

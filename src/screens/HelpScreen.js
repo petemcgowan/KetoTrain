@@ -158,16 +158,17 @@ export default HelpScreen;
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: "#011",
+    marginTop: 27,
   },
   textSectionContainer: {
     //    backgroundColor: "#f7f7f7",
-    backgroundColor: "#011",
+    backgroundColor: "black",
     // marginTop: 200,
     // backgroundColor: "white",
   },
   chartContainer: {
     //    backgroundColor: "#f7f7f7",
-    backgroundColor: "#011",
+    backgroundColor: "black",
     paddingBottom: 30,
     // backgroundColor: "white",
   },

@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, TextInput, View, Keyboard, Button} from 'react-native';
+import React from "react";
+import {StyleSheet, TextInput, View, Keyboard, Button} from "react-native";
 // import {Feather, Entypo} from '@expo/vector-icons';
 // import {FontAwesomeIcon} from '@fortawesome/free-solid-svg-icons';
 
@@ -33,8 +33,7 @@ const SearchBar = props => {
             props.setClicked(true);
           }}
         />
-
-        {props.clicked &&
+        {/* {props.clicked &&
           {
             /* <FontAwesomeIcon
             icon="fa-solid fa-xmark"
@@ -44,8 +43,8 @@ const SearchBar = props => {
             onPress={() => {
               props.setSearchPhrase('');
             }}
-          /> */
-          }}
+          />
+        } */}
       </View>
       {props.clicked && (
         <View>
@@ -67,31 +66,31 @@ export default SearchBar;
 const styles = StyleSheet.create({
   container: {
     margin: 15,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    flexDirection: 'row',
-    width: '90%',
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flexDirection: "row",
+    width: "90%",
   },
   searchBar__unclicked: {
     padding: 10,
-    flexDirection: 'row',
-    width: '95%',
-    backgroundColor: '#d9dbda',
+    flexDirection: "row",
+    width: "95%",
+    backgroundColor: "#d9dbda",
     borderRadius: 15,
-    alignItems: 'center',
+    alignItems: "center",
   },
   searchBar__clicked: {
     padding: 10,
-    flexDirection: 'row',
-    width: '80%',
-    backgroundColor: '#d9dbda',
+    flexDirection: "row",
+    width: "80%",
+    backgroundColor: "#d9dbda",
     borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
   input: {
     fontSize: 20,
     marginLeft: 10,
-    width: '90%',
+    width: "90%",
   },
 });

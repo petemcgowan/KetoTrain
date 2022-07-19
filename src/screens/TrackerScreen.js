@@ -30,7 +30,7 @@ const TrackerScreen = () => {
   console.log("TrackerScreen, getTotalCarbs:" + getTotalCarbs());
 
   return (
-    <View>
+    <View style={styles.trackerContainer}>
       <SafeAreaView style={styles.root}>
         <FlatList
           data={trackerItems}
@@ -85,6 +85,9 @@ const TrackerScreen = () => {
 export default withTheme(TrackerScreen);
 
 const styles = StyleSheet.create({
+  trackerContainer: {
+    marginTop: 27,
+  },
   root: {
     // justifyContent: "center",
     // alignItems: "center",
