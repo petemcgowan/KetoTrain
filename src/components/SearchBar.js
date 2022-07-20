@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     flexDirection: "row",
-    width: "90%",
+    width: "100%",
   },
   searchBar__unclicked: {
     padding: 10,
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   input: {
-    fontSize: 20,
+    fontSize: 30,
     marginLeft: 10,
     width: "90%",
   },

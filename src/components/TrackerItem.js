@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     // width: "100%",
     color: "#FFF",
     marginTop: 5,
-    fontSize: 16,
+    fontSize: 26,
     // fontWeight: "bold",
     // marginLeft: "5%",
   },

@@ -80,7 +80,21 @@ const GlycemicItem = ({
     carbBackgroundColor = "rgb(240,230,140)";
   }
 
-  console.log(carbBackgroundColor);
+  const PreviewLayout = () => (
+    <View style={{padding: 10, flex: 1}}>
+      <View style={{flexDirection: "row"}}>
+        <View style={[styles.box, {backgroundColor: giBackgroundColor}]}>
+          <Text style={styles.text}>{giAmt}</Text>
+        </View>
+        <View style={[styles.box, {backgroundColor: glBackgroundColor}]}>
+          <Text style={styles.text}>{giAmt}</Text>
+        </View>
+        <View style={[styles.box, {backgroundColor: carbBackgroundColor}]}>
+          <Text style={styles.text}>{giAmt}</Text>
+        </View>
+      </View>
+    </View>
+  );
 
   return (
     <TouchableOpacity
@@ -112,8 +126,6 @@ const GlycemicItem = ({
           totalGILoad += trackerItem.glAmt;
         });
 
-        console.log("TrackerItem, totalCarbs:" + totalCarbs);
-        console.log("TrackerItem, totalGILoad:" + totalGILoad);
         setTotalCarbs(totalCarbs);
         setTotalGILoad(totalGILoad);
         // setModalVisible(true);
@@ -154,7 +166,8 @@ const GlycemicItem = ({
           carbImageToUse={carbImageToUse}
         /> */}
         <ListItem>{description}</ListItem>
-        <View>
+        <PreviewLayout />
+        {/* <View>
           <View
             style={{
               backgroundColor: {giBackgroundColor},
@@ -176,12 +189,12 @@ const GlycemicItem = ({
               flex: 1,
               alignItems: "center",
             }}>
-            {/* <ImageBackground
+            <ImageBackground
               source={glImageToUse}
               resizeMode="cover"
               style={styles.image}>
               <Text style={styles.text}>{glAmt}</Text>
-            </ImageBackground> */}
+            </ImageBackground>
           </View>
         </View>
         <View>
@@ -198,8 +211,7 @@ const GlycemicItem = ({
               <Text style={styles.text}>{carbAmt}</Text>
             </ImageBackground>
           </View>
-        </View>
-        {/* <TrafficLight name="circle" size={24} color="orange" /> */}
+        </View> */}
       </ListItemContainer>
     </TouchableOpacity>
   );
@@ -216,18 +228,23 @@ const ListItemContainer = styled(View)`
 
 const ListItem = styled(Text)`
   /* font-family: CircularStd-Medium; */
-  margin: 3px;
+  /* margin: 3px; */
   width: 60%;
+  text-align: right;
   /* font-family: Modesta-Script; */
-  font-size: ${({theme}) => theme.metrics.mediumSize * 1.25}px;
+  font-size: ${({theme}) => theme.metrics.mediumSize * 2.5}px;
   /* color: ${({theme}) => theme.colors.subTextColor}; */
-  color: white;
+  color: "rgba(201, 189, 187, 1)";
 `;
 
 const styles = StyleSheet.create({
   circleTextContainer: {
     flex: 1,
     alignItems: "center",
+  },
+  box: {
+    width: 48,
+    height: 48,
   },
   image: {
     flex: 1,
@@ -236,13 +253,15 @@ const styles = StyleSheet.create({
     height: 26, //24
   },
   text: {
-    color: "white",
-    fontSize: 13,
+    color: "rgba(201, 189, 187, 1)",
+    fontSize: 24,
     // lineHeight: 20,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     textAlign: "center",
     justifyContent: "center",
-    padding: 2,
+    alignItems: "center",
+
+    // padding: 2,
     // backgroundColor: "#000000c0",
   },
   button: {

@@ -11,10 +11,9 @@ import {StyleSheet, SafeAreaView, View, Text} from "react-native";
 import type {Node} from "react";
 
 import SearchScreen from "./screens/SearchScreen";
-import TrackerScreen from "./screens/TrackerScreen";
+import KetoTrackerScreen from "./screens/KetoTrackerScreen";
 import KetoLimitScreen from "./screens/KetoLimitScreen";
 import HelpScreen from "./screens/HelpScreen";
-import DummyScreen from "./screens/DummyScreen";
 
 import {ApolloClient, InMemoryCache, ApolloProvider} from "@apollo/client";
 
@@ -81,32 +80,45 @@ function AppTabs() {
           tabBarIcon: ({color, size}) => (
             <FontAwesome5 name="search" size={24} color="orange" />
           ),
+          headerTitleStyle: {
+            color: "rgb(124, 131, 134)", // "#fff",
+            fontSize: 41,
+            fontWeight: "100",
+          },
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           tabBarItemStyle: {
-            backgroundColor: "#1b1344",
+            backgroundColor: "rgba(59, 73, 55, 1)", // "#1b1344",
             // backgroundColor: "#ff15",
           },
         }}
       />
       <Tab.Screen
         name="Keto Tracker"
-        component={TrackerScreen}
+        component={KetoTrackerScreen}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome5 name="star" size={24} color="orange" />
+            <FontAwesome5 name="utensils" size={24} color="orange" />
           ),
           tabBarBadge: trackerItems.length,
+          headerTitleStyle: {
+            color: "rgb(124, 131, 134)", // "#fff",
+            fontSize: 41,
+            fontWeight: "100",
+          },
+          // headerTintColor: {
+          //   color: "#fff",
+          // },
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           tabBarItemStyle: {
-            backgroundColor: "#1b1344",
+            backgroundColor: "rgba(59, 73, 55, 1)", //"#1b1344",
             // backgroundColor: "#1344",
           },
           tabBarBadgeStyle: {
-            backgroundColor: "#2196F3",
+            backgroundColor: "#2196F3", // rgb(69,55,73)  (comp to dark green)
             color: "#BBBccc",
           },
         }}
@@ -120,30 +132,40 @@ function AppTabs() {
           ),
           tabBarBadge: totalCarbs,
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+          },
+          headerTitleStyle: {
+            color: "rgb(124, 131, 134)", // "#fff",
+            fontSize: 41,
+            fontWeight: "100",
           },
           tabBarItemStyle: {
-            backgroundColor: "#1b1344",
+            backgroundColor: "rgba(59, 73, 55, 1)", //"#1b1344",
             color: "#BBBccc",
           },
           tabBarBadgeStyle: {
-            backgroundColor: "#ccF194AF",
-            color: "#BBBBBB",
+            backgroundColor: "#453749", // rgb(69,55,73)  (comp to dark green)
+            color: "#BBBccc",
           },
         }}
       />
       <Tab.Screen
-        name="Help"
+        name="Learn 🧐"
         component={HelpScreen}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome5 name="question-circle" size={24} color="orange" />
+            <FontAwesome5 name="lines-leaning" size={24} color="orange" />
           ),
+          headerTitleStyle: {
+            color: "rgb(124, 131, 134)", // "#fff",
+            fontSize: 41,
+            fontWeight: "100",
+          },
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           tabBarItemStyle: {
-            backgroundColor: "#1b1344",
+            backgroundColor: "rgba(59, 73, 55, 1)", // "#1b1344",
           },
         }}
       />

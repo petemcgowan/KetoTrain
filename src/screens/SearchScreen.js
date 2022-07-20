@@ -4,6 +4,7 @@ import {
   Text,
   SafeAreaView,
   ActivityIndicator,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -48,23 +49,20 @@ const SearchScreen = () => {
     // if (loading) return <Text>Loading...</Text>;
     // if (error) return <Text>Error :(</Text>;
 
-    // console.log("SearchScreen, data:" + JSON.stringify(data));
-    // console.log("SearchScreen, loading:" + JSON.stringify(loading));
-
-    let foodNutritionsNew = [];
-    // todo using local for now
-    // glycemicData.foodnutritions.map(item => {
-    glycemicData.map(item => {
-      foodNutritionsNew.push(item);
-    });
-    foodNutritionsNew.sort((a, b) =>
-      a.description.localeCompare(b.description),
-    );
+    // let foodNutritionsNew = [];
+    // // todo using local for now
+    // // glycemicData.foodnutritions.map(item => {
+    // glycemicData.map(item => {
+    //   foodNutritionsNew.push(item);
+    // });
+    // foodNutritionsNew.sort((a, b) =>
+    //   a.description.localeCompare(b.description),
+    // );
 
     // prettier-ignore
     return <Fragment>
       <SafeAreaView style={styles.searchPageContainer}>
-        {!clicked && <ListTitle>Glycemic Index</ListTitle>}
+        {!clicked }
 
          <SearchBar
           searchPhrase={searchPhrase}
@@ -77,7 +75,7 @@ const SearchScreen = () => {
         ) : ( */}
             <GlycemicList
             searchPhrase={searchPhrase}
-            glycemicData={foodNutritionsNew}
+            glycemicData={glycemicData}
             setClicked={setClicked}
           />
         {/* )
@@ -113,14 +111,15 @@ const ListTitle = styled(Text)`
 
 const styles = StyleSheet.create({
   searchPageContainer: {
-    marginTop: 27,
+    // marginTop: 27,
     justifyContent: "center",
     alignItems: "center",
     color: "#FFF",
     backgroundColor: "#000",
   },
+
   description: {
-    fontFamily: "Karla-Light",
+    // fontFamily: "Karla-Light",   // this isn't being picked up (when commented in)
     width: "100%",
     marginTop: 20,
     fontSize: 25,
@@ -129,3 +128,7 @@ const styles = StyleSheet.create({
     color: "#FFF",
   },
 });
+// greenVibe: "rgba(59, 73, 55, 1)",  // complimentary  rgb(69,55,73)
+// offWhiteVibe: "rgba(201, 189, 187, 1)"
+// tealVibe "  rgba(138, 149, 143, 1)"   complimentary=rgb(149,138,144)   comp2=rgb(124,131,134)
+// comp to Teal "rgba (124, 131, 134, 1)"
