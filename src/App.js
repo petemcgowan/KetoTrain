@@ -16,13 +16,14 @@ import KetoLimitScreen from "./screens/KetoLimitScreen";
 import HelpScreen from "./screens/HelpScreen";
 
 import {ApolloClient, InMemoryCache, ApolloProvider} from "@apollo/client";
-
+import usdaNutrition from "./data/usdaNutrition.json";
+import GlycemicContext, {GlycemicProvider} from "./state/GlycemicContext";
+import TrackerContext, {TrackerProvider} from "./state/TrackerContext";
 // import {FontAwesome} from '@expo/vector-icons';
 // import {FontAwesomeIcon} from '@fortawesome/free-solid-svg-icons';
 
 import {NavigationContainer, DefaultTheme} from "@react-navigation/native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import TrackerContext, {TrackerProvider} from "./TrackerContext";
 import {ThemeContextProvider} from "./ThemeContextProvider";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
@@ -63,7 +64,7 @@ function AppTabs() {
 
   return (
     <Tab.Navigator
-      style={styles.container}
+      // style={styles.container}
       screenOptions={{
         cardStyle: {
           backgroundColor: "black",
@@ -78,11 +79,11 @@ function AppTabs() {
           //   <FontAwesomeIcon name="search" size={24} color="orange" />
           // ),
           tabBarIcon: ({color, size}) => (
-            <FontAwesome5 name="search" size={24} color="orange" />
+            <FontAwesome5 name="search" size={36} color="orange" />
           ),
           headerTitleStyle: {
             color: "rgb(124, 131, 134)", // "#fff",
-            fontSize: 41,
+            fontSize: 43,
             fontWeight: "100",
           },
           headerStyle: {
@@ -99,12 +100,12 @@ function AppTabs() {
         component={KetoTrackerScreen}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome5 name="utensils" size={24} color="orange" />
+            <FontAwesome5 name="utensils" size={36} color="orange" />
           ),
           tabBarBadge: trackerItems.length,
           headerTitleStyle: {
             color: "rgb(124, 131, 134)", // "#fff",
-            fontSize: 41,
+            fontSize: 43,
             fontWeight: "100",
           },
           // headerTintColor: {
@@ -118,8 +119,9 @@ function AppTabs() {
             // backgroundColor: "#1344",
           },
           tabBarBadgeStyle: {
-            backgroundColor: "#2196F3", // rgb(69,55,73)  (comp to dark green)
+            backgroundColor: "#453749", // rgb(69,55,73)  (comp to dark green)
             color: "#BBBccc",
+            fontSize: 17,
           },
         }}
       />
@@ -128,7 +130,7 @@ function AppTabs() {
         component={KetoLimitScreen}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome5 name="ban" size={24} color="orange" />
+            <FontAwesome5 name="ban" size={36} color="orange" />
           ),
           tabBarBadge: totalCarbs,
           headerStyle: {
@@ -136,7 +138,7 @@ function AppTabs() {
           },
           headerTitleStyle: {
             color: "rgb(124, 131, 134)", // "#fff",
-            fontSize: 41,
+            fontSize: 43,
             fontWeight: "100",
           },
           tabBarItemStyle: {
@@ -144,8 +146,9 @@ function AppTabs() {
             color: "#BBBccc",
           },
           tabBarBadgeStyle: {
-            backgroundColor: "#453749", // rgb(69,55,73)  (comp to dark green)
+            backgroundColor: "#2196F3", // rgb(69,55,73)  (comp to dark green)
             color: "#BBBccc",
+            fontSize: 17,
           },
         }}
       />
@@ -154,11 +157,11 @@ function AppTabs() {
         component={HelpScreen}
         options={{
           tabBarIcon: ({color, size}) => (
-            <FontAwesome5 name="lines-leaning" size={24} color="orange" />
+            <FontAwesome5 name="book" size={36} color="orange" />
           ),
           headerTitleStyle: {
             color: "rgb(124, 131, 134)", // "#fff",
-            fontSize: 41,
+            fontSize: 43,
             fontWeight: "100",
           },
           headerStyle: {
@@ -177,6 +180,7 @@ const App: () => Node = () => {
   const [trackerItems, setTrackerItems] = useState([]);
   const [totalCarbs, setTotalCarbs] = useState(0);
   const [totalGILoad, setTotalGILoad] = useState(0);
+  const [glycemicData, setGlycemicData] = useState(usdaNutrition);
 
   // the memoization is here to prevent is re-rendering needlessly
   const value = useMemo(
@@ -190,6 +194,14 @@ const App: () => Node = () => {
     }),
     [trackerItems, totalCarbs, totalGILoad],
   );
+
+  const glycemicValue = useMemo(
+    () => ({
+      glycemicData,
+      setGlycemicData,
+    }),
+    [glycemicData],
+  );
   console.log("App Render");
 
   const client = new ApolloClient({
@@ -201,11 +213,13 @@ const App: () => Node = () => {
     <ApolloProvider client={client}>
       {/* <SafeAreaView> */}
       <ThemeContextProvider>
-        <TrackerProvider value={value}>
-          <NavigationContainer theme={MyTheme} style={styles.container}>
-            <AppTabs style={styles.container} />
-          </NavigationContainer>
-        </TrackerProvider>
+        <GlycemicProvider value={glycemicValue}>
+          <TrackerProvider value={value}>
+            <NavigationContainer theme={MyTheme} style={styles.container}>
+              <AppTabs style={styles.container} />
+            </NavigationContainer>
+          </TrackerProvider>
+        </GlycemicProvider>
       </ThemeContextProvider>
       {/* </SafeAreaView> */}
     </ApolloProvider>
@@ -214,9 +228,9 @@ const App: () => Node = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "black",
-    color: "#FFF",
-    fontFamily: "Karla-Light",
+    // backgroundColor: "black",
+    // color: "#FFF",
+    // fontFamily: "Karla-Light",
   },
 });
 
