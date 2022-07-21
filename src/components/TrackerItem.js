@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import styled, {withTheme} from "styled-components";
-import TrackerContext from "../TrackerContext";
+import TrackerContext from "../state/TrackerContext";
 
 const TrackerItem = ({item, setTrackerSelected, trackerSelected}) => {
   const {trackerItems, setTrackerItems, setTotalCarbs, setTotalGILoad} =
@@ -183,8 +183,8 @@ const styles = StyleSheet.create({
     // width: "100%",
     color: "#FFF",
     marginTop: 5,
-    fontSize: 26,
-    // fontWeight: "bold",
+    fontSize: 40,
+    fontWeight: "100",
     // marginLeft: "5%",
   },
 });

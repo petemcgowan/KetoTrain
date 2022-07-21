@@ -11,7 +11,7 @@ import {
 
 // import FlashMessage, { showMessage } from "react-native-flash-message";
 import DonutFactory from "../charting/DonutFactory";
-import TrackerContext from "../TrackerContext";
+import TrackerContext from "../state/TrackerContext";
 
 // import {
 //   contributionData,

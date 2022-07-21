@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import TrackerContext from "../TrackerContext";
+import TrackerContext from "../state/TrackerContext";
 import TrackerItem from "../components/TrackerItem";
 import styled, {withTheme} from "styled-components";
 import {getTotalCarbs} from "../utils/GlycemicUtils";
@@ -39,97 +39,102 @@ const KetoTrackerScreen = () => {
         />
       </SafeAreaView>
       <SafeAreaView style={styles.nutritionContainer}>
-        <View>
-          <Text>
-            Nutrional Info:{trackerItems[trackerSelected].description}
-          </Text>
-          <View style={{flexDirection: "row" /*nutrition details*/}}>
-            <View style={{flexDirection: "column" /*left hand side*/}}>
-              <View style={{flexDirection: "row"}}>
-                <Text style={styles.text}>Carbs:</Text>
-                <Text style={styles.detailText}>
+        {trackerItems[trackerSelected] ? (
+          <View>
+            <Text>
+              Nutrional Info:{trackerItems[trackerSelected].description}
+            </Text>
+
+            <View style={{flexDirection: "row" /*nutrition details*/}}>
+              <View style={{flexDirection: "column" /*left hand side*/}}>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={styles.text}>Carbs:</Text>
+                  <Text style={styles.detailText}>
+                    {trackerItems[trackerSelected].carbAmt}
+                  </Text>
+                </View>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={styles.text}>GI Amount:</Text>
+                  <Text style={styles.detailText}>
+                    {trackerItems[trackerSelected].giAmt}
+                  </Text>
+                </View>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={styles.text}>Glycemic Load:</Text>
+                  <Text style={styles.detailText}>
+                    {trackerItems[trackerSelected].glAmt}
+                  </Text>
+                </View>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={styles.text}>Fiber:</Text>
+                  <Text style={styles.detailText}>
+                    {trackerItems[trackerSelected].fiberAmt}
+                  </Text>
+                </View>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={styles.text}>Protein:</Text>
+                  <Text style={styles.detailText}>
+                    {trackerItems[trackerSelected].proteinAmt}
+                  </Text>
+                </View>
+              </View>
+              <View style={{flexDirection: "column" /*right hand side*/}}>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={styles.text}>Fat:</Text>
+                  <Text style={styles.detailText}>
+                    {trackerItems[trackerSelected].fatAmt}
+                  </Text>
+                </View>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={styles.text}>Energy:(kcal):</Text>
+                  <Text style={styles.detailText}>
+                    {trackerItems[trackerSelected].energyAmt}
+                  </Text>
+                </View>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={styles.text}>Sugars:</Text>
+                  <Text style={styles.detailText}>
+                    {trackerItems[trackerSelected].sugarsAmt}
+                  </Text>
+                </View>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={styles.text}>Sodium:</Text>
+                  <Text style={styles.detailText}>
+                    {trackerItems[trackerSelected].sodiumAmt}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={{flexDirection: "row"}}>
+              <ImageBackground
+                source={trackerItems[trackerSelected].carbImageToUse}
+                resizeMode="cover"
+                style={styles.image}>
+                <Text style={styles.text}>
                   {trackerItems[trackerSelected].carbAmt}
                 </Text>
-              </View>
-              <View style={{flexDirection: "row"}}>
-                <Text style={styles.text}>GI Amount:</Text>
-                <Text style={styles.detailText}>
+              </ImageBackground>
+              <ImageBackground
+                source={trackerItems[trackerSelected].giImageToUse}
+                resizeMode="cover"
+                style={styles.image}>
+                <Text style={styles.text}>
                   {trackerItems[trackerSelected].giAmt}
                 </Text>
-              </View>
-              <View style={{flexDirection: "row"}}>
-                <Text style={styles.text}>Glycemic Load:</Text>
-                <Text style={styles.detailText}>
+              </ImageBackground>
+              <ImageBackground
+                source={trackerItems[trackerSelected].glImageToUse}
+                resizeMode="cover"
+                style={styles.image}>
+                <Text style={styles.text}>
                   {trackerItems[trackerSelected].glAmt}
                 </Text>
-              </View>
-              <View style={{flexDirection: "row"}}>
-                <Text style={styles.text}>Fiber:</Text>
-                <Text style={styles.detailText}>
-                  {trackerItems[trackerSelected].fiberAmt}
-                </Text>
-              </View>
-              <View style={{flexDirection: "row"}}>
-                <Text style={styles.text}>Protein:</Text>
-                <Text style={styles.detailText}>
-                  {trackerItems[trackerSelected].proteinAmt}
-                </Text>
-              </View>
-            </View>
-            <View style={{flexDirection: "column" /*right hand side*/}}>
-              <View style={{flexDirection: "row"}}>
-                <Text style={styles.text}>Fat:</Text>
-                <Text style={styles.detailText}>
-                  {trackerItems[trackerSelected].fatAmt}
-                </Text>
-              </View>
-              <View style={{flexDirection: "row"}}>
-                <Text style={styles.text}>Energy:(kcal):</Text>
-                <Text style={styles.detailText}>
-                  {trackerItems[trackerSelected].energyAmt}
-                </Text>
-              </View>
-              <View style={{flexDirection: "row"}}>
-                <Text style={styles.text}>Sugars:</Text>
-                <Text style={styles.detailText}>
-                  {trackerItems[trackerSelected].sugarsAmt}
-                </Text>
-              </View>
-              <View style={{flexDirection: "row"}}>
-                <Text style={styles.text}>Sodium:</Text>
-                <Text style={styles.detailText}>
-                  {trackerItems[trackerSelected].sodiumAmt}
-                </Text>
-              </View>
+              </ImageBackground>
             </View>
           </View>
-          <View style={{flexDirection: "row"}}>
-            <ImageBackground
-              source={trackerItems[trackerSelected].carbImageToUse}
-              resizeMode="cover"
-              style={styles.image}>
-              <Text style={styles.text}>
-                {trackerItems[trackerSelected].carbAmt}
-              </Text>
-            </ImageBackground>
-            <ImageBackground
-              source={trackerItems[trackerSelected].giImageToUse}
-              resizeMode="cover"
-              style={styles.image}>
-              <Text style={styles.text}>
-                {trackerItems[trackerSelected].giAmt}
-              </Text>
-            </ImageBackground>
-            <ImageBackground
-              source={trackerItems[trackerSelected].glImageToUse}
-              resizeMode="cover"
-              style={styles.image}>
-              <Text style={styles.text}>
-                {trackerItems[trackerSelected].glAmt}
-              </Text>
-            </ImageBackground>
-          </View>
-        </View>
+        ) : (
+          <Text>No items added yet</Text>
+        )}
       </SafeAreaView>
     </View>
   );

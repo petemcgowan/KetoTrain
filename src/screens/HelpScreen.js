@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import WeeklyLineChartContainer from "../charting/WeeklyLineChartContainer";
-import TrackerContext from "../TrackerContext";
+import TrackerContext from "../state/TrackerContext";
 
 function HelpScreen() {
   const {width} = Dimensions.get("window");

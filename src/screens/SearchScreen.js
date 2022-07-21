@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useEffect} from "react";
+import React, {Fragment, useState, useEffect, useContext} from "react";
 import {
   StyleSheet,
   Text,
@@ -10,13 +10,17 @@ import {
 
 import GlycemicList from "../components/GlycemicList";
 import SearchBar from "../components/SearchBar";
-import glycemicData from "../data/usdaNutrition.json";
+// import glycemicData from "../data/usdaNutrition.json";
+
 import styled, {withTheme} from "styled-components";
 import {gql, useQuery} from "@apollo/client";
+import GlycemicContext from "../state/GlycemicContext";
 
 const SearchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
+  const {glycemicData} = useContext(GlycemicContext);
+
   // const {loading, error, data} = useQuery(EXCHANGE_RATES);
 
   const GET_ALL_FOOD_NUTRITIONS = gql`
