@@ -83,20 +83,21 @@ const LineChartContainer = ({trackerItems}: any) => {
   console.log("trackerContext.trackerItems:" + JSON.stringify(trackerItems));
 
   graphData = [
-    makeGraphKetoInfo(day1Data, trackerItems),
+    // makeGraphKetoInfo(day1Data, trackerItems),
     // makeGraph(originalData),
     makeGraph(day2Data),
     makeGraph(day3Data),
     makeGraph(day4Data),
+    makeGraphKetoInfo(day1Data, trackerItems),
   ];
 
   return (
     <Animated.View style={styles.graphCard}>
       <LineChart
-        height={GRAPH_HEIGHT}
-        width={GRAPH_WIDTH}
+        height={GRAPH_HEIGHT + 50}
+        width={GRAPH_WIDTH + 50}
         data={graphData}
-        bottomPadding={20}
+        bottomPadding={10}
         leftPadding={0}
       />
     </Animated.View>
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 20,
     alignItems: "center",
-    width: "80%",
+    width: "100%",
   },
   graphCard: {
     elevation: 5,

@@ -1,10 +1,10 @@
-import {curveBasis, line, scaleLinear, scaleTime} from 'd3';
-import React from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
+import {curveBasis, line, scaleLinear, scaleTime} from "d3";
+import React from "react";
+import {Dimensions, StyleSheet} from "react-native";
 
-import {parse, Path as RePath} from 'react-native-redash';
+import {parse, Path as RePath} from "react-native-redash";
 
-import Animated from 'react-native-reanimated';
+import Animated from "react-native-reanimated";
 import {
   day1Data,
   day2Data,
@@ -14,10 +14,10 @@ import {
   day6Data,
   day7Data,
   DataPoint,
-} from './Data';
-import WeeklyLineChart from './WeeklyLineChart';
+} from "./Data";
+import WeeklyLineChart from "./WeeklyLineChart";
 
-const {width} = Dimensions.get('screen');
+const {width} = Dimensions.get("screen");
 
 const CARD_WIDTH = width - 20;
 const GRAPH_WIDTH = CARD_WIDTH - 60;
@@ -54,26 +54,26 @@ const makeGraph = (data: DataPoint[]) => {
 };
 
 const makeGraphKetoInfo = (data: DataPoint[], trackerItems: any) => {
-  console.log('trackerItems:' + JSON.stringify(trackerItems));
-  console.log('data BEFORE:' + JSON.stringify(data));
+  console.log("trackerItems:" + JSON.stringify(trackerItems));
+  console.log("data BEFORE:" + JSON.stringify(data));
 
   data.forEach((element: DataPoint, index: number, array: any) => {
     console.log(
-      'index:' + index + ', data[' + index + '] = ' + JSON.stringify(element),
+      "index:" + index + ", data[" + index + "] = " + JSON.stringify(element),
     );
 
-    console.log('trackerItems[index]:' + JSON.stringify(trackerItems[index]));
+    console.log("trackerItems[index]:" + JSON.stringify(trackerItems[index]));
     //replacing dummy value with real value
     const trackerObj = trackerItems[index];
     if (trackerObj !== undefined && index < trackerItems.length) {
       console.log(
-        'Replacing element.carbAmt:' +
+        "Replacing element.carbAmt:" +
           element.carbAmt +
-          ', with:' +
+          ", with:" +
           trackerObj.carbAmt,
       );
       element.carbAmt = trackerObj.carbAmt;
-      console.log('Setting real value, element:' + JSON.stringify(element));
+      console.log("Setting real value, element:" + JSON.stringify(element));
       array[index] = element;
     } else {
       //zero it out
@@ -81,7 +81,7 @@ const makeGraphKetoInfo = (data: DataPoint[], trackerItems: any) => {
       array[index] = element;
     }
   });
-  console.log('data AFTER:' + JSON.stringify(data));
+  console.log("data AFTER:" + JSON.stringify(data));
 
   return makeGraph(data);
 };
@@ -89,7 +89,7 @@ const makeGraphKetoInfo = (data: DataPoint[], trackerItems: any) => {
 let graphData: GraphData[] = [];
 
 const WeeklyLineChartContainer = ({trackerItems}: any) => {
-  console.log('trackerContext.trackerItems:' + JSON.stringify(trackerItems));
+  console.log("trackerContext.trackerItems:" + JSON.stringify(trackerItems));
 
   graphData = [
     makeGraphKetoInfo(day1Data, trackerItems),
@@ -105,10 +105,10 @@ const WeeklyLineChartContainer = ({trackerItems}: any) => {
   return (
     <Animated.View style={styles.graphCard}>
       <WeeklyLineChart
-        height={GRAPH_HEIGHT}
-        width={GRAPH_WIDTH}
+        height={GRAPH_HEIGHT + 50}
+        width={GRAPH_WIDTH + 50}
         data={graphData}
-        bottomPadding={20}
+        bottomPadding={15}
         leftPadding={0}
       />
     </Animated.View>
@@ -119,8 +119,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 20,
-    alignItems: 'center',
-    width: '80%',
+    alignItems: "center",
+    width: "80%",
   },
   graphCard: {
     elevation: 5,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     height: CARD_HEIGHT,
     width: CARD_WIDTH,
     // backgroundColor: 'white',
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,

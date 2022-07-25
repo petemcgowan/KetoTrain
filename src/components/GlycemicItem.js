@@ -40,7 +40,7 @@ const GlycemicItem = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const {trackerItems, setTrackerItems} = useContext(TrackerContext);
-  const {glycemicData} = useContext(GlycemicContext);
+  const {data} = useContext(GlycemicContext);
   /* Glycemic Index ranges
    **Low**  **less than or equal to 55** and are characterised by a smaller rise and fall in blood glucose.
    **Medium** Value **between 56 and 69.**
@@ -60,23 +60,23 @@ const GlycemicItem = ({
 
   /* Glycemic Load ranges (GL)
   "Low-GL foods are those with a** GL of 10 and below**, medium are those between **11 and 19**, and high are those with a GL of **20 and above** (Mabel Blades. “The Glycemic Load Counter”.  */
-  let glBackgroundColor = "rgb(46,139,87)";
+  let glBackgroundColor = "#350244"; //"rgb(46,139,87)";
   if (glAmt > 19) {
     //red
-    glBackgroundColor = "rgb(255,127,80)";
+    glBackgroundColor = "#1A0546"; // "rgb(255,127,80)";
   } else if (glAmt > 10) {
     //orange
-    glBackgroundColor = "rgb(240,230,140)";
+    glBackgroundColor = "#5C6500"; //"rgb(240,230,140)";
   }
 
   // Carb ranges (keto watch outs)
-  let carbBackgroundColor = "rgb(46,139,87)";
+  let carbBackgroundColor = "#350244"; //"rgb(46,139,87)";
   if (carbAmt > 22) {
     //red
-    carbBackgroundColor = "rgb(255,127,80)";
+    carbBackgroundColor = "#1A0546"; //"rgb(255,127,80)";
   } else if (carbAmt > 11) {
     //orange
-    carbBackgroundColor = "rgb(240,230,140)";
+    carbBackgroundColor = "#5C6500"; //"rgb(240,230,140)";
   }
 
   return (
@@ -97,6 +97,9 @@ const GlycemicItem = ({
             energyAmt: energyAmt,
             sugarsAmt: sugarsAmt,
             sodiumAmt: sodiumAmt,
+            giBackgroundColor: giBackgroundColor,
+            glBackgroundColor: glBackgroundColor,
+            carbBackgroundColor: carbBackgroundColor,
           },
           //     },
         ]);
@@ -110,13 +113,13 @@ const GlycemicItem = ({
         setTotalCarbs(totalCarbs);
         setTotalGILoad(totalGILoad);
         // setModalVisible(true);
-        for (var i = 0; i < glycemicData.length; i++) {
-          if (glycemicData[i].description === description) {
+        for (var i = 0; i < data.foodnutritions.length; i++) {
+          if (data.foodnutritions[i].description === description) {
             console.log(
               "Item found for info panel, i:" +
                 i +
                 ", trackerItems:" +
-                JSON.stringify(glycemicData[i]),
+                JSON.stringify(data.foodnutritions[i].description),
             );
             // const trackerSelected = trackerItems[i];
             setSearchItemSelected(i);
@@ -156,6 +159,9 @@ const GlycemicItem = ({
           giBackgroundColor={giBackgroundColor}
           glBackgroundColor={glBackgroundColor}
           carbBackgroundColor={carbBackgroundColor}
+          boxWidth={48}
+          boxHeight={48}
+          textFontSize={36}
         />
         {/* </ListItemContainer> */}
       </View>
@@ -193,28 +199,23 @@ const styles = StyleSheet.create({
   listItemContainerStyle: {
     flexDirection: "row",
     backgroundColor: "black",
+    // justifyContent: "center",
+    alignItems: "center",
   },
   listItemStyle: {
     width: "60%",
     textAlign: "right",
-    fontSize: 32,
+    // justifyContent: "center",
+    // alignItems: "center",
+    fontSize: 43,
+    fontWeight: "200",
     color: "rgba(201, 189, 187, 1)",
-  },
-  circleTextContainer: {
-    flex: 1,
-    alignItems: "center",
   },
   // box: {
   //   width: 48,
   //   height: 40,
   //   padding: 1,
   // },
-  image: {
-    flex: 1,
-    // justifyContent: "center",
-    width: 26, //24
-    height: 26, //24
-  },
   // text: {
   //   color: "rgba(201, 189, 187, 1)",
   //   fontSize: 34,
@@ -223,15 +224,15 @@ const styles = StyleSheet.create({
   //   alignItems: "center",
   //   fontWeight: "200",
   // },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
+  // button: {
+  //   borderRadius: 20,
+  //   padding: 10,
+  //   elevation: 2,
+  // },
+  // buttonOpen: {
+  //   backgroundColor: "#F194FF",
+  // },
+  // buttonClose: {
+  //   backgroundColor: "#2196F3",
+  // },
 });
