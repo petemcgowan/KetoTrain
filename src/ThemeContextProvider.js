@@ -1,17 +1,17 @@
 // @flow
 
-import React, {Fragment, Component, createContext} from 'react';
-import {StatusBar} from 'react-native';
+import React, {Fragment, Component, createContext} from "react";
+import {StatusBar} from "react-native";
 
-import {ThemeProvider} from 'styled-components';
+import {ThemeProvider} from "styled-components";
 
 import {
   getItemFromStorage,
   persistItemInStorage,
-} from './utils/AsyncStorageManager';
+} from "./utils/AsyncStorageManager";
 
-import appStyles, {lightTheme, darkTheme} from './styles';
-import CONSTANTS from './utils/CONSTANTS';
+import appStyles, {lightTheme, darkTheme} from "./styles";
+import CONSTANTS from "./utils/CONSTANTS";
 
 const {Provider, Consumer} = createContext();
 
@@ -34,7 +34,7 @@ class ThemeContextProvider extends Component<Props, State> {
       false,
     );
 
-    if (typeof isFirstTimeRunningApp === 'boolean') {
+    if (typeof isFirstTimeRunningApp === "boolean") {
       this.setState({
         isDarkThemeActivated: true,
       });
@@ -47,7 +47,7 @@ class ThemeContextProvider extends Component<Props, State> {
       false,
     );
 
-    const isDarkThemeActivated = appThemeFromStorage === 'true';
+    const isDarkThemeActivated = appThemeFromStorage === "true";
 
     this.setState({
       isDarkThemeActivated,
@@ -83,7 +83,7 @@ class ThemeContextProvider extends Component<Props, State> {
     const {isDarkThemeActivated} = this.state;
     const {children} = this.props;
 
-    if (typeof isDarkThemeActivated !== 'boolean') {
+    if (typeof isDarkThemeActivated !== "boolean") {
       return null;
     }
 
@@ -99,7 +99,7 @@ class ThemeContextProvider extends Component<Props, State> {
           <Fragment>
             <StatusBar
               backgroundColor={appTheme.colors.androidToolbarColor}
-              barStyle={isDarkThemeActivated ? 'light-content' : 'dark-content'}
+              barStyle={isDarkThemeActivated ? "light-content" : "dark-content"}
               animated
             />
             {children}

@@ -3,14 +3,12 @@ import {StyleSheet, TextInput, View, Keyboard, Button} from "react-native";
 // import {Feather, Entypo} from '@expo/vector-icons';
 // import {FontAwesomeIcon} from '@fortawesome/free-solid-svg-icons';
 
-const SearchBar = props => {
+const SearchBar = ({searchPhrase, setSearchPhrase, clicked, setClicked}) => {
   return (
     <View style={styles.container}>
       <View
         style={
-          !props.clicked
-            ? styles.searchBar__unclicked
-            : styles.searchBar__clicked
+          !clicked ? styles.searchBar__unclicked : styles.searchBar__clicked
         }>
         {/* <FontAwesomeIcon
           icon="fa-solid fa-magnifying-glass"
@@ -27,13 +25,13 @@ const SearchBar = props => {
         <TextInput
           style={styles.input}
           placeholder="Search"
-          value={props.searchPhrase}
-          onChangeText={props.setSearchPhrase}
+          value={searchPhrase}
+          onChangeText={setSearchPhrase}
           onFocus={() => {
-            props.setClicked(true);
+            setClicked(true);
           }}
         />
-        {/* {props.clicked &&
+        {/* {clicked &&
           {
             /* <FontAwesomeIcon
             icon="fa-solid fa-xmark"
@@ -41,18 +39,19 @@ const SearchBar = props => {
             color="black"
             style={{padding: 1}}
             onPress={() => {
-              props.setSearchPhrase('');
+              setSearchPhrase('');
             }}
           />
         } */}
       </View>
-      {props.clicked && (
-        <View>
+      {clicked && (
+        <View style={{color: "purple"}}>
           <Button
+            style={{color: "purple"}}
             title="Cancel"
             onPress={() => {
               Keyboard.dismiss();
-              props.setClicked(false);
+              setClicked(false);
             }}
           />
         </View>

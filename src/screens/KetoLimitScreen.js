@@ -69,7 +69,7 @@ export default KetoLimitScreen;
 
 const styles = StyleSheet.create({
   ketoLimitContainer: {
-    marginTop: 27,
+    marginTop: 40,
   },
   root: {
     justifyContent: "center",

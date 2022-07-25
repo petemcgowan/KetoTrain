@@ -18,10 +18,13 @@ import {getGLResult} from "../utils/GlycemicUtils";
 // the filter
 const GlycemicList = ({searchPhrase, setClicked}) => {
   const {setTotalCarbs, setTotalGILoad} = useContext(TrackerContext);
-  const {glycemicData} = useContext(GlycemicContext);
+  const {data} = useContext(GlycemicContext);
   const [searchItemSelected, setSearchItemSelected] = useState(0);
 
-  console.log("GlycemicList, searchPhrase:" + searchPhrase);
+  console.log("GlycemicList, data:" + JSON.stringify(data));
+  console.log(
+    "GlycemicList, data.foodnutritions:" + JSON.stringify(data.foodnutritions),
+  );
 
   let [opacityAnimatedValue, setOpacityAnimatedValue] = useState(
     new Animated.Value(0),
@@ -58,8 +61,8 @@ const GlycemicList = ({searchPhrase, setClicked}) => {
           description={item.description}
           setTotalCarbs={setTotalCarbs}
           setTotalGILoad={setTotalGILoad}
-          // carbAmt={Math.round(item.carbAmt)}
-          carbAmt={item.carbAmt}
+          carbAmt={Math.round(item.carbAmt)}
+          // carbAmt={item.carbAmt}
           giAmt={item.giAmt}
           glAmt={item.glAmt}
           fiberAmt={item.fiberAmt}
@@ -85,8 +88,8 @@ const GlycemicList = ({searchPhrase, setClicked}) => {
           description={item.description}
           setTotalCarbs={setTotalCarbs}
           setTotalGILoad={setTotalGILoad}
-          // carbAmt={Math.round(item.carbAmt)}
-          carbAmt={item.carbAmt}
+          carbAmt={Math.round(item.carbAmt)}
+          // carbAmt={item.carbAmt}
           giAmt={item.giAmt}
           glAmt={item.glAmt}
           fiberAmt={item.fiberAmt}
@@ -111,67 +114,67 @@ const GlycemicList = ({searchPhrase, setClicked}) => {
       // }}
       >
         <FlatList
-          data={glycemicData}
+          data={data.foodnutritions}
           renderItem={renderItem}
           keyExtractor={item => item.description}
         />
       </View>
       <Animated.View style={[styles.box, animatedStyle]}>
         <View style={styles.nutritionElementBox}>
-          <Text>{glycemicData[searchItemSelected].description}</Text>
+          <Text>{data.foodnutritions[searchItemSelected].description}</Text>
         </View>
         <View style={styles.nutritionElementBox}>
           <Text style={styles.labelText}>GI:</Text>
           <Text style={styles.valueText}>
-            {glycemicData[searchItemSelected].giAmt}
+            {data.foodnutritions[searchItemSelected].giAmt}
           </Text>
         </View>
         <View style={styles.nutritionElementBox}>
           <Text style={styles.labelText}>GI Load:</Text>
           <Text style={styles.valueText}>
-            {glycemicData[searchItemSelected].glAmt}
+            {data.foodnutritions[searchItemSelected].glAmt}
           </Text>
         </View>
         <View style={styles.nutritionElementBox}>
           <Text style={styles.labelText}>Carb:</Text>
           <Text style={styles.valueText}>
-            {glycemicData[searchItemSelected].carbAmt}
+            {data.foodnutritions[searchItemSelected].carbAmt}
           </Text>
         </View>
         <View style={styles.nutritionElementBox}>
           <Text style={styles.labelText}>Fibre:</Text>
           <Text style={styles.valueText}>
-            {glycemicData[searchItemSelected].fiberAmt}
+            {data.foodnutritions[searchItemSelected].fiberAmt}
           </Text>
         </View>
         <View style={styles.nutritionElementBox}>
           <Text style={styles.labelText}>Protein:</Text>
           <Text style={styles.valueText}>
-            {glycemicData[searchItemSelected].proteinAmt}
+            {data.foodnutritions[searchItemSelected].proteinAmt}
           </Text>
         </View>
         <View style={styles.nutritionElementBox}>
           <Text style={styles.labelText}>Fat:</Text>
           <Text style={styles.valueText}>
-            {glycemicData[searchItemSelected].fatAmt}
+            {data.foodnutritions[searchItemSelected].fatAmt}
           </Text>
         </View>
         <View style={styles.nutritionElementBox}>
           <Text style={styles.labelText}>kCal:</Text>
           <Text style={styles.valueText}>
-            {glycemicData[searchItemSelected].energyAmt}
+            {data.foodnutritions[searchItemSelected].energyAmt}
           </Text>
         </View>
         <View style={styles.nutritionElementBox}>
           <Text style={styles.labelText}>Sugars:</Text>
           <Text style={styles.valueText}>
-            {glycemicData[searchItemSelected].sugarsAmt}
+            {data.foodnutritions[searchItemSelected].sugarsAmt}
           </Text>
         </View>
         <View style={styles.nutritionElementBox}>
           <Text style={styles.labelText}>Sodium:</Text>
           <Text style={styles.valueText}>
-            {glycemicData[searchItemSelected].sodiumAmt}
+            {data.foodnutritions[searchItemSelected].sodiumAmt}
           </Text>
         </View>
       </Animated.View>
