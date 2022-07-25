@@ -1,13 +1,14 @@
 import React, {useState, useMemo, useContext} from "react";
-import {StyleSheet, SafeAreaView, View, Text} from "react-native";
+import {StyleSheet, Dimensions, SafeAreaView, View, Text} from "react-native";
+
 // import {ApolloProvider} from "@apollo/react-hooks";
-// import {
-//   ApolloClient,
-//   InMemoryCache,
-//   ApolloProvider,
-//   gql,
-//   useQuery,
-// } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql,
+  useQuery,
+} from "@apollo/client";
 import type {Node} from "react";
 
 import SearchScreen from "./screens/SearchScreen";
@@ -15,8 +16,8 @@ import KetoTrackerScreen from "./screens/KetoTrackerScreen";
 import KetoLimitScreen from "./screens/KetoLimitScreen";
 import HelpScreen from "./screens/HelpScreen";
 
-import {ApolloClient, InMemoryCache, ApolloProvider} from "@apollo/client";
-import usdaNutrition from "./data/usdaNutrition.json";
+// import {ApolloClient, InMemoryCache, ApolloProvider} from "@apollo/client";
+// import usdaNutrition from "./data/usdaNutrition.json";
 import GlycemicContext, {GlycemicProvider} from "./state/GlycemicContext";
 import TrackerContext, {TrackerProvider} from "./state/TrackerContext";
 // import {FontAwesome} from '@expo/vector-icons';
@@ -26,6 +27,10 @@ import {NavigationContainer, DefaultTheme} from "@react-navigation/native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {ThemeContextProvider} from "./ThemeContextProvider";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+
+const {width, height} = Dimensions.get("screen");
+const APP_WIDTH = width;
+const APP_HEIGHT = height;
 
 const MyTheme = {
   ...DefaultTheme,
@@ -83,11 +88,11 @@ function AppTabs() {
           ),
           headerTitleStyle: {
             color: "rgb(124, 131, 134)", // "#fff",
-            fontSize: 43,
-            fontWeight: "100",
+            fontSize: 44,
+            fontWeight: "200",
           },
           headerStyle: {
-            backgroundColor: "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            backgroundColor: "#1A0546", // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           tabBarItemStyle: {
             backgroundColor: "rgba(59, 73, 55, 1)", // "#1b1344",
@@ -105,14 +110,14 @@ function AppTabs() {
           tabBarBadge: trackerItems.length,
           headerTitleStyle: {
             color: "rgb(124, 131, 134)", // "#fff",
-            fontSize: 43,
-            fontWeight: "100",
+            fontSize: 44,
+            fontWeight: "200",
           },
           // headerTintColor: {
           //   color: "#fff",
           // },
           headerStyle: {
-            backgroundColor: "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            backgroundColor: "#350244", //  "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           tabBarItemStyle: {
             backgroundColor: "rgba(59, 73, 55, 1)", //"#1b1344",
@@ -134,12 +139,13 @@ function AppTabs() {
           ),
           tabBarBadge: totalCarbs,
           headerStyle: {
-            backgroundColor: "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            opacity: 0.9,
+            backgroundColor: "aqua", // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           headerTitleStyle: {
             color: "rgb(124, 131, 134)", // "#fff",
-            fontSize: 43,
-            fontWeight: "100",
+            fontSize: 44,
+            fontWeight: "200",
           },
           tabBarItemStyle: {
             backgroundColor: "rgba(59, 73, 55, 1)", //"#1b1344",
@@ -159,13 +165,23 @@ function AppTabs() {
           tabBarIcon: ({color, size}) => (
             <FontAwesome5 name="book" size={36} color="orange" />
           ),
+          headerTitle: {
+            paddingHorizontal: 20,
+            paddingBottom: 20,
+            padding: 10,
+          },
+          // headerTitleContainerStyle: {
+          //   paddingHorizontal: 20,
+          //   paddingBottom: 20,
+          //   // marginBottom: 5,
+          // },
           headerTitleStyle: {
             color: "rgb(124, 131, 134)", // "#fff",
-            fontSize: 43,
-            fontWeight: "100",
+            fontSize: 44,
+            fontWeight: "200",
           },
           headerStyle: {
-            backgroundColor: "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            backgroundColor: "#5C6500", // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           tabBarItemStyle: {
             backgroundColor: "rgba(59, 73, 55, 1)", // "#1b1344",
@@ -176,12 +192,47 @@ function AppTabs() {
   );
 }
 
-const App: () => Node = () => {
+const GET_ALL_FOOD_NUTRITIONS = gql`
+  query {
+    foodnutritions {
+      foodCode
+      description
+      fiberAmt
+      giAmt
+      glAmt
+      carbAmt
+      protein
+      fatAmt
+      satFatAmt
+      monoFatAmt
+      polyFatAmt
+      energyAmt
+      sugarsAmt
+      sodiumAmt
+    }
+  }
+`;
+
+// const App: () => Node = () => {
+export default function App() {
   const [trackerItems, setTrackerItems] = useState([]);
   const [totalCarbs, setTotalCarbs] = useState(0);
   const [totalGILoad, setTotalGILoad] = useState(0);
-  const [glycemicData, setGlycemicData] = useState(usdaNutrition);
+  // const [graphGlycemicData, setGraphGlycemicData] = useState([]);
 
+  const {loading, error, data} = useQuery(GET_ALL_FOOD_NUTRITIONS);
+  // const {loading, error, data} = useQuery(GET_ALL_FOOD_NUTRITIONS);
+
+  // const [glycemicData, setGlycemicData] = useState(usdaNutrition); // local copy
+  // const [graphGlycemicData, setGraphGlycemicData] = useState(data); // graphql copy which is undefined if it's in a state variable ? 🧐
+  // console.log("glycemicData:" + JSON.stringify(glycemicData));
+  console.log("loading:" + JSON.stringify(loading));
+  // console.log("data:" + JSON.stringify(data));
+  // console.log("data:" + JSON.stringify(data));
+  // const [glycemicData, setGlycemicData] = useState(
+  //   usdaNutrition.foodNutritions,
+  // ); // graphql copy
+  // const glycemicData = data.foodnutritions;
   // the memoization is here to prevent is re-rendering needlessly
   const value = useMemo(
     () => ({
@@ -197,34 +248,43 @@ const App: () => Node = () => {
 
   const glycemicValue = useMemo(
     () => ({
-      glycemicData,
-      setGlycemicData,
+      // glycemicData,
+      data,
+      // setGlycemicData,
+      // graphGlycemicData,
+      // setGraphGlycemicData,
     }),
-    [glycemicData],
+    [data, loading],
   );
   console.log("App Render");
+  // console.log("graphGlycemicData:" + JSON.stringify(graphGlycemicData));
+  console.log("data:" + data);
 
-  const client = new ApolloClient({
-    uri: "http://localhost:4000/graphql",
-    cache: new InMemoryCache(),
-  });
+  // const client = new ApolloClient({
+  //   uri: "http://localhost:4000/graphql",
+  //   cache: new InMemoryCache(),
+  // });
 
   return (
-    <ApolloProvider client={client}>
-      {/* <SafeAreaView> */}
-      <ThemeContextProvider>
-        <GlycemicProvider value={glycemicValue}>
-          <TrackerProvider value={value}>
-            <NavigationContainer theme={MyTheme} style={styles.container}>
-              <AppTabs style={styles.container} />
-            </NavigationContainer>
-          </TrackerProvider>
-        </GlycemicProvider>
-      </ThemeContextProvider>
-      {/* </SafeAreaView> */}
-    </ApolloProvider>
+    <>
+      {!loading && data && (
+        <ThemeContextProvider>
+          <View style={{width: APP_WIDTH, height: APP_HEIGHT}}>
+            <GlycemicProvider value={glycemicValue}>
+              <TrackerProvider value={value}>
+                <NavigationContainer theme={MyTheme} style={styles.container}>
+                  {/* <View> */}
+                  <AppTabs style={styles.container} />
+                  {/* </View> */}
+                </NavigationContainer>
+              </TrackerProvider>
+            </GlycemicProvider>
+          </View>
+        </ThemeContextProvider>
+      )}
+    </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -234,4 +294,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+// export default App;
