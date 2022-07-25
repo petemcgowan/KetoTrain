@@ -12,6 +12,7 @@ import TrackerContext from "../state/TrackerContext";
 import TrackerItem from "../components/TrackerItem";
 import styled, {withTheme} from "styled-components";
 import {getTotalCarbs} from "../utils/GlycemicUtils";
+import BoxesLayout from "../components/BoxesLayout";
 
 const KetoTrackerScreen = () => {
   const {trackerItems, setTrackerItems} = useContext(TrackerContext);
@@ -38,6 +39,7 @@ const KetoTrackerScreen = () => {
           keyExtractor={item => item.id}
         />
       </SafeAreaView>
+
       <SafeAreaView style={styles.nutritionContainer}>
         {trackerItems[trackerSelected] ? (
           <View>
@@ -105,32 +107,23 @@ const KetoTrackerScreen = () => {
                 </View>
               </View>
             </View>
-            <View style={{flexDirection: "row"}}>
-              <ImageBackground
-                source={trackerItems[trackerSelected].carbImageToUse}
-                resizeMode="cover"
-                style={styles.image}>
-                <Text style={styles.text}>
-                  {trackerItems[trackerSelected].carbAmt}
-                </Text>
-              </ImageBackground>
-              <ImageBackground
-                source={trackerItems[trackerSelected].giImageToUse}
-                resizeMode="cover"
-                style={styles.image}>
-                <Text style={styles.text}>
-                  {trackerItems[trackerSelected].giAmt}
-                </Text>
-              </ImageBackground>
-              <ImageBackground
-                source={trackerItems[trackerSelected].glImageToUse}
-                resizeMode="cover"
-                style={styles.image}>
-                <Text style={styles.text}>
-                  {trackerItems[trackerSelected].glAmt}
-                </Text>
-              </ImageBackground>
-            </View>
+            <BoxesLayout
+              giAmt={trackerItems[trackerSelected].giAmt}
+              glAmt={trackerItems[trackerSelected].glAmt}
+              carbAmt={trackerItems[trackerSelected].carbAmt}
+              giBackgroundColor={
+                trackerItems[trackerSelected].giBackgroundColor
+              }
+              glBackgroundColor={
+                trackerItems[trackerSelected].glBackgroundColor
+              }
+              carbBackgroundColor={
+                trackerItems[trackerSelected].carbBackgroundColor
+              }
+              boxWidth={118}
+              boxHeight={118}
+              textFontSize={80}
+            />
           </View>
         ) : (
           <Text>No items added yet</Text>

@@ -15,38 +15,42 @@ const BoxesLayout = ({
   giBackgroundColor,
   glBackgroundColor,
   carbBackgroundColor,
+  boxWidth,
+  boxHeight,
+  textFontSize,
 }) => {
+  const dynamicStyles = StyleSheet.create({
+    box: {
+      width: boxWidth,
+      height: boxHeight,
+      padding: 1,
+    },
+    text: {
+      color: "rgba(201, 189, 187, 1)",
+      fontSize: textFontSize,
+      textAlign: "center",
+      justifyContent: "center",
+      alignItems: "center",
+      fontWeight: "200",
+    },
+  });
+
   return (
-    <View style={{padding: 10, flex: 1}}>
-      <View style={{flexDirection: "row"}}>
-        <View style={[styles.box, {backgroundColor: giBackgroundColor}]}>
-          <Text style={styles.text}>{giAmt}</Text>
+    <View style={{flex: 1}}>
+      <View style={{flexDirection: "row", padding: 3}}>
+        <View style={[dynamicStyles.box, {backgroundColor: giBackgroundColor}]}>
+          <Text style={dynamicStyles.text}>{giAmt}</Text>
         </View>
-        <View style={[styles.box, {backgroundColor: glBackgroundColor}]}>
-          <Text style={styles.text}>{glAmt}</Text>
+        <View style={[dynamicStyles.box, {backgroundColor: glBackgroundColor}]}>
+          <Text style={dynamicStyles.text}>{glAmt}</Text>
         </View>
-        <View style={[styles.box, {backgroundColor: carbBackgroundColor}]}>
-          <Text style={styles.text}>{carbAmt}</Text>
+        <View
+          style={[dynamicStyles.box, {backgroundColor: carbBackgroundColor}]}>
+          <Text style={dynamicStyles.text}>{carbAmt}</Text>
         </View>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  box: {
-    width: 48,
-    height: 40,
-    padding: 1,
-  },
-  text: {
-    color: "rgba(201, 189, 187, 1)",
-    fontSize: 34,
-    textAlign: "center",
-    justifyContent: "center",
-    alignItems: "center",
-    fontWeight: "200",
-  },
-});
 
 export default memo(BoxesLayout);

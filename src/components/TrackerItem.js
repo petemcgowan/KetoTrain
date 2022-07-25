@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import styled, {withTheme} from "styled-components";
 import TrackerContext from "../state/TrackerContext";
+import PortionLayout from "../components/PortionLayout";
 
 const TrackerItem = ({item, setTrackerSelected, trackerSelected}) => {
   const {trackerItems, setTrackerItems, setTotalCarbs, setTotalGILoad} =
@@ -95,6 +96,15 @@ const TrackerItem = ({item, setTrackerSelected, trackerSelected}) => {
           // justifyContents: "center",
           // alignContent: "center",
         }}>
+        <PortionLayout
+          portion1BackgroundColor={"#7A069B"}
+          portion2BackgroundColor={"#620B7B"}
+          portion3BackgroundColor={"#370246"}
+          portion4BackgroundColor={"#200129"}
+          boxWidth={48}
+          boxHeight={48}
+          textFontSize={36}
+        />
         <TouchableOpacity onPress={pressTrackerItem}>
           <View
             style={{
@@ -106,7 +116,7 @@ const TrackerItem = ({item, setTrackerSelected, trackerSelected}) => {
             <Text style={styles.description}>{item.description}</Text>
             {/* </Pressable> */}
             {/* <Pressable onPress={pressCarbAmt}> */}
-            <Text style={styles.description}>{item.carbAmt}</Text>
+            {/* <Text style={styles.description}>{item.carbAmt}</Text> */}
             {/* </Pressable> */}
           </View>
         </TouchableOpacity>
@@ -118,7 +128,8 @@ const TrackerItem = ({item, setTrackerSelected, trackerSelected}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View>
+
+      {/* <View>
         <View style={{width: 96, height: 24, flexDirection: "row"}}>
           <Text
             style={{
@@ -170,7 +181,7 @@ const TrackerItem = ({item, setTrackerSelected, trackerSelected}) => {
               }}></View>
           </Pressable>
         </View>
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -183,7 +194,7 @@ const styles = StyleSheet.create({
     // width: "100%",
     color: "#FFF",
     marginTop: 5,
-    fontSize: 40,
+    fontSize: 36,
     fontWeight: "100",
     // marginLeft: "5%",
   },
