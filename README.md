@@ -1,6 +1,6 @@
 ## What the app is for
 
-This React/Gatsby app is fundamentally a website where a DJ/producer displays what they've created, mixes they've done, downloads etc. Original goal was to have it as fully extensible, with all content driven externally. This extensibility is partially done using Gatsby's blog content system.
+Glycemic / Keto Limit allows you to track your carb/sugar intake in a day and make sure you don't pass the ketogenic limit which throws you out of ketosis. It's also a learning tool about all things glycemic/keto.
 
 ## de.com Architecture
 
