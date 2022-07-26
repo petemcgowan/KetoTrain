@@ -9,16 +9,16 @@ This React/Gatsby app is fundamentally a website where a DJ/producer displays wh
 ## Main app components
 
 1. Search / Add page
-   <img src="docs/images/1. Search, Add (Ideal).png" width="100%" />
+   <img src="docs/images/1. Search, Add (Ideal).png" width="50%" />
 
 2. Keto Tracker/Nutritional info page
-   <img src="docs/images/2. Keto Tracker (Ideal).png" width="100%" />
+   <img src="docs/images/2. Keto Tracker (Ideal).png" width="50%" />
 
 3. Keto Limit page
-   <img src="docs/images/3. Keto Limit (Ideal).png" width="100%" />
+   <img src="docs/images/3. Keto Limit (Ideal).png" width="50%" />
 
 4. Learn page
-   <img src="docs/images/4. Learn (Ideal).png" width="100%" />
+   <img src="docs/images/4. Learn (Ideal).png" width="50%" />
 
 ## How the app is started
 
