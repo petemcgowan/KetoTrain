@@ -21,7 +21,7 @@ import GlycemicContext from "../state/GlycemicContext";
 // Previous TouchableOpacity style was style={[styles.item]}
 // definition of the Item, which will be rendered in the FlatList
 const GlycemicItem = ({
-  description,
+  descriptionGI,
   setTotalCarbs,
   setTotalGILoad,
   carbAmt,
@@ -79,30 +79,49 @@ const GlycemicItem = ({
     carbBackgroundColor = "#5C6500"; //"rgb(240,230,140)";
   }
 
+  const dynamicStyles = StyleSheet.create({
+    listItemContainerStyle: {
+      flexDirection: "row",
+      // backgroundColor: "black",
+      backgroundColor: carbBackgroundColor,
+      // justifyContent: "center",
+      alignItems: "center",
+    },
+  });
+
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log("GlycemicItem onPress");
-        setTrackerItems([
-          ...trackerItems,
-          {
-            id: description,
-            description: description,
-            carbAmt: carbAmt,
-            giAmt: giAmt,
-            glAmt: glAmt,
-            fiberAmt: fiberAmt,
-            proteinAmt: proteinAmt,
-            fatAmt: fatAmt,
-            energyAmt: energyAmt,
-            sugarsAmt: sugarsAmt,
-            sodiumAmt: sodiumAmt,
-            giBackgroundColor: giBackgroundColor,
-            glBackgroundColor: glBackgroundColor,
-            carbBackgroundColor: carbBackgroundColor,
-          },
-          //     },
-        ]);
+        // is it already in trackerItems?
+        console.log("descriptionGI:" + descriptionGI);
+        const trackerClicked = trackerItems.find(
+          ({description}) => description === descriptionGI,
+        );
+        console.log("trackerClicked:" + JSON.stringify(trackerClicked));
+        if (trackerClicked) {
+          trackerClicked.portionAmount++;
+        } else {
+          setTrackerItems([
+            ...trackerItems,
+            {
+              id: descriptionGI,
+              description: descriptionGI,
+              carbAmt: carbAmt,
+              giAmt: giAmt,
+              glAmt: glAmt,
+              fiberAmt: fiberAmt,
+              proteinAmt: proteinAmt,
+              fatAmt: fatAmt,
+              energyAmt: energyAmt,
+              sugarsAmt: sugarsAmt,
+              sodiumAmt: sodiumAmt,
+              giBackgroundColor: giBackgroundColor,
+              glBackgroundColor: glBackgroundColor,
+              carbBackgroundColor: carbBackgroundColor,
+              portionAmount: 1,
+            },
+          ]);
+        } // end if
         let totalCarbs = 0;
         let totalGILoad = 0;
         trackerItems.map(trackerItem => {
@@ -113,30 +132,21 @@ const GlycemicItem = ({
         setTotalCarbs(totalCarbs);
         setTotalGILoad(totalGILoad);
         // setModalVisible(true);
-        for (var i = 0; i < data.foodnutritions.length; i++) {
-          if (data.foodnutritions[i].description === description) {
-            console.log(
-              "Item found for info panel, i:" +
-                i +
-                ", trackerItems:" +
-                JSON.stringify(data.foodnutritions[i].description),
-            );
-            // const trackerSelected = trackerItems[i];
-            setSearchItemSelected(i);
-            console.log(
-              "trackerSelected:" + JSON.stringify(searchItemSelected),
-            );
-          }
+        const index = data.foodnutritions.findIndex(
+          ({description}) => description === descriptionGI,
+        );
+        if (index > -1) {
+          setSearchItemSelected(index);
         }
         // Make the nutritional panel appear briefly here
         animatedOpacitySequence();
       }}>
-      <View style={styles.listItemContainerStyle}>
+      <View style={dynamicStyles.listItemContainerStyle}>
         {/* <ListItemContainer> */}
         {/* <GlycemicModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          description={description}
+          description={descriptionGI}
           giAmt={giAmt}
           carbAmt={carbAmt}
           glAmt={glAmt}
@@ -150,8 +160,8 @@ const GlycemicItem = ({
           glBackgroundColor={glBackgroundColor}
           carbBackgroundColor={carbBackgroundColor}
         /> */}
-        <Text style={styles.listItemStyle}>{description}</Text>
-        {/* <ListItem>{description}</ListItem> */}
+        <Text style={styles.listItemStyle}>{descriptionGI}</Text>
+        {/* <ListItem>{descriptionGI}</ListItem> */}
         <BoxesLayout
           giAmt={giAmt}
           glAmt={glAmt}
@@ -170,7 +180,7 @@ const GlycemicItem = ({
 };
 
 function arePropsEqual(prevProps, nextProps) {
-  return prevProps.description === nextProps.description;
+  return prevProps.descriptionGI === nextProps.descriptionGI;
 }
 
 // export default withTheme(memo(GlycemicItem, arePropsEqual));
@@ -195,15 +205,8 @@ export default memo(GlycemicItem, arePropsEqual);
 // `;
 
 const styles = StyleSheet.create({
-  // listItemContainerStyle
-  listItemContainerStyle: {
-    flexDirection: "row",
-    backgroundColor: "black",
-    // justifyContent: "center",
-    alignItems: "center",
-  },
   listItemStyle: {
-    width: "60%",
+    width: "63%",
     textAlign: "right",
     // justifyContent: "center",
     // alignItems: "center",

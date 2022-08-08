@@ -21,10 +21,10 @@ const GlycemicList = ({searchPhrase, setClicked}) => {
   const {data} = useContext(GlycemicContext);
   const [searchItemSelected, setSearchItemSelected] = useState(0);
 
-  console.log("GlycemicList, data:" + JSON.stringify(data));
-  console.log(
-    "GlycemicList, data.foodnutritions:" + JSON.stringify(data.foodnutritions),
-  );
+  // console.log("GlycemicList, data:" + JSON.stringify(data));
+  // console.log(
+  //   "GlycemicList, data.foodnutritions:" + JSON.stringify(data.foodnutritions),
+  // );
 
   let [opacityAnimatedValue, setOpacityAnimatedValue] = useState(
     new Animated.Value(0),
@@ -58,7 +58,7 @@ const GlycemicList = ({searchPhrase, setClicked}) => {
     if (searchPhrase === "") {
       return (
         <GlycemicItem
-          description={item.description}
+          descriptionGI={item.description}
           setTotalCarbs={setTotalCarbs}
           setTotalGILoad={setTotalGILoad}
           carbAmt={Math.round(item.carbAmt)}
@@ -85,7 +85,7 @@ const GlycemicList = ({searchPhrase, setClicked}) => {
     ) {
       return (
         <GlycemicItem
-          description={item.description}
+          descriptionGI={item.description}
           setTotalCarbs={setTotalCarbs}
           setTotalGILoad={setTotalGILoad}
           carbAmt={Math.round(item.carbAmt)}
@@ -204,16 +204,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   list__container: {
-    margin: 10,
-    height: "85%",
+    // margin: 10,
+    height: "88%",
     width: "100%",
     justifyContent: "center",
   },
   box: {
+    backgroundColor: "rgba(59, 73, 55, 1)",
     textAlign: "center",
     justifyContent: "center",
-    width: 200,
-    height: 200,
+    // width: 200,
+    // height: 200,
     position: "absolute",
     backgroundColor: "lightgrey",
     color: "white",

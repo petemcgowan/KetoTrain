@@ -23,7 +23,7 @@ const BoxesLayout = ({
     box: {
       width: boxWidth,
       height: boxHeight,
-      padding: 1,
+      // padding: 0.5,
     },
     text: {
       color: "rgba(201, 189, 187, 1)",
@@ -37,7 +37,7 @@ const BoxesLayout = ({
 
   return (
     <View style={{flex: 1}}>
-      <View style={{flexDirection: "row", padding: 3}}>
+      <View style={{flexDirection: "row", padding: 1.5}}>
         <View style={[dynamicStyles.box, {backgroundColor: giBackgroundColor}]}>
           <Text style={dynamicStyles.text}>{giAmt}</Text>
         </View>
