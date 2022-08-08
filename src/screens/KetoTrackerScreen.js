@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import {
   StyleSheet,
   Text,
@@ -15,7 +15,8 @@ import {getTotalCarbs} from "../utils/GlycemicUtils";
 import BoxesLayout from "../components/BoxesLayout";
 
 const KetoTrackerScreen = () => {
-  const {trackerItems, setTrackerItems} = useContext(TrackerContext);
+  const {trackerItems, setTrackerItems, totalCarbs} =
+    useContext(TrackerContext);
   const [trackerSelected, setTrackerSelected] = useState(0);
 
   const renderTrackerItem = ({item}) => (
@@ -29,6 +30,10 @@ const KetoTrackerScreen = () => {
 
   console.log("TrackerScreen, trackerItems:" + JSON.stringify(trackerItems));
   console.log("TrackerScreen, getTotalCarbs:" + getTotalCarbs());
+
+  useEffect(() => {
+    console.log("KetoTrackerScreen useEffect called");
+  }, [trackerItems, totalCarbs]);
 
   return (
     <View style={styles.trackerContainer}>

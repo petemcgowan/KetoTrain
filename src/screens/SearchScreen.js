@@ -61,31 +61,25 @@ const SearchScreen = () => {
 
 export default withTheme(SearchScreen);
 
-const ListTitle = styled(Text)`
-  margin-bottom: ${({theme}) => theme.metrics.extraSmallSize}px;
-  /* font-family: CircularStd-Bold; */
-  font-size: ${({theme}) => theme.metrics.largeSize * 1.1}px;
-  color: ${({theme}) => theme.colors.textColor};
-`;
-
 const styles = StyleSheet.create({
   searchPageContainer: {
     // marginTop: 27,
     justifyContent: "center",
     alignItems: "center",
     color: "#FFF",
-    backgroundColor: "#000",
   },
 
-  description: {
-    // fontFamily: "Karla-Light",   // this isn't being picked up (when commented in)
-    width: "100%",
-    marginTop: 20,
-    fontSize: 25,
-    // fontWeight: 'bold',
-    marginLeft: "10%",
-    color: "#FFF",
-  },
+  // description: {
+  //   // fontFamily: "Karla-Light",   // this isn't being picked up (when commented in)
+
+  //   // backgroundColor: "#000",
+  //   width: "100%",
+  //   // marginTop: 20,
+  //   fontSize: 25,
+  //   // fontWeight: 'bold',
+  //   // marginLeft: "10%",
+  //   color: "#FFF",
+  // },
 });
 // greenVibe: "rgba(59, 73, 55, 1)",  // complimentary  rgb(69,55,73)
 // offWhiteVibe: "rgba(201, 189, 187, 1)"

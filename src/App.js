@@ -43,25 +43,6 @@ const MyTheme = {
   },
 };
 
-// const client = new ApolloClient({
-//   link: new WebSocketLink({
-//     uri: "wss://localhost:4000/graphql",
-//     options: {
-//       reconnect: true,
-//       connectionParams: {
-//         headers: {
-//           Authorization: "Bearer yourauthtoken",
-//         },
-//       },
-//     },
-//   }),
-//   cache: new InMemoryCache(),
-// });
-// const client = new ApolloClient({
-//   uri: "http://localhost:4000/graphql",
-//   cache: new InMemoryCache(),
-// });
-
 const Tab = createBottomTabNavigator();
 
 function AppTabs() {
@@ -153,6 +134,7 @@ function AppTabs() {
           },
           tabBarBadgeStyle: {
             backgroundColor: "#2196F3", // rgb(69,55,73)  (comp to dark green)
+
             color: "#BBBccc",
             fontSize: 17,
           },
@@ -225,10 +207,7 @@ export default function App() {
 
   // const [glycemicData, setGlycemicData] = useState(usdaNutrition); // local copy
   // const [graphGlycemicData, setGraphGlycemicData] = useState(data); // graphql copy which is undefined if it's in a state variable ? 🧐
-  // console.log("glycemicData:" + JSON.stringify(glycemicData));
   console.log("loading:" + JSON.stringify(loading));
-  // console.log("data:" + JSON.stringify(data));
-  // console.log("data:" + JSON.stringify(data));
   // const [glycemicData, setGlycemicData] = useState(
   //   usdaNutrition.foodNutritions,
   // ); // graphql copy
@@ -258,7 +237,7 @@ export default function App() {
   );
   console.log("App Render");
   // console.log("graphGlycemicData:" + JSON.stringify(graphGlycemicData));
-  console.log("data:" + data);
+  // console.log("data:" + data);
 
   // const client = new ApolloClient({
   //   uri: "http://localhost:4000/graphql",
