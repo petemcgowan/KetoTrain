@@ -17,7 +17,7 @@ import GlycemicContext from "../state/GlycemicContext";
 const SearchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
-  const {data} = useContext(GlycemicContext);
+  const {glycemicData} = useContext(GlycemicContext);
 
   useEffect(() => {
     console.log("SearchScreen, useEffect");
@@ -44,7 +44,7 @@ const SearchScreen = () => {
         ) : ( */}
             <GlycemicList
             searchPhrase={searchPhrase}
-            glycemicData={data.foodnutritions}
+            glycemicData={glycemicData}
             setClicked={setClicked}
           />
         {/* )
@@ -55,6 +55,7 @@ const SearchScreen = () => {
   return (
     <View>
       <FoodNutritions />
+      {/* <Text>Search Screen test</Text> */}
     </View>
   );
 };

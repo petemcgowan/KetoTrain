@@ -40,7 +40,7 @@ const GlycemicItem = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const {trackerItems, setTrackerItems} = useContext(TrackerContext);
-  const {data} = useContext(GlycemicContext);
+  const {glycemicData} = useContext(GlycemicContext);
   /* Glycemic Index ranges
    **Low**  **less than or equal to 55** and are characterised by a smaller rise and fall in blood glucose.
    **Medium** Value **between 56 and 69.**
@@ -132,7 +132,7 @@ const GlycemicItem = ({
         setTotalCarbs(totalCarbs);
         setTotalGILoad(totalGILoad);
         // setModalVisible(true);
-        const index = data.foodnutritions.findIndex(
+        const index = glycemicData.findIndex(
           ({description}) => description === descriptionGI,
         );
         if (index > -1) {
