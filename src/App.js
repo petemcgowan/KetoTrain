@@ -1,5 +1,5 @@
-import React, {useState, useMemo, useContext, useEffect} from "react";
-import {StyleSheet, Dimensions, SafeAreaView, View, Text} from "react-native";
+import React, { useState, useMemo, useContext, useEffect } from 'react'
+import { StyleSheet, Dimensions, SafeAreaView, View, Text } from 'react-native'
 
 // import {ApolloProvider} from "@apollo/react-hooks";
 import {
@@ -8,31 +8,31 @@ import {
   ApolloProvider,
   gql,
   useQuery,
-} from "@apollo/client";
-import type {Node} from "react";
+} from '@apollo/client'
+import type { Node } from 'react'
 
-import SearchScreen from "./screens/SearchScreen";
-import KetoTrackerScreen from "./screens/KetoTrackerScreen";
-import KetoLimitScreen from "./screens/KetoLimitScreen";
-import HelpScreen from "./screens/HelpScreen";
+import SearchScreen from './screens/SearchScreen'
+import KetoTrackerScreen from './screens/KetoTrackerScreen'
+import KetoLimitScreen from './screens/KetoLimitScreen'
+import HelpScreen from './screens/HelpScreen'
 
 // import {ApolloClient, InMemoryCache, ApolloProvider} from "@apollo/client";
-import usdaNutrition from "./data/usdaNutrition.json";
-import GlycemicContext, {GlycemicProvider} from "./state/GlycemicContext";
-import TrackerContext, {TrackerProvider} from "./state/TrackerContext";
+import usdaNutrition from './data/usdaNutrition.json'
+import GlycemicContext, { GlycemicProvider } from './state/GlycemicContext'
+import TrackerContext, { TrackerProvider } from './state/TrackerContext'
 // import {FontAwesome} from '@expo/vector-icons';
 // import {FontAwesomeIcon} from '@fortawesome/free-solid-svg-icons';
 
-import {NavigationContainer, DefaultTheme} from "@react-navigation/native";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import {ThemeContextProvider} from "./ThemeContextProvider";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { ThemeContextProvider } from './ThemeContextProvider'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
-import SplashScreen from "react-native-splash-screen";
+import SplashScreen from 'react-native-splash-screen'
 
-const {width, height} = Dimensions.get("screen");
-const APP_WIDTH = width;
-const APP_HEIGHT = height;
+const { width, height } = Dimensions.get('screen')
+const APP_WIDTH = width
+const APP_HEIGHT = height
 
 const MyTheme = {
   ...DefaultTheme,
@@ -40,11 +40,11 @@ const MyTheme = {
     ...DefaultTheme.colors,
     // primary: "rgb(255, 45, 85)",
     // background: "rgb(34, 34, 34)",
-    background: "black",
-    notification: "blue",
+    background: 'black',
+    notification: 'blue',
   },
-};
-const Tab = createBottomTabNavigator();
+}
+const Tab = createBottomTabNavigator()
 
 function AppTabs() {
   return (
@@ -52,27 +52,28 @@ function AppTabs() {
       // style={styles.container}
       screenOptions={{
         cardStyle: {
-          backgroundColor: "black",
+          backgroundColor: 'black',
         },
         tabBarShowLabel: false,
-      }}>
+      }}
+    >
       <Tab.Screen
         name="Food Search"
         component={SearchScreen}
         options={{
-          tabBarIcon: ({color, size}) => (
+          tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="search" size={36} color="orange" />
           ),
           headerTitleStyle: {
-            color: "rgb(124, 131, 134)", // "#fff",
+            color: 'rgb(124, 131, 134)', // "#fff",
             fontSize: 44,
-            fontWeight: "200",
+            fontWeight: '200',
           },
           headerStyle: {
-            backgroundColor: "#1A0546", // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            backgroundColor: '#1A0546', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           tabBarItemStyle: {
-            backgroundColor: "rgba(59, 73, 55, 1)", // "#1b1344",
+            backgroundColor: 'rgba(59, 73, 55, 1)', // "#1b1344",
             // backgroundColor: "#ff15",
           },
         }}
@@ -81,28 +82,28 @@ function AppTabs() {
         name="Keto Tracker"
         component={KetoTrackerScreen}
         options={{
-          tabBarIcon: ({color, size}) => (
+          tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="utensils" size={36} color="orange" />
           ),
           tabBarBadge: trackerItems.length,
           headerTitleStyle: {
-            color: "rgb(124, 131, 134)", // "#fff",
+            color: 'rgb(124, 131, 134)', // "#fff",
             fontSize: 44,
-            fontWeight: "200",
+            fontWeight: '200',
           },
           // headerTintColor: {
           //   color: "#fff",
           // },
           headerStyle: {
-            backgroundColor: "#350244", //  "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            backgroundColor: '#350244', //  "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           tabBarItemStyle: {
-            backgroundColor: "rgba(59, 73, 55, 1)", //"#1b1344",
+            backgroundColor: 'rgba(59, 73, 55, 1)', //"#1b1344",
             // backgroundColor: "#1344",
           },
           tabBarBadgeStyle: {
-            backgroundColor: "#453749", // rgb(69,55,73)  (comp to dark green)
-            color: "#BBBccc",
+            backgroundColor: '#453749', // rgb(69,55,73)  (comp to dark green)
+            color: '#BBBccc',
             fontSize: 17,
           },
         }}
@@ -111,27 +112,27 @@ function AppTabs() {
         name="Keto Limit"
         component={KetoLimitScreen}
         options={{
-          tabBarIcon: ({color, size}) => (
+          tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="ban" size={36} color="orange" />
           ),
           tabBarBadge: totalCarbs,
           headerStyle: {
             opacity: 0.9,
-            backgroundColor: "aqua", // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            backgroundColor: 'aqua', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           headerTitleStyle: {
-            color: "rgb(124, 131, 134)", // "#fff",
+            color: 'rgb(124, 131, 134)', // "#fff",
             fontSize: 44,
-            fontWeight: "200",
+            fontWeight: '200',
           },
           tabBarItemStyle: {
-            backgroundColor: "rgba(59, 73, 55, 1)", //"#1b1344",
-            color: "#BBBccc",
+            backgroundColor: 'rgba(59, 73, 55, 1)', //"#1b1344",
+            color: '#BBBccc',
           },
           tabBarBadgeStyle: {
-            backgroundColor: "#2196F3", // rgb(69,55,73)  (comp to dark green)
+            backgroundColor: '#2196F3', // rgb(69,55,73)  (comp to dark green)
 
-            color: "#BBBccc",
+            color: '#BBBccc',
             fontSize: 17,
           },
         }}
@@ -140,7 +141,7 @@ function AppTabs() {
         name="Learn 🧐"
         component={HelpScreen}
         options={{
-          tabBarIcon: ({color, size}) => (
+          tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="book" size={36} color="orange" />
           ),
           headerTitle: {
@@ -154,20 +155,20 @@ function AppTabs() {
           //   // marginBottom: 5,
           // },
           headerTitleStyle: {
-            color: "rgb(124, 131, 134)", // "#fff",
+            color: 'rgb(124, 131, 134)', // "#fff",
             fontSize: 44,
-            fontWeight: "200",
+            fontWeight: '200',
           },
           headerStyle: {
-            backgroundColor: "#5C6500", // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            backgroundColor: '#5C6500', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
           },
           tabBarItemStyle: {
-            backgroundColor: "rgba(59, 73, 55, 1)", // "#1b1344",
+            backgroundColor: 'rgba(59, 73, 55, 1)', // "#1b1344",
           },
         }}
       />
     </Tab.Navigator>
-  );
+  )
 }
 
 const GET_ALL_FOOD_NUTRITIONS = gql`
@@ -189,23 +190,23 @@ const GET_ALL_FOOD_NUTRITIONS = gql`
       sodiumAmt
     }
   }
-`;
+`
 
 // const App: () => Node = () => {
 export default function AppGlycemic() {
-  const [trackerItems, setTrackerItems] = useState([]);
-  const [totalCarbs, setTotalCarbs] = useState(0);
-  const [totalGILoad, setTotalGILoad] = useState(0);
+  const [trackerItems, setTrackerItems] = useState([])
+  const [totalCarbs, setTotalCarbs] = useState(0)
+  const [totalGILoad, setTotalGILoad] = useState(0)
   // const {trackerItems, totalCarbs} = useContext(TrackerContext);
 
   // const [graphGlycemicData, setGraphGlycemicData] = useState([]);
 
-  const {loading, error, data} = useQuery(GET_ALL_FOOD_NUTRITIONS);
+  const { loading, error, data } = useQuery(GET_ALL_FOOD_NUTRITIONS)
   // const {loading, error, data} = useQuery(GET_ALL_FOOD_NUTRITIONS);
 
-  const [glycemicData, setGlycemicData] = useState(usdaNutrition); // local copy
+  const [glycemicData, setGlycemicData] = useState(usdaNutrition) // local copy
   // const [graphGlycemicData, setGraphGlycemicData] = useState(data); // graphql copy which is undefined if it's in a state variable ? 🧐
-  console.log("loading:" + JSON.stringify(loading));
+  console.log('loading:' + JSON.stringify(loading))
   // const [glycemicData, setGlycemicData] = useState(
   //   usdaNutrition.foodNutritions,
   // ); // graphql copy
@@ -220,8 +221,8 @@ export default function AppGlycemic() {
       totalGILoad,
       setTotalGILoad,
     }),
-    [trackerItems, totalCarbs, totalGILoad],
-  );
+    [trackerItems, totalCarbs, totalGILoad]
+  )
 
   const glycemicValue = useMemo(
     () => ({
@@ -231,24 +232,21 @@ export default function AppGlycemic() {
       // graphGlycemicData,
       // setGraphGlycemicData,
     }),
-    [glycemicData, loading],
-  );
-  console.log("App Render, glycemicData:" + JSON.stringify(glycemicData));
-  // console.log("App Render, data:" + JSON.stringify(data));
-  // console.log("graphGlycemicData:" + JSON.stringify(graphGlycemicData));
-  // console.log("data:" + data);
+    [glycemicData, loading]
+  )
+  console.log('App Render, glycemicData:' + JSON.stringify(glycemicData))
 
   useEffect(() => {
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen
-    SplashScreen.hide();
-  }, []);
+    SplashScreen.hide()
+  }, [])
 
   return (
     <>
       {!loading && glycemicData && (
         <ThemeContextProvider>
-          <View style={{width: APP_WIDTH, height: APP_HEIGHT}}>
+          <View style={{ width: APP_WIDTH, height: APP_HEIGHT }}>
             <GlycemicProvider value={glycemicValue}>
               <TrackerProvider value={value}>
                 {/* <NavigationContainer theme={MyTheme} style={styles.container}>
@@ -266,16 +264,17 @@ export default function AppGlycemic() {
                       // showIcon: true,
                       // tabBarStyle: [{display: "flex"}, null],
                       cardStyle: {
-                        backgroundColor: "black",
+                        backgroundColor: 'black',
                       },
                       tabBarShowLabel: false,
                       // tabBarShowLabel: true,
-                    }}>
+                    }}
+                  >
                     <Tab.Screen
                       name="Food Search"
                       component={SearchScreen}
                       options={{
-                        tabBarIcon: ({color, size}) => (
+                        tabBarIcon: ({ color, size }) => (
                           <FontAwesome5
                             name="search"
                             size={36}
@@ -283,15 +282,15 @@ export default function AppGlycemic() {
                           />
                         ),
                         headerTitleStyle: {
-                          color: "rgb(124, 131, 134)", // "#fff",
+                          color: 'rgb(124, 131, 134)', // "#fff",
                           fontSize: 44,
-                          fontWeight: "200",
+                          fontWeight: '200',
                         },
                         headerStyle: {
-                          backgroundColor: "#1A0546", // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+                          backgroundColor: '#1A0546', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
                         },
                         tabBarItemStyle: {
-                          backgroundColor: "rgba(59, 73, 55, 1)", // "#1b1344",
+                          backgroundColor: 'rgba(59, 73, 55, 1)', // "#1b1344",
                           // backgroundColor: "#ff15",
                         },
                       }}
@@ -300,7 +299,7 @@ export default function AppGlycemic() {
                       name="Keto Tracker"
                       component={KetoTrackerScreen}
                       options={{
-                        tabBarIcon: ({color, size}) => (
+                        tabBarIcon: ({ color, size }) => (
                           <FontAwesome5
                             name="utensils"
                             size={36}
@@ -309,23 +308,23 @@ export default function AppGlycemic() {
                         ),
                         tabBarBadge: trackerItems.length,
                         headerTitleStyle: {
-                          color: "rgb(124, 131, 134)", // "#fff",
+                          color: 'rgb(124, 131, 134)', // "#fff",
                           fontSize: 44,
-                          fontWeight: "200",
+                          fontWeight: '200',
                         },
                         // headerTintColor: {
                         //   color: "#fff",
                         // },
                         headerStyle: {
-                          backgroundColor: "#350244", //  "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+                          backgroundColor: '#350244', //  "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
                         },
                         tabBarItemStyle: {
-                          backgroundColor: "rgba(59, 73, 55, 1)", //"#1b1344",
+                          backgroundColor: 'rgba(59, 73, 55, 1)', //"#1b1344",
                           // backgroundColor: "#1344",
                         },
                         tabBarBadgeStyle: {
-                          backgroundColor: "#453749", // rgb(69,55,73)  (comp to dark green)
-                          color: "#BBBccc",
+                          backgroundColor: '#453749', // rgb(69,55,73)  (comp to dark green)
+                          color: '#BBBccc',
                           fontSize: 17,
                         },
                       }}
@@ -334,27 +333,27 @@ export default function AppGlycemic() {
                       name="Keto Limit"
                       component={KetoLimitScreen}
                       options={{
-                        tabBarIcon: ({color, size}) => (
+                        tabBarIcon: ({ color, size }) => (
                           <FontAwesome5 name="ban" size={36} color="orange" />
                         ),
                         tabBarBadge: totalCarbs,
                         headerStyle: {
                           opacity: 0.9,
-                          backgroundColor: "aqua", // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+                          backgroundColor: 'aqua', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
                         },
                         headerTitleStyle: {
-                          color: "rgb(124, 131, 134)", // "#fff",
+                          color: 'rgb(124, 131, 134)', // "#fff",
                           fontSize: 44,
-                          fontWeight: "200",
+                          fontWeight: '200',
                         },
                         tabBarItemStyle: {
-                          backgroundColor: "rgba(59, 73, 55, 1)", //"#1b1344",
-                          color: "#BBBccc",
+                          backgroundColor: 'rgba(59, 73, 55, 1)', //"#1b1344",
+                          color: '#BBBccc',
                         },
                         tabBarBadgeStyle: {
-                          backgroundColor: "#2196F3", // rgb(69,55,73)  (comp to dark green)
+                          backgroundColor: '#2196F3', // rgb(69,55,73)  (comp to dark green)
 
-                          color: "#BBBccc",
+                          color: '#BBBccc',
                           fontSize: 17,
                         },
                       }}
@@ -363,7 +362,7 @@ export default function AppGlycemic() {
                       name="Help"
                       component={HelpScreen}
                       options={{
-                        tabBarIcon: ({color, size}) => (
+                        tabBarIcon: ({ color, size }) => (
                           <FontAwesome5 name="book" size={36} color="orange" />
                         ),
                         headerTitle: {
@@ -377,15 +376,15 @@ export default function AppGlycemic() {
                         //   // marginBottom: 5,
                         // },
                         headerTitleStyle: {
-                          color: "rgb(124, 131, 134)", // "#fff",
+                          color: 'rgb(124, 131, 134)', // "#fff",
                           fontSize: 44,
-                          fontWeight: "200",
+                          fontWeight: '200',
                         },
                         headerStyle: {
-                          backgroundColor: "#5C6500", // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+                          backgroundColor: '#5C6500', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
                         },
                         tabBarItemStyle: {
-                          backgroundColor: "rgba(59, 73, 55, 1)", // "#1b1344",
+                          backgroundColor: 'rgba(59, 73, 55, 1)', // "#1b1344",
                         },
                       }}
                     />
@@ -397,7 +396,7 @@ export default function AppGlycemic() {
         </ThemeContextProvider>
       )}
     </>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -406,6 +405,6 @@ const styles = StyleSheet.create({
     // color: "#FFF",
     // fontFamily: "Karla-Light",
   },
-});
+})
 
 // export default App;

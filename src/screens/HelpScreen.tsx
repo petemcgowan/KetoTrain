@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from 'react'
 import {
   StyleSheet,
   Text,
@@ -6,18 +6,18 @@ import {
   Image,
   ScrollView,
   Dimensions,
-} from "react-native";
-import WeeklyLineChartContainer from "../charting/WeeklyLineChartContainer";
-import TrackerContext from "../state/TrackerContext";
+} from 'react-native'
+import WeeklyLineChartContainer from '../charting/WeeklyLineChartContainer'
+import TrackerContext from '../state/TrackerContext'
 
 function HelpScreen() {
-  const {width} = Dimensions.get("window");
-  const height = 256;
-  const {trackerItems} = useContext(TrackerContext);
+  const { width } = Dimensions.get('window')
+  const height = 256
+  const { trackerItems } = useContext(TrackerContext)
 
   return (
     <View style={styles.mainContainer}>
-      <ScrollView style={[styles.chartContainer, {color: "white"}]}>
+      <ScrollView style={[styles.chartContainer]}>
         {/* <Text style={{ color: "white" }}>test</Text> */}
         <WeeklyLineChartContainer trackerItems={trackerItems} />
       </ScrollView>
@@ -45,7 +45,7 @@ function HelpScreen() {
         </Text>
         <Image
           style={styles.tinyLogo}
-          source={require("../../assets/images/breakfast-food-1296x728-header.jpg")}
+          source={require('../../assets/images/breakfast-food-1296x728-header.jpg')}
         />
         <Text style={styles.subHeading}>What is the glycemic index?</Text>
         <Text style={styles.paragraph}>
@@ -150,81 +150,81 @@ function HelpScreen() {
         </Text> */}
       </ScrollView>
     </View>
-  );
+  )
 }
 
-export default HelpScreen;
+export default HelpScreen
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: "#011",
+    backgroundColor: '#011',
     marginTop: 27,
   },
   textSectionContainer: {
     //    backgroundColor: "#f7f7f7",
-    backgroundColor: "black",
+    backgroundColor: 'black',
     // marginTop: 200,
     // backgroundColor: "white",
   },
   chartContainer: {
     //    backgroundColor: "#f7f7f7",
-    backgroundColor: "black",
+    backgroundColor: 'black',
     paddingBottom: 75,
     // backgroundColor: "white",
   },
   paragraph: {
     lineHeight: 21,
     fontSize: 21,
-    fontWeight: "200",
-    color: "#FFF",
+    fontWeight: '200',
+    color: '#FFF',
     marginBottom: 12,
   },
   mainHeading: {
     // fontWeight: "bold",
     fontSize: 21,
-    textAlign: "center",
+    textAlign: 'center',
     paddingTop: 10,
     paddingRight: 10,
-    color: "#FFF",
+    color: '#FFF',
     marginBottom: 12,
   },
   subHeading: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 12,
   },
   smallHeading: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 14,
     marginBottom: 12,
   },
   summaryHeading: {
-    textTransform: "uppercase",
-    color: "#f0533a",
+    textTransform: 'uppercase',
+    color: '#f0533a',
     lineHeight: 26,
     marginBottom: 6,
     //    backgroundColor: "#f7f7f7",
-    backgroundColor: "#000",
+    backgroundColor: '#000',
   },
   summaryBox: {
     lineHeight: 22,
     //    backgroundColor: "#f7f7f7",
-    backgroundColor: "#000",
+    backgroundColor: '#000',
     marginBottom: 12,
   },
   text: {
-    color: "#FFF",
-    fontFamily: "Karla-Light",
+    color: '#FFF',
+    fontFamily: 'Karla-Light',
     fontSize: 16,
   },
   tinyLogo: {
     width: 324,
     height: 182,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginBottom: 12,
   },
   bulletPoint: {
-    color: "orange",
+    color: 'orange',
     fontSize: 9,
   },
-});
+})

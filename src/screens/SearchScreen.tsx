@@ -1,27 +1,20 @@
-import React, {Fragment, useState, useEffect, useContext} from "react";
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  ActivityIndicator,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { Fragment, useState, useEffect, useContext } from 'react'
+import { StyleSheet, SafeAreaView, View } from 'react-native'
 
-import GlycemicList from "../components/GlycemicList";
-import SearchBar from "../components/SearchBar";
+import GlycemicList from '../components/GlycemicList'
+import SearchBar from '../components/SearchBar'
 
-import styled, {withTheme} from "styled-components";
-import GlycemicContext from "../state/GlycemicContext";
+import { withTheme } from 'styled-components'
+import GlycemicContext from '../state/GlycemicContext'
 
 const SearchScreen = () => {
-  const [searchPhrase, setSearchPhrase] = useState("");
-  const [clicked, setClicked] = useState(false);
-  const {glycemicData} = useContext(GlycemicContext);
+  const [searchPhrase, setSearchPhrase] = useState('')
+  const [clicked, setClicked] = useState(false)
+  const { glycemicData } = useContext(GlycemicContext)
 
   useEffect(() => {
-    console.log("SearchScreen, useEffect");
-  }, []);
+    console.log('SearchScreen, useEffect')
+  }, [])
 
   function FoodNutritions() {
     // if (loading) return <Text>Loading...</Text>;
@@ -57,17 +50,17 @@ const SearchScreen = () => {
       <FoodNutritions />
       {/* <Text>Search Screen test</Text> */}
     </View>
-  );
-};
+  )
+}
 
-export default withTheme(SearchScreen);
+export default withTheme(SearchScreen)
 
 const styles = StyleSheet.create({
   searchPageContainer: {
     // marginTop: 27,
-    justifyContent: "center",
-    alignItems: "center",
-    color: "#FFF",
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#FFF',
   },
 
   // description: {
@@ -81,7 +74,7 @@ const styles = StyleSheet.create({
   //   // marginLeft: "10%",
   //   color: "#FFF",
   // },
-});
+})
 // greenVibe: "rgba(59, 73, 55, 1)",  // complimentary  rgb(69,55,73)
 // offWhiteVibe: "rgba(201, 189, 187, 1)"
 // tealVibe "  rgba(138, 149, 143, 1)"   complimentary=rgb(149,138,144)   comp2=rgb(124,131,134)
