@@ -45,7 +45,7 @@ const chartConfigs = [
 ]
 
 interface KetoLimitScreenProps {
-  totalCarbsForReals: number;
+  totalCarbsForReals: number
 }
 
 const KetoLimitScreen = ({ totalCarbsForReals }: KetoLimitScreenProps) => {
@@ -65,12 +65,12 @@ export default KetoLimitScreen
 const styles = StyleSheet.create({
   ketoLimitContainer: {
     marginTop: 40,
+    backgroundColor: 'pink',
   },
   root: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'black',
-
     color: '#FFF',
     fontFamily: 'Karla-Light',
   },

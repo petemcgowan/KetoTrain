@@ -46,131 +46,6 @@ const MyTheme = {
 }
 const Tab = createBottomTabNavigator()
 
-function AppTabs() {
-  return (
-    <Tab.Navigator
-      // style={styles.container}
-      screenOptions={{
-        cardStyle: {
-          backgroundColor: 'black',
-        },
-        tabBarShowLabel: false,
-      }}
-    >
-      <Tab.Screen
-        name="Food Search"
-        component={SearchScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="search" size={36} color="orange" />
-          ),
-          headerTitleStyle: {
-            color: 'rgb(124, 131, 134)', // "#fff",
-            fontSize: 44,
-            fontWeight: '200',
-          },
-          headerStyle: {
-            backgroundColor: '#1A0546', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
-          },
-          tabBarItemStyle: {
-            backgroundColor: 'rgba(59, 73, 55, 1)', // "#1b1344",
-            // backgroundColor: "#ff15",
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Keto Tracker"
-        component={KetoTrackerScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="utensils" size={36} color="orange" />
-          ),
-          tabBarBadge: trackerItems.length,
-          headerTitleStyle: {
-            color: 'rgb(124, 131, 134)', // "#fff",
-            fontSize: 44,
-            fontWeight: '200',
-          },
-          // headerTintColor: {
-          //   color: "#fff",
-          // },
-          headerStyle: {
-            backgroundColor: '#350244', //  "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
-          },
-          tabBarItemStyle: {
-            backgroundColor: 'rgba(59, 73, 55, 1)', //"#1b1344",
-            // backgroundColor: "#1344",
-          },
-          tabBarBadgeStyle: {
-            backgroundColor: '#453749', // rgb(69,55,73)  (comp to dark green)
-            color: '#BBBccc',
-            fontSize: 17,
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Keto Limit"
-        component={KetoLimitScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="ban" size={36} color="orange" />
-          ),
-          tabBarBadge: totalCarbs,
-          headerStyle: {
-            opacity: 0.9,
-            backgroundColor: 'aqua', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
-          },
-          headerTitleStyle: {
-            color: 'rgb(124, 131, 134)', // "#fff",
-            fontSize: 44,
-            fontWeight: '200',
-          },
-          tabBarItemStyle: {
-            backgroundColor: 'rgba(59, 73, 55, 1)', //"#1b1344",
-            color: '#BBBccc',
-          },
-          tabBarBadgeStyle: {
-            backgroundColor: '#2196F3', // rgb(69,55,73)  (comp to dark green)
-
-            color: '#BBBccc',
-            fontSize: 17,
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Learn 🧐"
-        component={HelpScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="book" size={36} color="orange" />
-          ),
-          headerTitle: {
-            paddingHorizontal: 20,
-            paddingBottom: 20,
-            padding: 10,
-          },
-          // headerTitleContainerStyle: {
-          //   paddingHorizontal: 20,
-          //   paddingBottom: 20,
-          //   // marginBottom: 5,
-          // },
-          headerTitleStyle: {
-            color: 'rgb(124, 131, 134)', // "#fff",
-            fontSize: 44,
-            fontWeight: '200',
-          },
-          headerStyle: {
-            backgroundColor: '#5C6500', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
-          },
-          tabBarItemStyle: {
-            backgroundColor: 'rgba(59, 73, 55, 1)', // "#1b1344",
-          },
-        }}
-      />
-    </Tab.Navigator>
-  )
-}
-
 const GET_ALL_FOOD_NUTRITIONS = gql`
   query {
     foodnutritions {
@@ -235,6 +110,131 @@ export default function AppGlycemic() {
     [glycemicData, loading]
   )
   console.log('App Render, glycemicData:' + JSON.stringify(glycemicData))
+
+  function AppTabs() {
+    return (
+      <Tab.Navigator
+        // style={styles.container}
+        screenOptions={{
+          cardStyle: {
+            backgroundColor: 'black',
+          },
+          tabBarShowLabel: false,
+        }}
+      >
+        <Tab.Screen
+          name="Food Search"
+          component={SearchScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5 name="search" size={36} color="orange" />
+            ),
+            headerTitleStyle: {
+              color: 'rgb(124, 131, 134)', // "#fff",
+              fontSize: 44,
+              fontWeight: '200',
+            },
+            headerStyle: {
+              backgroundColor: '#1A0546', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            },
+            tabBarItemStyle: {
+              backgroundColor: 'rgba(59, 73, 55, 1)', // "#1b1344",
+              // backgroundColor: "#ff15",
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Keto Tracker"
+          component={KetoTrackerScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5 name="utensils" size={36} color="orange" />
+            ),
+            tabBarBadge: trackerItems.length,
+            headerTitleStyle: {
+              color: 'rgb(124, 131, 134)', // "#fff",
+              fontSize: 44,
+              fontWeight: '200',
+            },
+            // headerTintColor: {
+            //   color: "#fff",
+            // },
+            headerStyle: {
+              backgroundColor: '#350244', //  "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            },
+            tabBarItemStyle: {
+              backgroundColor: 'rgba(59, 73, 55, 1)', //"#1b1344",
+              // backgroundColor: "#1344",
+            },
+            tabBarBadgeStyle: {
+              backgroundColor: '#453749', // rgb(69,55,73)  (comp to dark green)
+              color: '#BBBccc',
+              fontSize: 17,
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Keto Limit"
+          component={KetoLimitScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5 name="ban" size={36} color="orange" />
+            ),
+            tabBarBadge: totalCarbs,
+            headerStyle: {
+              opacity: 0.9,
+              backgroundColor: 'aqua', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            },
+            headerTitleStyle: {
+              color: 'rgb(124, 131, 134)', // "#fff",
+              fontSize: 44,
+              fontWeight: '200',
+            },
+            tabBarItemStyle: {
+              backgroundColor: 'rgba(59, 73, 55, 1)', //"#1b1344",
+              color: '#BBBccc',
+            },
+            tabBarBadgeStyle: {
+              backgroundColor: '#2196F3', // rgb(69,55,73)  (comp to dark green)
+
+              color: '#BBBccc',
+              fontSize: 17,
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Learn 🧐"
+          component={HelpScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5 name="book" size={36} color="orange" />
+            ),
+            headerTitle: {
+              paddingHorizontal: 20,
+              paddingBottom: 20,
+              padding: 10,
+            },
+            // headerTitleContainerStyle: {
+            //   paddingHorizontal: 20,
+            //   paddingBottom: 20,
+            //   // marginBottom: 5,
+            // },
+            headerTitleStyle: {
+              color: 'rgb(124, 131, 134)', // "#fff",
+              fontSize: 44,
+              fontWeight: '200',
+            },
+            headerStyle: {
+              backgroundColor: '#5C6500', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)", // "#f4511e",
+            },
+            tabBarItemStyle: {
+              backgroundColor: 'rgba(59, 73, 55, 1)', // "#1b1344",
+            },
+          }}
+        />
+      </Tab.Navigator>
+    )
+  }
 
   useEffect(() => {
     // do stuff while splash screen is shown
