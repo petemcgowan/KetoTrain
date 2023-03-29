@@ -2,8 +2,8 @@ import React, { useContext, useState, useEffect } from 'react'
 import { StyleSheet, Text, SafeAreaView, FlatList, View } from 'react-native'
 import TrackerContext from '../state/TrackerContext'
 import TrackerItem from '../components/TrackerItem'
-import { withTheme } from 'styled-components'
-import { getTotalCarbs } from '../utils/GlycemicUtils'
+
+// import { getTotalCarbs } from '../utils/GlycemicUtils'
 import BoxesLayout from '../components/BoxesLayout'
 
 const KetoTrackerScreen = () => {
@@ -18,10 +18,6 @@ const KetoTrackerScreen = () => {
       trackerSelected={trackerSelected}
     />
   )
-  const pressTrackerItem = ({ item }) => console.log('Nutrient pressed')
-
-  console.log('TrackerScreen, trackerItems:' + JSON.stringify(trackerItems))
-  console.log('TrackerScreen, getTotalCarbs:' + getTotalCarbs())
 
   useEffect(() => {
     console.log('KetoTrackerScreen useEffect called')
@@ -130,7 +126,7 @@ const KetoTrackerScreen = () => {
   )
 }
 
-export default withTheme(KetoTrackerScreen)
+export default KetoTrackerScreen
 
 const styles = StyleSheet.create({
   trackerContainer: {
@@ -167,6 +163,3 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
 })
-// greenVibe: "rgba(59, 73, 55, 1)",
-// offWhiteVibe: "rgba(201, 189, 187, 1)"
-// tealVibe   "rgba(138, 149, 143, 1)"
