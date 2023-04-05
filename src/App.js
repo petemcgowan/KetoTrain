@@ -1,20 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { Dimensions, View } from 'react-native'
 
-// import { ApolloProvider } from '@apollo/react-hooks'
-// import {
-//   ApolloClient,
-//   InMemoryCache,
-//   ApolloProvider,
-//   gql,
-//   useQuery,
-// } from '@apollo/client'
-// import type { Node } from 'react'
-
 import SearchScreen from './screens/SearchScreen'
 import KetoTrackerScreen from './screens/KetoTrackerScreen'
 import KetoLimitScreen from './screens/KetoLimitScreen'
 import HelpScreen from './screens/HelpScreen'
+import TestView from './screens/TestView'
 
 import { GlycemicProvider } from './state/GlycemicContext'
 import { TrackerProvider } from './state/TrackerContext'
@@ -39,44 +30,11 @@ const MyTheme = {
 }
 const Tab = createBottomTabNavigator()
 
-// const GET_ALL_FOOD_NUTRITIONS = gql`
-
-//   query {
-//     foodnutritions {
-//       foodCode
-//       description
-//       fiberAmt
-//       giAmt
-//       glAmt
-//       carbAmt
-//       protein
-//       fatAmt
-//       satFatAmt
-//       monoFatAmt
-//       polyFatAmt
-//       energyAmt
-//       sugarsAmt
-//       sodiumAmt
-//     }
-//   }
-// `
-
-// const App: () => Node = () => {
-
 export default function AppGlycemic() {
   const [trackerItems, setTrackerItems] = useState([])
   const [totalCarbs, setTotalCarbs] = useState(0)
   const [totalGILoad, setTotalGILoad] = useState(0)
-  // const {trackerItems, totalCarbs} = useContext(TrackerContext);
 
-  // const { loading, error, data } = useQuery(GET_ALL_FOOD_NUTRITIONS)
-  // const { loading, error, data } = useQuery(GET_ALL_FOOD_NUTRITIONS)
-
-  // const [glycemicData, setGlycemicData] = useState(
-  //   usdaNutrition.foodNutritions,
-  // ); // graphql copy
-  // const glycemicData = data.foodnutritions;
-  // the memoization is here to prevent is re-rendering needlessly
   const value = useMemo(
     () => ({
       trackerItems,
@@ -92,18 +50,20 @@ export default function AppGlycemic() {
   useEffect(() => {
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen
+    console.log('App, useEffect before splash hide')
     SplashScreen.hide()
+    console.log('App, useEffect after splash hide')
   }, [])
 
   return (
     <>
       {
         <View style={{ width: APP_WIDTH, height: APP_HEIGHT }}>
-          {/* <GlycemicProvider value={glycemicValue}> */}
           <TrackerProvider value={value}>
+            <TestView />
             <NavigationContainer>
               <Tab.Navigator
-                theme={MyTheme}
+                // theme={MyTheme}
                 screenOptions={{
                   cardStyle: {
                     backgroundColor: 'black',
@@ -215,10 +175,34 @@ export default function AppGlycemic() {
                     },
                   }}
                 />
+                {/* <Tab.Screen
+                  name="Test"
+                  component={TestView}
+                  options={{
+                    tabBarIcon: ({ color, size }) => (
+                      <FontAwesome5 name="book" size={36} color="orange" />
+                    ),
+                    headerTitle: {
+                      paddingHorizontal: 20,
+                      paddingBottom: 20,
+                      padding: 10,
+                    },
+                    headerTitleStyle: {
+                      color: 'rgb(124, 131, 134)', // "#fff",
+                      fontSize: 44,
+                      fontWeight: '200',
+                    },
+                    headerStyle: {
+                      backgroundColor: '#5C6500', // "rgb(69,55,73)", // // "rgba(138, 149, 143, 1)"
+                    },
+                    tabBarItemStyle: {
+                      backgroundColor: 'rgba(59, 73, 55, 1)', // "#1b1344",
+                    },
+                  }}
+                /> */}
               </Tab.Navigator>
             </NavigationContainer>
           </TrackerProvider>
-          {/* </GlycemicProvider> */}
         </View>
       }
     </>
