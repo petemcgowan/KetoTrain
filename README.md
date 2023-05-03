@@ -9,16 +9,24 @@ Glycemic / Keto Limit allows you to track your carb/sugar intake in a day and ma
 ## Main app components
 
 1. Search / Add page
-   <img src="docs/images/1. Search, Add (Ideal).png" width="50%" />
+<div style="text-align: center">
+<img src="docs/images/1. Search, Add (Ideal).png" width="50%" />
+</div>
 
 2. Keto Tracker/Nutritional info page
+<div style="text-align: center">
    <img src="docs/images/2. Keto Tracker (Ideal).png" width="50%" />
+</div>
 
 3. Keto Limit page
+<div style="text-align: center">
    <img src="docs/images/3. Keto Limit (Ideal).png" width="50%" />
+</div>
 
 4. Learn page
+<div style="text-align: center">
    <img src="docs/images/4. Learn (Ideal).png" width="50%" />
+</div>
 
 ## How the app is started
 
