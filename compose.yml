@@ -1,0 +1,47 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:15.2
+    ports:
+      - '5432:5432'
+    networks:
+      - pern-app
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: ${PGDATA}
+    volumes:
+      - postgres-data:/data/postgres
+  redis-server:
+    image: redis/redis-stack:latest
+    ports:
+      - '6379:6379'
+    #   stdin_open: true
+    networks:
+      - pern-app
+  keto-api-server:
+    image: keto-api-server
+    build: ./server/
+    ports:
+      - '5000:5000' # for REST (which may go away)
+      - '4001:4001' # for graphQL
+    networks:
+      - pern-app
+    #    volumes:
+    #      - ./server/:usr/src/app
+    #      - /usr/src/app/node_modules
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGHOST: ${PGHOST} #name of the service
+    depends_on:
+      - postgres
+      - redis-server
+networks:
+  pern-app:
+    driver: bridge
+volumes:
+  postgres-data:
+    driver: local
