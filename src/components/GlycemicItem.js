@@ -29,30 +29,32 @@ const GlycemicItem = ({
   const { trackerItems, setTrackerItems } = useContext(TrackerContext)
   // const { glycemicData } = useContext(GlycemicContext)
 
-  let giBackgroundColor = '#350244' // "rgb(46,139,87)";
+  let giBackgroundColor = '#350244'
   if (glAmt > 60) {
-    giBackgroundColor = '#1A0546' // "rgb(255,127,80)";
+    giBackgroundColor = '#1A0546'
   } else if (glAmt > 30) {
-    giBackgroundColor = '#5C6500' //  "rgb(240,230,140)";
+    giBackgroundColor = '#5C6500'
   }
 
-  let glBackgroundColor = '#350244' //"rgb(46,139,87)";
+  let glBackgroundColor = '#350244'
   if (glAmt > 19) {
-    glBackgroundColor = '#1A0546' // "rgb(255,127,80)";
+    glBackgroundColor = '#1A0546'
   } else if (glAmt > 10) {
-    glBackgroundColor = '#5C6500' //"rgb(240,230,140)";
+    glBackgroundColor = '#5C6500'
   }
 
   // Carb ranges (keto watch outs)
-  let carbBackgroundColor = '#350244' //"rgb(46,139,87)";
+  let carbBackgroundColor = '#350244'
   if (carbAmt > 22) {
-    carbBackgroundColor = '#1A0546' //"rgb(255,127,80)";
+    carbBackgroundColor = '#1A0546'
   } else if (carbAmt > 11) {
-    carbBackgroundColor = '#5C6500' //"rgb(240,230,140)";
+    carbBackgroundColor = '#5C6500'
   }
 
   const dynamicStyles = StyleSheet.create({
     listItemContainerStyle: {
+      borderColor: 'white',
+      borderWidth: 1,
       flexDirection: 'row',
       backgroundColor: carbBackgroundColor,
       alignItems: 'center',
@@ -122,7 +124,7 @@ const GlycemicItem = ({
           carbBackgroundColor={carbBackgroundColor}
           boxWidth={48}
           boxHeight={48}
-          textFontSize={36}
+          textFontSize={30}
         />
       </View>
     </TouchableOpacity>
@@ -139,34 +141,11 @@ const styles = StyleSheet.create({
   listItemStyle: {
     width: '63%',
     textAlign: 'right',
-    // justifyContent: "center",
-    // alignItems: "center",
-    fontSize: 43,
+    borderRightColor: 'pink',
+    borderRightWidth: 1,
+    fontSize: 30,
+    // backgroundColor: 'red',
     fontWeight: '200',
     color: 'rgba(201, 189, 187, 1)',
   },
-  // box: {
-  //   width: 48,
-  //   height: 40,
-  //   padding: 1,
-  // },
-  // text: {
-  //   color: "rgba(201, 189, 187, 1)",
-  //   fontSize: 34,
-  //   textAlign: "center",
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   fontWeight: "200",
-  // },
-  // button: {
-  //   borderRadius: 20,
-  //   padding: 10,
-  //   elevation: 2,
-  // },
-  // buttonOpen: {
-  //   backgroundColor: "#F194FF",
-  // },
-  // buttonClose: {
-  //   backgroundColor: "#2196F3",
-  // },
 })
