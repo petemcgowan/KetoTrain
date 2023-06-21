@@ -1,27 +1,16 @@
-import React, {
-  Fragment,
-  useState,
-  useMemo,
-  useEffect,
-  useContext,
-} from 'react'
+import React, { Fragment, useState, useMemo, useEffect } from 'react'
 import { StyleSheet, SafeAreaView, View } from 'react-native'
 
 import GlycemicList from '../components/GlycemicList'
 import SearchBar from '../components/SearchBar'
 import database from '@react-native-firebase/database'
 
-// import { db } from '../firebase/firebase-config'
-// import { ref, onValue } from 'firebase/database'
 import usdaNutrition from '../data/usdaNutrition.json'
-
-// import GlycemicContext from '../state/GlycemicContext'
 
 const SearchScreen = ({ route }) => {
   const [searchPhrase, setSearchPhrase] = useState('')
   const [clicked, setClicked] = useState(false)
 
-  // const { glycemicData } = useContext(GlycemicContext)
   const [foodData, setFoodData] = useState() // Firebase
   const [glycemicData, setGlycemicData] = useState(usdaNutrition) // local copy
 
@@ -101,12 +90,12 @@ const SearchScreen = ({ route }) => {
     // })
   }, [])
 
-  const glycemicValue = useMemo(
-    () => ({
-      glycemicData,
-    }),
-    [glycemicData]
-  )
+  // const glycemicValue = useMemo(
+  //   () => ({
+  //     glycemicData,
+  //   }),
+  //   [glycemicData]
+  // )
 
   function FoodNutritions() {
     // if (loading) return <Text>Loading...</Text>;
@@ -146,7 +135,6 @@ export default SearchScreen
 
 const styles = StyleSheet.create({
   searchPageContainer: {
-    // marginTop: 27,
     justifyContent: 'center',
     alignItems: 'center',
     color: '#FFF',
