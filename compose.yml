@@ -10,9 +10,12 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-      PGDATA: ${PGDATA}
+      PGDATA: /var/lib/postgresql/data
+    # volumes:
+    #   - postgres-data:/data/postgres
     volumes:
-      - postgres-data:/data/postgres
+      - postgres-data:/var/lib/postgresql/data
+      - ./db-scripts:/docker-entrypoint-initdb.d
   redis-server:
     image: redis/redis-stack:latest
     ports:
@@ -24,7 +27,7 @@ services:
     image: keto-api-server
     build: ./server/
     ports:
-      - '5000:5000' # for REST (which may go away)
+      # - '5000:5000' # for REST (which may go away)
       - '4001:4001' # for graphQL
     networks:
       - pern-app
@@ -42,6 +45,10 @@ services:
 networks:
   pern-app:
     driver: bridge
+# networks:
+#   pern-app:
+#     external: true
+#     name: healthycalc_pern-app
 volumes:
   postgres-data:
     driver: local
