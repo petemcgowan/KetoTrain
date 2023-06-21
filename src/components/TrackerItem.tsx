@@ -1,22 +1,25 @@
 import React, { useContext, useEffect } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native'
 import TrackerContext from '../state/TrackerContext'
 import PortionLayout from './PortionLayout'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { TrackerItemProps } from '../types/ItemTypes'
 
+const { width, height } = Dimensions.get('screen')
+
 const TrackerItem = ({
   item,
   setTrackerSelected,
   trackerSelected,
+  clickNutrientPanel,
 }: TrackerItemProps) => {
-  console.log(
-    'TrackerItem, item:' +
-      JSON.stringify(item) +
-      ', trackerSelected:' +
-      trackerSelected
-  )
   const {
     trackerItems,
     setTrackerItems,
@@ -32,33 +35,19 @@ const TrackerItem = ({
   // const [portion4, setPortion4] = useState("black");
 
   const pressTrackerItem = () => {
-    console.log(`pressTrackerItem, item name is:${item.description}`)
-
     const index = trackerItems.findIndex(
       ({ description }) => description === item.description
     )
     if (index > -1) {
-      console.log(
-        `Item found, index: ${index}, trackerItems: ${JSON.stringify(
-          trackerItems[index]
-        )}`
-      )
       setTrackerSelected(index)
-      console.log('trackerSelected:' + JSON.stringify(trackerSelected))
     }
   }
 
   const deleteTrackerItem = () => {
-    console.log('deleteTrackerItem Pressed')
     const index = trackerItems.findIndex(
       ({ description }) => description === item.description
     )
     if (index > -1) {
-      console.log(
-        `Item found, index: ${index}, trackerItems: ${JSON.stringify(
-          trackerItems[index]
-        )}`
-      )
       trackerItems.splice(index, 1)
     }
 
@@ -76,7 +65,6 @@ const TrackerItem = ({
   }
 
   useEffect(() => {
-    console.log('TrackerItem useEffect called')
     // portion1 is the colour, we need it to reflect the item, so trackerItem needs the
     // if (item.portionAmount > 0) {
     //   item.portion1 = "#7A069B";
@@ -103,7 +91,7 @@ const TrackerItem = ({
           flexDirection: 'row',
         }}
       >
-        <PortionLayout
+        {/* <PortionLayout
           portion1BackgroundColor={item.portionAmount > 0 ? '#7A069B' : 'black'}
           portion2BackgroundColor={item.portionAmount > 1 ? '#620B7B' : 'black'}
           portion3BackgroundColor={item.portionAmount > 2 ? '#370246' : 'black'}
@@ -113,23 +101,27 @@ const TrackerItem = ({
           textFontSize={36}
           portionAmount={item.portionAmount}
           itemKey={item.description}
-        />
+        /> */}
+        <TouchableOpacity onPress={clickNutrientPanel}>
+          <View style={{ width: width * 0.1 }}>
+            <FontAwesome5 name="heartbeat" size={40} color="#2196F3" />
+          </View>
+        </TouchableOpacity>
         <TouchableOpacity onPress={pressTrackerItem}>
           <View
             style={{
               flexDirection: 'row',
+              width: width * 0.8,
             }}
           >
             <Text style={styles.description}>{item.description}</Text>
           </View>
         </TouchableOpacity>
-        <View>
-          <TouchableOpacity onPress={deleteTrackerItem}>
-            <View>
-              <FontAwesome5 name="trash" size={40} color="rgb(124, 131, 134)" />
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={deleteTrackerItem}>
+          <View style={{ width: width * 0.1 }}>
+            <FontAwesome5 name="trash" size={40} color="#2196F3" />
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -141,7 +133,7 @@ const styles = StyleSheet.create({
   description: {
     color: 'rgb(124, 131, 134)',
     alignItems: 'center',
-    fontSize: 42,
-    fontWeight: '100',
+    fontSize: 32,
+    fontWeight: '200',
   },
 })
