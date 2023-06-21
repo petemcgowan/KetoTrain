@@ -6,8 +6,29 @@ import BoxesLayout from './BoxesLayout'
 
 import TrackerContext from '../state/TrackerContext'
 // import GlycemicContext from '../state/GlycemicContext'
+import { TrackerItemType } from './TrackerItemType'
+import { TrackerContextType } from '../state/TrackerContextType'
 
-const GlycemicItem = ({
+interface GlycemicItemProps {
+  descriptionGI: string
+  setTotalCarbs: (value: number) => void
+  setTotalGILoad: (value: number) => void
+  carbAmt: number
+  giAmt: number
+  glAmt: number
+  fiberAmt: number
+  proteinAmt: number
+  fatAmt: number
+  energyAmt: number
+  sugarsAmt: number
+  sodiumAmt: number
+  animatedOpacitySequence: () => void
+  setSearchItemSelected: (index: number) => void
+  searchItemSelected: number
+  glycemicData: Array<any> // replace 'any' with appropriate type for your data
+}
+
+const GlycemicItem: React.FC<GlycemicItemProps> = ({
   descriptionGI,
   setTotalCarbs,
   setTotalGILoad,
@@ -25,8 +46,10 @@ const GlycemicItem = ({
   searchItemSelected,
   glycemicData,
 }) => {
-  const [modalVisible, setModalVisible] = useState(false)
-  const { trackerItems, setTrackerItems } = useContext(TrackerContext)
+  const [modalVisible, setModalVisible] = useState<boolean>(false)
+  const { trackerItems, setTrackerItems } =
+    useContext<TrackerContextType>(TrackerContext)
+
   // const { glycemicData } = useContext(GlycemicContext)
 
   let giBackgroundColor = '#350244'
@@ -64,11 +87,9 @@ const GlycemicItem = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log('descriptionGI:' + descriptionGI)
         const trackerClicked = trackerItems.find(
-          ({ description }) => description === descriptionGI
+          (item: TrackerItemType) => item.description === descriptionGI
         )
-        console.log('trackerClicked:' + JSON.stringify(trackerClicked))
         if (trackerClicked) {
           trackerClicked.portionAmount++
         } else {
@@ -90,12 +111,13 @@ const GlycemicItem = ({
               glBackgroundColor: glBackgroundColor,
               carbBackgroundColor: carbBackgroundColor,
               portionAmount: 1,
+              consumptionDate: new Date(),
             },
           ])
         } // if
         let totalCarbs = 0
         let totalGILoad = 0
-        trackerItems.map((trackerItem) => {
+        trackerItems.map((trackerItem: TrackerItemType) => {
           totalCarbs += trackerItem.carbAmt
           totalGILoad += trackerItem.glAmt
         })
@@ -131,10 +153,12 @@ const GlycemicItem = ({
   )
 }
 
-function arePropsEqual(prevProps, nextProps) {
+function arePropsEqual(
+  prevProps: GlycemicItemProps,
+  nextProps: GlycemicItemProps
+): boolean {
   return prevProps.descriptionGI === nextProps.descriptionGI
 }
-
 export default memo(GlycemicItem, arePropsEqual)
 
 const styles = StyleSheet.create({
@@ -144,7 +168,6 @@ const styles = StyleSheet.create({
     borderRightColor: 'pink',
     borderRightWidth: 1,
     fontSize: 30,
-    // backgroundColor: 'red',
     fontWeight: '200',
     color: 'rgba(201, 189, 187, 1)',
   },
