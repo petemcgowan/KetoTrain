@@ -1,128 +1,123 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { StyleSheet, Text, SafeAreaView, FlatList, View } from 'react-native'
+import React, { useContext, useState, useEffect, useRef } from 'react'
+import {
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+  Dimensions,
+  View,
+  Button,
+  Text,
+} from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import TrackerContext from '../state/TrackerContext'
 import TrackerItem from '../components/TrackerItem'
+import CarbCircleChart from '../charting/CarbCircleChart'
+import NutrientBottomSheet from './NutrientBottomSheet'
+import BottomSheet from 'reanimated-bottom-sheet'
+import { ItemProps } from '../types/ItemProps'
+import { TrackerItemType } from '../components/TrackerItemType'
 
-// import { getTotalCarbs } from '../utils/GlycemicUtils'
-import BoxesLayout from '../components/BoxesLayout'
+type TrackerItemProps = {
+  item: TrackerItemType
+}
+
+const { height, width } = Dimensions.get('screen')
+
+// Database items
+// foodName
+// foodIndex
+// consumptionDateTime
+// carbAmount
+// glAmount  (for later)
+// giAmount  (for later)
+
+// You could store the nutritional info, but I guess that might be better to get a) at startup with everything else b)
 
 const KetoTrackerScreen = () => {
-  const { trackerItems, setTrackerItems, totalCarbs } =
-    useContext(TrackerContext)
+  const { trackerItems, totalCarbs } = useContext(TrackerContext)
   const [trackerSelected, setTrackerSelected] = useState(0)
+  const sheetRef = useRef<BottomSheet>(null)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [focused, setFocused] = useState(false)
+  const navigation = useNavigation()
+  const [selectedDate, setSelectedDate] = useState(new Date())
 
-  const renderTrackerItem = ({ item }) => (
+  const itemsForSelectedDate = trackerItems.filter((item) => {
+    const itemDate = new Date(item.consumptionDate)
+    const selected = new Date(selectedDate)
+    return (
+      itemDate.getFullYear() === selected.getFullYear() &&
+      itemDate.getMonth() === selected.getMonth() &&
+      itemDate.getDate() === selected.getDate()
+    )
+  })
+
+  const renderTrackerItem = ({ item }: TrackerItemProps) => (
     <TrackerItem
       item={item}
       setTrackerSelected={setTrackerSelected}
       trackerSelected={trackerSelected}
+      clickNutrientPanel={clickNutrientPanel}
     />
   )
 
+  const clickNutrientPanel = () => {
+    if (isSheetOpen) {
+      sheetRef.current?.snapTo(0) // Assuming 1 is the hidden position
+    } else {
+      sheetRef.current?.snapTo(1) // Assuming 0 is the open position
+    }
+    setIsSheetOpen(!isSheetOpen)
+  }
+  const handleNextDay = () => {
+    setSelectedDate(
+      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() + 1))
+    )
+  }
+
+  const handlePrevDay = () => {
+    setSelectedDate(
+      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() - 1))
+    )
+  }
   useEffect(() => {
-    console.log('KetoTrackerScreen useEffect called')
-  }, [trackerItems, totalCarbs])
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      console.log('setting Focused to true in Keto Tracker screen')
+      setFocused(true)
+    })
+    const unsubscribeBlur = navigation.addListener('blur', () => {
+      setFocused(false)
+    })
+
+    return () => {
+      unsubscribeFocus()
+      unsubscribeBlur()
+    }
+  }, [navigation, trackerItems, totalCarbs])
 
   return (
-    <View style={styles.trackerContainer}>
-      <SafeAreaView style={styles.root}>
-        <FlatList
-          data={trackerItems}
-          renderItem={renderTrackerItem}
-          keyExtractor={(item) => item.id}
+    <SafeAreaView style={styles.trackerContainer}>
+      <View style={styles.dateHeader}>
+        <Button title="<" onPress={handlePrevDay} />
+        <Text style={{ color: 'white', fontSize: 20 }}>
+          {selectedDate.toDateString()}
+        </Text>
+        <Button title=">" onPress={handleNextDay} />
+      </View>
+
+      <FlatList
+        data={itemsForSelectedDate}
+        renderItem={renderTrackerItem}
+        keyExtractor={(item) => item.id}
+      />
+      <CarbCircleChart focused={focused} />
+      <View style={{ flex: 1 }}>
+        <NutrientBottomSheet
+          sheetRef={sheetRef}
+          clickNutrientPanel={clickNutrientPanel}
         />
-      </SafeAreaView>
-
-      <SafeAreaView style={styles.nutritionContainer}>
-        {trackerItems[trackerSelected] ? (
-          <View>
-            <Text>
-              Nutrional Info:{trackerItems[trackerSelected].description}
-            </Text>
-
-            <View style={{ flexDirection: 'row' /*nutrition details*/ }}>
-              <View style={{ flexDirection: 'column' /*left hand side*/ }}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.text}>Carbs:</Text>
-                  <Text style={styles.detailText}>
-                    {trackerItems[trackerSelected].carbAmt}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.text}>GI Amount:</Text>
-                  <Text style={styles.detailText}>
-                    {trackerItems[trackerSelected].giAmt}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.text}>Glycemic Load:</Text>
-                  <Text style={styles.detailText}>
-                    {trackerItems[trackerSelected].glAmt}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.text}>Fiber:</Text>
-                  <Text style={styles.detailText}>
-                    {trackerItems[trackerSelected].fiberAmt}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.text}>Protein:</Text>
-                  <Text style={styles.detailText}>
-                    {trackerItems[trackerSelected].proteinAmt}
-                  </Text>
-                </View>
-              </View>
-              <View style={{ flexDirection: 'column' /*right hand side*/ }}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.text}>Fat:</Text>
-                  <Text style={styles.detailText}>
-                    {trackerItems[trackerSelected].fatAmt}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.text}>Energy:(kcal):</Text>
-                  <Text style={styles.detailText}>
-                    {trackerItems[trackerSelected].energyAmt}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.text}>Sugars:</Text>
-                  <Text style={styles.detailText}>
-                    {trackerItems[trackerSelected].sugarsAmt}
-                  </Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.text}>Sodium:</Text>
-                  <Text style={styles.detailText}>
-                    {trackerItems[trackerSelected].sodiumAmt}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <BoxesLayout
-              giAmt={trackerItems[trackerSelected].giAmt}
-              glAmt={trackerItems[trackerSelected].glAmt}
-              carbAmt={trackerItems[trackerSelected].carbAmt}
-              giBackgroundColor={
-                trackerItems[trackerSelected].giBackgroundColor
-              }
-              glBackgroundColor={
-                trackerItems[trackerSelected].glBackgroundColor
-              }
-              carbBackgroundColor={
-                trackerItems[trackerSelected].carbBackgroundColor
-              }
-              boxWidth={118}
-              boxHeight={118}
-              textFontSize={80}
-            />
-          </View>
-        ) : (
-          <Text>No items added yet</Text>
-        )}
-      </SafeAreaView>
-    </View>
+      </View>
+    </SafeAreaView>
   )
 }
 
@@ -130,36 +125,79 @@ export default KetoTrackerScreen
 
 const styles = StyleSheet.create({
   trackerContainer: {
-    marginTop: 27,
-  },
-  root: {
-    // justifyContent: "center",
-    // alignItems: "center",
-    flexDirection: 'row',
+    flex: 1,
     backgroundColor: 'black',
     color: '#FFF',
-    height: 300,
+    // marginTop: 27,
+    // height: height * 0.4,
   },
-  nutritionContainer: {
+  dateHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    /* other styling properties */
+  },
+  // trackerScreenContainer: {
+  //   // flexDirection: 'row',
+  //   flex: 1,
+  //   backgroundColor: 'black',
+  //   color: '#FFF',
+  //   // height: 300,
+  // },
+  ////////////////////////
+  // nutritionContainer: {
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   backgroundColor: 'rgba(138, 149, 143, 1)',
+  //   color: '#FFF',
+  //   height: 300,
+  // },
+  //////////////////////////////////
+  panel: {
+    // backgroundColor: 'green', //temp
+    backgroundColor: 'rgb(32, 32, 32)',
+    // height: height * 0.4,
+    padding: 20,
+  },
+  panelHeader: {
+    // backgroundColor: 'yellow', //temp
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  panelTitle: {
+    fontSize: 20,
+    color: 'rgb(2, 158, 147)',
+    textAlign: 'center',
+  },
+  panelContent: {
+    // backgroundColor: 'red', //temp
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  panelFooter: {
+    // backgroundColor: 'pink', //temp
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  button: {
+    // backgroundColor: 'blue', //temp
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: "royalblue",
-    backgroundColor: 'rgba(138, 149, 143, 1)',
-    color: '#FFF',
-    height: 300,
+    backgroundColor: 'rgb(27, 46, 46)',
+    padding: 10,
+    marginHorizontal: 10,
   },
-  image: {
-    flex: 1,
-    width: 26,
-    height: 26,
-  },
-  text: {
+  buttonText: {
+    fontSize: 18,
     color: 'white',
-    fontSize: 24,
-    //   padding: 2,
-  },
-  detailText: {
-    color: 'rgba(59, 73, 55, 1)',
-    fontSize: 24,
+    textTransform: 'uppercase',
   },
 })

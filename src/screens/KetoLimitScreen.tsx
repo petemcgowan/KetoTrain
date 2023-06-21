@@ -1,35 +1,17 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 
-import { StyleSheet, View, SafeAreaView, Dimensions } from 'react-native'
+import { StyleSheet, View, SafeAreaView } from 'react-native'
 
-// import FlashMessage, { showMessage } from "react-native-flash-message";
 import DonutFactory from '../charting/DonutFactory'
-import TrackerContext from '../state/TrackerContext'
 
-// import {
-//   contributionData,
-//   data,
-//   pieChartData,
-//   progressChartData,
-//   stackedBarGraphData,
-//   stackedBarGraphDataSmaller,
-// } from "../data/chartData";
-
-// import { StackedBarChart } from "react-native-chart-kit";
 import LineChartContainer from '../charting/LineChartContainer'
 
 // for reference only, this is the old chart config
 const chartConfigs = [
   {
-    // backgroundColor: "#011000",
     backgroundColor: 'black',
-    // backgroundColor: "#022173",
     backgroundGradientFrom: '#1E2923',
-    // backgroundGradientFrom: "#022173",
     backgroundGradientTo: '#1b3fa0',
-    // backgroundColor: "#000000",
-    // backgroundGradientFrom: "#1E2923",
-    // backgroundGradientTo: "#08130D",
     alignItems: 'center',
     justifyContent: 'center',
 
@@ -49,12 +31,11 @@ interface KetoLimitScreenProps {
 }
 
 const KetoLimitScreen = ({ totalCarbsForReals }: KetoLimitScreenProps) => {
-  const { trackerItems } = useContext(TrackerContext)
   return (
     <View style={styles.ketoLimitContainer}>
       <SafeAreaView style={styles.root}>
         <DonutFactory />
-        <LineChartContainer trackerItems={trackerItems} />
+        <LineChartContainer />
       </SafeAreaView>
     </View>
   )
