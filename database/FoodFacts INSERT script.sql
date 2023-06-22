@@ -1,7 +1,7 @@
 
-INSERT INTO public."FoodFacts"
+INSERT INTO public."food_facts"
 
-("calcium", "carbohydrates", "classification", "energy", "fatTotal", "foodName", "iodine", "magnesium", "potassium", "protein", "publicFoodKey", "saturatedFat", "sodium", "totalDietaryFibre", "totalSugars" )
+("calcium", "carbohydrates", "classification", "energy", "fat_total", "food_name", "iodine", "magnesium", "potassium", "protein", "public_food_key", "saturated_fat", "sodium", "total_dietary_fibre", "total_sugars" )
 
 VALUES
 
@@ -257,7 +257,7 @@ VALUES
 	(27,64.1,13104,1974,22.5,'Biscuit, sweet, sandwich, cream & jam filling',0,14,85,4,'F001233',11.24,260,1.8,33.5);
 
 
-INSERT INTO public."FoodFacts"
+INSERT INTO public."food_facts"
 
 ("calcium", "carbohydrates", "classification", "energy", "fatTotal", "foodName", "iodine", "magnesium", "potassium", "protein", "publicFoodKey", "saturatedFat", "sodium", "totalDietaryFibre", "totalSugars" )
 
@@ -512,7 +512,7 @@ VALUES (90,63.1,13106,2080,25.4,'Biscuit, sweet, sandwich, cream filling, chocol
 	(218,55.3,28102,2080,27.9,'Chocolate, milk, with dried fruit & nuts',17.9,64,524,7.8,'F002937',15.1,62,2.9,53.3),
 	(208,40.7,28102,2325,39.5,'Chocolate, milk, with nuts',15.8,85,505,9.9,'F002939',13.98,48,4.7,39.6);
 
-INSERT INTO public."FoodFacts"
+INSERT INTO public."food_facts"
 
 ("calcium", "carbohydrates", "classification", "energy", "fatTotal", "foodName", "iodine", "magnesium", "potassium", "protein", "publicFoodKey", "saturatedFat", "sodium", "totalDietaryFibre", "totalSugars" )
 
@@ -769,7 +769,7 @@ VALUES
 	(6,0,18102,542,4.3,'Lamb, chop, with bone, chump, lean, raw',1.2,30,350,22.5,'F004899',1.4,65,0,0),
 	(10,0,18102,1132,16,'Lamb, chop, with bone, chump, semi-trimmed, grilled, no added fat',1,29,300,31.7,'F004907',6.46,60,0,0);
 
-INSERT INTO public."FoodFacts"
+INSERT INTO public."food_facts"
 
 ("calcium", "carbohydrates", "classification", "energy", "fatTotal", "foodName", "iodine", "magnesium", "potassium", "protein", "publicFoodKey", "saturatedFat", "sodium", "totalDietaryFibre", "totalSugars" )
 
@@ -1026,7 +1026,7 @@ VALUES
 	(18,10.2,20106,224,0.8,'Oat beverage, fluid, unfortified',1.2,6,47,1.3,'F006132',0.16,38,0.3,3.1),
 	(37,55.5,12101,1589,9.8,'Oats, hulled, uncooked',74,117,310,12.5,'F006136',1.79,4,8.6,1.2);
 
-INSERT INTO public."FoodFacts"
+INSERT INTO public."food_facts"
 
 ("calcium", "carbohydrates", "classification", "energy", "fatTotal", "foodName", "iodine", "magnesium", "potassium", "protein", "publicFoodKey", "saturatedFat", "sodium", "totalDietaryFibre", "totalSugars" )
 
@@ -1283,7 +1283,7 @@ VALUES
 	(10,13.1,24103,304,0.4,'Potato, sebago, peeled, boiled, drained',1.2,16,398,2.5,'F007384',0,8,2.5,1),
 	(3,13.8,24101,303,0.2,'Potato, sebago, peeled, raw',0,19,442,2.5,'F007386',0,4,2.2,0.4);
 
-INSERT INTO public."FoodFacts"
+INSERT INTO public."food_facts"
 
 ("calcium", "carbohydrates", "classification", "energy", "fatTotal", "foodName", "iodine", "magnesium", "potassium", "protein", "publicFoodKey", "saturatedFat", "sodium", "totalDietaryFibre", "totalSugars" )
 
@@ -1540,7 +1540,7 @@ VALUES
 	(25,0,15101,654,6,'Tilapia, fillet, baked, no added fat',39,42,475,25.3,'F009161',1.88,115,0,0),
 	(18,0,15101,477,4.4,'Tilapia, fillet, raw',30,31,347,18.5,'F009163',1.37,84,0,0);
 
-INSERT INTO public."FoodFacts"
+INSERT INTO public."food_facts"
 
 ("calcium", "carbohydrates", "classification", "energy", "fatTotal", "foodName", "iodine", "magnesium", "potassium", "protein", "publicFoodKey", "saturatedFat", "sodium", "totalDietaryFibre", "totalSugars" )
 
