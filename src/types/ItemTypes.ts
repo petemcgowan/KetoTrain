@@ -1,24 +1,11 @@
-interface ItemProps {
-  id: string
-  description: string
-  carbAmt: number
-  giAmt: number
-  glAmt: number
-  fiberAmt: number
-  fatAmt: number
-  energyAmt: number
-  sugarsAmt: number
-  sodiumAmt: number
-  giBackgroundColor: string
-  glBackgroundColor: string
-  carbBackgroundColor: string
-  portionAmount: number
-}
+import { RefObject, View } from 'react'
+import { ItemProps } from './ItemProps'
 
 interface TrackerItemProps {
   item: ItemProps
   setTrackerSelected: (trackerSelected: number) => void
   trackerSelected: number
+  clickNutrientPanel: () => void
 }
 
 export type { ItemProps, TrackerItemProps }
