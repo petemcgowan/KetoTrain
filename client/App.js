@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useContext } from 'react'
 import { Dimensions, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import axios from 'axios'
 
 import SearchScreen from './screens/SearchScreen'
 import KetoTrackerScreen from './screens/KetoTrackerScreen'
@@ -31,7 +32,7 @@ const MyTheme = {
 }
 const Tab = createBottomTabNavigator()
 
-export default function AppGlycemic() {
+export default function App() {
   const [trackerItems, setTrackerItems] = useState([])
   const [totalCarbs, setTotalCarbs] = useState(0)
   const [totalGILoad, setTotalGILoad] = useState(0)
@@ -49,6 +50,77 @@ export default function AppGlycemic() {
   )
 
   useEffect(() => {
+    const getFoodFacts = async () => {
+      try {
+        const foodFactsResponse = await axios({
+          url: 'http://localhost:4001/pete-graphql',
+          method: 'post',
+          data: {
+            query: `
+              query {
+                allFoodFacts {
+                  food_facts_id
+                  food_name
+                  public_food_key
+                  calcium
+                  carbohydrates
+                  classification
+                  energy
+                  fat_total
+                  iodine
+                  magnesium
+                  potassium
+                  protein
+                  saturated_fat
+                  sodium
+                  total_dietary_fibre
+                  total_sugars
+                  creation_ts
+                  last_modified_ts
+                }
+              }
+            `,
+          },
+        })
+
+        console.log('Food facts client data:' + foodFactsResponse.data)
+        return foodFactsResponse.data // use or return the response data as needed
+      } catch (error) {
+        console.error('Error fetching food facts:', error)
+      }
+    }
+
+    getFoodFacts()
+
+    const getConsumptionLogs = async () => {
+      try {
+        const consumptionResponse = await axios({
+          url: 'http://localhost:4001/pete-graphql',
+          method: 'post',
+          data: {
+            query: `
+            query {
+              consumptionLogs
+              {
+                  consumption_log_id
+                  food_facts_id
+                  consumption_date
+              }
+          }`,
+          },
+        })
+
+        console.log(
+          'Consumption client data:' + JSON.stringify(consumptionResponse.data)
+        )
+        return consumptionResponse.data
+      } catch (error) {
+        console.error('Error fetching consumption:', error)
+      }
+    }
+
+    getConsumptionLogs()
+
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen
     console.log('App, useEffect before splash hide')
