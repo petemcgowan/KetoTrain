@@ -69,6 +69,7 @@ const KetoTrackerScreen = () => {
     }
     setIsSheetOpen(!isSheetOpen)
   }
+
   const handleNextDay = () => {
     setSelectedDate(
       (prevDate) => new Date(prevDate.setDate(prevDate.getDate() + 1))
@@ -80,7 +81,9 @@ const KetoTrackerScreen = () => {
       (prevDate) => new Date(prevDate.setDate(prevDate.getDate() - 1))
     )
   }
+
   useEffect(() => {
+    console.log('trackerItems' + JSON.stringify(trackerItems))
     const unsubscribeFocus = navigation.addListener('focus', () => {
       console.log('setting Focused to true in Keto Tracker screen')
       setFocused(true)
