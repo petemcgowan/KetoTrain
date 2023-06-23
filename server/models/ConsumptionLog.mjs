@@ -21,6 +21,9 @@ export const ConsumptionLog = sequelize.define(
     consumption_date: {
       type: DataTypes.DATE,
     },
+    user_id: {
+      type: DataTypes.STRING,
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: Sequelize.NOW,
