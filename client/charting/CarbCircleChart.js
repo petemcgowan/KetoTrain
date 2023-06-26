@@ -1,18 +1,25 @@
 import * as React from 'react'
-
+import { useEffect, useContext } from 'react'
 import { View, SafeAreaView, StyleSheet } from 'react-native'
 import CarbDonut from './CarbDonut'
+import TrackerContext from '../state/TrackerContext'
 
-import { getTotalCarbs } from '../utils/GlycemicUtils'
+// import { getTotalCarbs } from '../utils/GlycemicUtils'
+import { getTotalCarbsForSpecificDay } from '../utils/GlycemicUtils'
 
 export default function CarbCircleChart({ focused }) {
-  let totalCarbsCapped = getTotalCarbs()
+  const { totalCarbs } = useContext(TrackerContext)
+
+  // let totalCarbsCapped = getTotalCarbsForSpecificDay()
   let colorOfCarbChart = 'aqua'
-  if (totalCarbsCapped > 50) {
-    totalCarbsCapped = 50
+  if (totalCarbs > 50) {
     colorOfCarbChart = 'tomato'
   }
-  console.log('totalCarbsCapped:' + totalCarbsCapped)
+  console.log('totalCarbs:' + totalCarbs)
+
+  useEffect(() => {
+    console.log('useEffect CarbCircleChart, totalCarbs' + totalCarbs)
+  }, [totalCarbs])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -26,9 +33,9 @@ export default function CarbCircleChart({ focused }) {
       >
         <CarbDonut
           key={1}
-          percentage={totalCarbsCapped}
-          percentage1={totalCarbsCapped}
-          percentage2={totalCarbsCapped}
+          percentage={totalCarbs}
+          percentage1={totalCarbs}
+          percentage2={totalCarbs}
           color={colorOfCarbChart}
           max={50}
           max1={50}

@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native'
 import Svg, { G, Circle } from 'react-native-svg'
+import TrackerContext from '../state/TrackerContext'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
@@ -39,6 +40,7 @@ export default function CarbDonut({
   const inputRef = useRef()
   const circumference = 2 * Math.PI * radius
   const halfCircle = radius + strokeWidth
+  const { totalCarbs } = useContext(TrackerContext)
 
   const animation = (toValue: number) => {
     console.log('animation, toValue:' + toValue)
@@ -93,7 +95,7 @@ export default function CarbDonut({
     return () => {
       animated.removeAllListeners()
     }
-  }, [focused])
+  }, [focused, totalCarbs])
 
   return (
     <View style={{ width: radius * 2, height: radius * 2 }}>
