@@ -3,7 +3,6 @@ import {
   StyleSheet,
   SafeAreaView,
   FlatList,
-  Dimensions,
   View,
   Button,
   Text,
@@ -14,89 +13,78 @@ import TrackerItem from '../components/TrackerItem'
 import CarbCircleChart from '../charting/CarbCircleChart'
 import NutrientBottomSheet from './NutrientBottomSheet'
 import BottomSheet from 'reanimated-bottom-sheet'
-import { ItemProps } from '../types/ItemProps'
-import { TrackerItemType } from '../components/TrackerItemType'
+import { TrackerItemType } from '../types/TrackerItemType'
 
 type TrackerItemProps = {
   item: TrackerItemType
 }
 
-const { height, width } = Dimensions.get('screen')
-
-// Database items
-// foodName
-// foodIndex
-// consumptionDateTime
-// carbAmount
-// glAmount  (for later)
-// giAmount  (for later)
-
-// You could store the nutritional info, but I guess that might be better to get a) at startup with everything else b)
-
 const KetoTrackerScreen = () => {
-  const { trackerItems, totalCarbs } = useContext(TrackerContext)
+  const {
+    trackerItems,
+    totalCarbs,
+    selectedDate,
+    setSelectedDate,
+    setTotalCarbs,
+    itemsForSelectedDate,
+    setItemsForSelectedDate,
+    handlePrevDay,
+    handleNextDay,
+  } = useContext(TrackerContext)
   const [trackerSelected, setTrackerSelected] = useState(0)
   const sheetRef = useRef<BottomSheet>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [focused, setFocused] = useState(false)
   const navigation = useNavigation()
-  const [selectedDate, setSelectedDate] = useState(new Date())
 
-  const itemsForSelectedDate = trackerItems.filter((item) => {
-    const itemDate = new Date(item.consumptionDate)
-    const selected = new Date(selectedDate)
-    return (
-      itemDate.getFullYear() === selected.getFullYear() &&
-      itemDate.getMonth() === selected.getMonth() &&
-      itemDate.getDate() === selected.getDate()
-    )
-  })
-
-  const renderTrackerItem = ({ item }: TrackerItemProps) => (
+  const renderTrackerItem = ({ item, index }: TrackerItemProps) => (
     <TrackerItem
       item={item}
+      index={index}
       setTrackerSelected={setTrackerSelected}
       trackerSelected={trackerSelected}
       clickNutrientPanel={clickNutrientPanel}
     />
   )
 
-  const clickNutrientPanel = () => {
+  const clickNutrientPanel = (item: TrackerItemType, index: number) => {
+    console.log('clickNutrientPanel, index:' + index)
+    setTrackerSelected(index)
+    console.log('clickNutrientPanel, item.carbAmt:' + item.carbAmt)
     if (isSheetOpen) {
-      sheetRef.current?.snapTo(0) // Assuming 1 is the hidden position
+      sheetRef.current?.snapTo(0)
     } else {
-      sheetRef.current?.snapTo(1) // Assuming 0 is the open position
+      sheetRef.current?.snapTo(1)
     }
     setIsSheetOpen(!isSheetOpen)
   }
 
-  const handleNextDay = () => {
-    setSelectedDate(
-      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() + 1))
-    )
-  }
-
-  const handlePrevDay = () => {
-    setSelectedDate(
-      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() - 1))
-    )
-  }
-
   useEffect(() => {
-    console.log('trackerItems' + JSON.stringify(trackerItems))
+    console.log('KetoTrackerScreen, useEffect')
     const unsubscribeFocus = navigation.addListener('focus', () => {
-      console.log('setting Focused to true in Keto Tracker screen')
       setFocused(true)
     })
     const unsubscribeBlur = navigation.addListener('blur', () => {
       setFocused(false)
     })
 
+    setItemsForSelectedDate(
+      trackerItems.filter((item) => {
+        const itemDate = new Date(item.consumptionDate)
+        const selected = new Date(selectedDate)
+        return (
+          itemDate.getFullYear() === selected.getFullYear() &&
+          itemDate.getMonth() === selected.getMonth() &&
+          itemDate.getDate() === selected.getDate()
+        )
+      })
+    )
+
     return () => {
       unsubscribeFocus()
       unsubscribeBlur()
     }
-  }, [navigation, trackerItems, totalCarbs])
+  }, [navigation, trackerItems, totalCarbs, selectedDate])
 
   return (
     <SafeAreaView style={styles.trackerContainer}>
@@ -118,6 +106,7 @@ const KetoTrackerScreen = () => {
         <NutrientBottomSheet
           sheetRef={sheetRef}
           clickNutrientPanel={clickNutrientPanel}
+          trackerSelected={trackerSelected}
         />
       </View>
     </SafeAreaView>
@@ -138,24 +127,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-
-    /* other styling properties */
   },
-  // trackerScreenContainer: {
-  //   // flexDirection: 'row',
-  //   flex: 1,
-  //   backgroundColor: 'black',
-  //   color: '#FFF',
-  //   // height: 300,
-  // },
-  ////////////////////////
-  // nutritionContainer: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: 'rgba(138, 149, 143, 1)',
-  //   color: '#FFF',
-  //   height: 300,
-  // },
+
   //////////////////////////////////
   panel: {
     // backgroundColor: 'green', //temp
