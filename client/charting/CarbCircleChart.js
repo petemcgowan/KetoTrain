@@ -37,9 +37,9 @@ export default function CarbCircleChart({ focused }) {
           percentage1={totalCarbs}
           percentage2={totalCarbs}
           color={colorOfCarbChart}
-          max={50}
-          max1={50}
-          max2={50}
+          max={100}
+          max1={100}
+          max2={100}
           focused={focused}
         />
       </View>
