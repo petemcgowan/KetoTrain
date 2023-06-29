@@ -10,11 +10,11 @@ import bodyParser from 'body-parser'
 import morgan from 'morgan'
 
 import { sequelize } from './db/sequelizeSetup.mjs'
-import { resolvers } from './resolvers/resolvers.mjs'
-import { schema } from './schema/schema.mjs'
+// import { resolvers } from './resolvers/resolvers.mjs'
+// import { schema } from './schema/schema.mjs'
 
-import { testResolvers, peteResolvers } from './resolvers/resolvers.mjs'
-import { testSchema, peteSchema } from './schema/schema.mjs'
+import { peteResolvers } from './resolvers/resolvers.mjs'
+import { peteSchema } from './schema/schema.mjs'
 
 await sequelize.sync()
 
@@ -77,41 +77,41 @@ graphQLApp.use(cors())
 graphQLApp.use(express.json())
 graphQLApp.use(express.urlencoded({ extended: true }))
 
-graphQLApp.use(
-  '/graphql',
-  graphqlHTTP({
-    schema: schema,
-    rootValue: resolvers,
-    graphiql: true,
-    customFormatErrorFn: (error) => {
-      console.error('Error in graphql customFormatErrorFn ' + error)
-      return {
-        message: error.message,
-        locations: error.locations,
-        stack: error.stack ? error.stack.split('\n') : [],
-        path: error.path,
-      }
-    },
-  })
-)
+// graphQLApp.use(
+//   '/graphql',
+//   graphqlHTTP({
+//     schema: schema,
+//     rootValue: resolvers,
+//     graphiql: true,
+//     customFormatErrorFn: (error) => {
+//       console.error('Error in graphql customFormatErrorFn ' + error)
+//       return {
+//         message: error.message,
+//         locations: error.locations,
+//         stack: error.stack ? error.stack.split('\n') : [],
+//         path: error.path,
+//       }
+//     },
+//   })
+// )
 
-graphQLApp.use(
-  '/test-graphql',
-  graphqlHTTP({
-    schema: testSchema,
-    rootValue: testResolvers,
-    graphiql: true,
-    customFormatErrorFn: (error) => {
-      console.error('Error in test-graphql customFormatErrorFn ' + error)
-      return {
-        message: error.message,
-        locations: error.locations,
-        stack: error.stack ? error.stack.split('\n') : [],
-        path: error.path,
-      }
-    },
-  })
-)
+// graphQLApp.use(
+//   '/test-graphql',
+//   graphqlHTTP({
+//     schema: testSchema,
+//     rootValue: testResolvers,
+//     graphiql: true,
+//     customFormatErrorFn: (error) => {
+//       console.error('Error in test-graphql customFormatErrorFn ' + error)
+//       return {
+//         message: error.message,
+//         locations: error.locations,
+//         stack: error.stack ? error.stack.split('\n') : [],
+//         path: error.path,
+//       }
+//     },
+//   })
+// )
 
 graphQLApp.use(
   '/pete-graphql',

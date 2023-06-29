@@ -4,15 +4,15 @@ import {
   fillFoodFacts,
   getAllConsumptionLog,
   getConsumptionLogWithFoodFacts,
-  replaceConsumptionLogsForToday,
+  replaceConsumptionLogs,
 } from './resolverFunctions.mjs'
 
-export const testResolvers = {
-  test: () => {
-    console.log('Test resolver invoked')
-    return 'Test Test successful'
-  },
-}
+// export const testResolvers = {
+//   test: () => {
+//     console.log('Test resolver invoked')
+//     return 'Test Test successful'
+//   },
+// }
 
 export const peteResolvers = {
   test: () => {
@@ -20,6 +20,7 @@ export const peteResolvers = {
     return 'Pete Test successful'
   },
   allFoodFacts: () => {
+    console.log('allFoodFacts resolver')
     return getAllFoodFacts()
   },
   consumptionLogWithFoodFacts: async (args, context, info) => {
@@ -40,45 +41,50 @@ export const peteResolvers = {
     console.log('resolvers fillFoodFacts')
     return fillFoodFacts()
   },
-  addConsumptionLogs: async (args, context, info) => {
-    console.log('addConsumptionLogs args' + JSON.stringify(args))
+  replaceConsumptionLogs: async (args, context, info) => {
+    console.log('replaceConsumptionLogs args' + JSON.stringify(args))
     // Delete existing records for the current day and add new ones
-    const newConsumptionLogs = await replaceConsumptionLogsForToday(args.logs)
+    const newConsumptionLogs = await replaceConsumptionLogs(
+      args.logs,
+      args.dayToUpdate,
+      args.toBeDeleted,
+      args.toBeInserted
+    )
     return newConsumptionLogs
   },
 }
 
 // The resolvers provides a resolver function for each API endpoint
-export const resolvers = {
-  Query: {
-    hello: () => {
-      try {
-        console.log('Hello world called')
-        return 'Hello, world!'
-      } catch (error) {
-        console.error('Error in hello resolver:', error)
-        throw new Error('Failed to resolve hello')
-      }
-    },
-    allFoodFacts: () => {
-      return getAllFoodFacts()
-    },
-    consumptionLogs: () => {
-      console.log('consumptionLogs resolver called')
-      return getAllConsumptionLog()
-    },
-  },
-  Mutation: {
-    fillFoodFacts: () => {
-      console.log('resolvers fillFoodFacts')
-      return fillFoodFacts()
-    },
-    addConsumptionLogs: async (_, { logs }) => {
-      // Delete the existing records for the current day and add new ones
-      const newConsumptionLogs = await replaceConsumptionLogsForToday(logs)
+// export const resolvers = {
+//   Query: {
+//     hello: () => {
+//       try {
+//         console.log('Hello world called')
+//         return 'Hello, world!'
+//       } catch (error) {
+//         console.error('Error in hello resolver:', error)
+//         throw new Error('Failed to resolve hello')
+//       }
+//     },
+//     allFoodFacts: () => {
+//       return getAllFoodFacts()
+//     },
+//     consumptionLogs: () => {
+//       console.log('consumptionLogs resolver called')
+//       return getAllConsumptionLog()
+//     },
+//   },
+//   Mutation: {
+//     fillFoodFacts: () => {
+//       console.log('resolvers fillFoodFacts')
+//       return fillFoodFacts()
+//     },
+//     replaceConsumptionLogs: async (_, { logs, dayToUpdate }) => {
+//       // Delete the existing records for the current day and add new ones
+//       const newConsumptionLogs = await replaceConsumptionLogs(logs, dayToUpdate)
 
-      // Return the new consumption logs
-      return newConsumptionLogs
-    },
-  },
-}
+//       // Return the new consumption logs
+//       return newConsumptionLogs
+//     },
+//   },
+// }

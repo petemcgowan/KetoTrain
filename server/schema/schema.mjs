@@ -1,11 +1,11 @@
 import { buildSchema } from 'graphql'
 
-export const testSchema = buildSchema(`
-    type Query {
-        test: String
-        hello: String
-      }
-`)
+// export const testSchema = buildSchema(`
+//     type Query {
+//         test: String
+//         hello: String
+//       }
+// `)
 
 export const peteSchema = buildSchema(`
 
@@ -70,56 +70,56 @@ export const peteSchema = buildSchema(`
   }
   type Mutation {
     fillFoodFacts: [FoodFacts]
-    addConsumptionLogs(logs: [ConsumptionLogInput]!): [ConsumptionLog]
+    replaceConsumptionLogs(logs: [ConsumptionLogInput]!, dayToUpdate: String!, toBeDeleted: Boolean!, toBeInserted: Boolean! ): [ConsumptionLog]
   }
 `)
 
 // Construct a schema, using GraphQL schema language aka typedefs
-export var schema = buildSchema(`
+// export var schema = buildSchema(`
 
-type FoodFacts {
-  food_facts_id: Int
-  food_name: String
-  public_food_key: String
-  calcium: Float
-  carbohydrates: Float
-  classification: Float
-  energy: Float
-  fat_total: Float
-  iodine: Float
-  magnesium: Float
-  potassium: Float
-  protein: Float
-  saturated_fat: Float
-  sodium: Float
-  total_dietary_fibre: Float
-  total_sugars: Float
-  creation_ts: String
-  last_modifed_ts: String
-}
+// type FoodFacts {
+//   food_facts_id: Int
+//   food_name: String
+//   public_food_key: String
+//   calcium: Float
+//   carbohydrates: Float
+//   classification: Float
+//   energy: Float
+//   fat_total: Float
+//   iodine: Float
+//   magnesium: Float
+//   potassium: Float
+//   protein: Float
+//   saturated_fat: Float
+//   sodium: Float
+//   total_dietary_fibre: Float
+//   total_sugars: Float
+//   creation_ts: String
+//   last_modifed_ts: String
+// }
 
-type ConsumptionLog {
-  consumption_log_id: Int
-  food_facts_id: Int
-  consumption_date: String
-  created_at: String
-  updated_at: String
-}
+// type ConsumptionLog {
+//   consumption_log_id: Int
+//   food_facts_id: Int
+//   consumption_date: String
+//   created_at: String
+//   updated_at: String
+// }
 
-input ConsumptionLogInput {
-  food_facts_id: Int!
-  consumption_date: String!
-}
+// input ConsumptionLogInput {
+//   food_facts_id: Int!
+//   consumption_date: String!
+// }
 
-type Mutation {
-  fillFoodFacts: [FoodFacts]
-  addConsumptionLogs(logs: [ConsumptionLogInput]!): [ConsumptionLog]
-}
+// type Mutation {
+//   fillFoodFacts: [FoodFacts]
+//   replaceConsumptionLogs(logs: [ConsumptionLogInput]!, dayToUpdate: String! ): [ConsumptionLog]
+// }
 
-type Query {
-  hello: String
-  allFoodFacts: [FoodFacts]
-  consumptionLogs: [ConsumptionLog]
-}
+// type Query {
+//   hello: String
+//   allFoodFacts: [FoodFacts]
+//   consumptionLogs: [ConsumptionLog]
+// }
 
-`)
+// `)

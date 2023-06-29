@@ -58,7 +58,6 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
         total_sugars: log.food_fact.total_sugars,
       }
     })
-    console.log('result' + JSON.stringify(result))
 
     return result
   } catch (error) {
@@ -116,33 +115,45 @@ export async function getAllConsumptionLog() {
   }
 }
 
-export async function replaceConsumptionLogsForToday(logs) {
+export async function replaceConsumptionLogs(
+  logs,
+  dayToUpdate,
+  toBeDeleted,
+  toBeInserted
+) {
   let t
   try {
-    console.log(
-      'replaceConsumptionLogsForToday called, logs' + JSON.stringify(logs)
-    )
+    console.log('replaceConsumptionLogs called, logs: ', JSON.stringify(logs))
+    console.log('replaceConsumptionLogs called, toBeDeleted: ', toBeDeleted)
+
     // Start a transaction
     t = await ConsumptionLog.sequelize.transaction()
 
-    // Get the current date without time
-    const currentDate = new Date()
-    currentDate.setHours(0, 0, 0, 0)
+    // Delete specific records based on consumption_date and food_facts_id
+    if (toBeDeleted) {
+      const foodFactsIdsToDelete = logs.map((log) => log.food_facts_id)
+      console.log('foodFactsIdsToDelete:' + foodFactsIdsToDelete)
 
-    // Delete existing records for the current day
-    await ConsumptionLog.destroy({
-      where: {
-        consumption_date: {
-          [Op.gte]: currentDate,
+      await ConsumptionLog.destroy({
+        where: {
+          consumption_date: {
+            [Op.eq]: dayToUpdate,
+          },
+          food_facts_id: {
+            [Op.in]: foodFactsIdsToDelete,
+          },
         },
-      },
-      transaction: t,
-    })
+        transaction: t,
+      })
+    }
 
     // Insert new records
-    const newConsumptionLogs = await ConsumptionLog.bulkCreate(logs, {
-      transaction: t,
-    })
+    let newConsumptionLogs = []
+    if (toBeInserted) {
+      newConsumptionLogs = await ConsumptionLog.bulkCreate(logs, {
+        transaction: t,
+      })
+    }
 
     // Commit the transaction
     await t.commit()
