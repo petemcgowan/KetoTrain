@@ -1,30 +1,22 @@
-import React, { useState, useMemo, useEffect, useContext } from 'react'
-import { Dimensions, View, StyleSheet } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import axios from 'axios'
 import Svg from 'react-native-svg'
 import Animated from 'react-native-reanimated'
 import Lottie from 'lottie-react-native'
-import { TrackerItemType } from '../components/TrackerItemType'
 import SearchScreen from './screens/SearchScreen'
 import KetoTrackerScreen from './screens/KetoTrackerScreen'
 import KetoLimitScreen from './screens/KetoLimitScreen'
 import HelpScreen from './screens/HelpScreen'
-import TestView from './screens/TestView'
 
-import { GlycemicProvider } from './state/GlycemicContext'
 import { TrackerProvider } from './state/TrackerContext'
 
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { AnimatedTabBar } from './tabbar/AnimatedTabBar'
 
 import SplashScreen from 'react-native-splash-screen'
-
-const { width, height } = Dimensions.get('screen')
-const APP_WIDTH = width
-const APP_HEIGHT = height
 
 const MyTheme = {
   ...DefaultTheme,
@@ -43,6 +35,47 @@ export default function App() {
   const [totalGILoad, setTotalGILoad] = useState(0)
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [itemsForSelectedDate, setItemsForSelectedDate] = useState([])
+  const [foodData, setFoodData] = useState()
+
+  const getTotalCarbsForSpecificDay = () => {
+    // const { trackerItems, setTotalCarbs, selectedDate } =
+    //   useContext(TrackerContext)
+    let carbsForDayAmt = 0
+
+    trackerItems.map((item) => {
+      const itemDate = new Date(item.consumptionDate)
+
+      if (
+        itemDate.getFullYear() === selectedDate.getFullYear() &&
+        itemDate.getMonth() === selectedDate.getMonth() &&
+        itemDate.getDate() === selectedDate.getDate()
+      ) {
+        carbsForDayAmt = carbsForDayAmt + item.carbAmt
+        console.log(
+          'getTotalCarbsForSpecificDay, carbsForDayAmt:' + carbsForDayAmt
+        )
+      }
+    })
+    setTotalCarbs(carbsForDayAmt)
+    // setFocused(!focused)
+    return carbsForDayAmt
+  }
+
+  const handleNextDay = () => {
+    console.log('handleNextDay, selectedDate:' + selectedDate.toDateString())
+    setSelectedDate(
+      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() + 1))
+    )
+    getTotalCarbsForSpecificDay()
+  }
+
+  const handlePrevDay = () => {
+    console.log('handlePrevDay, selectedDate:' + selectedDate.toDateString())
+    setSelectedDate(
+      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() - 1))
+    )
+    getTotalCarbsForSpecificDay()
+  }
 
   const value = {
     trackerItems,
@@ -55,9 +88,13 @@ export default function App() {
     setSelectedDate,
     itemsForSelectedDate,
     setItemsForSelectedDate,
+    handlePrevDay,
+    handleNextDay,
+    foodData,
   }
 
   useEffect(() => {
+    console.log('App, useEffect')
     const getFoodFacts = async () => {
       try {
         const foodFactsResponse = await axios({
@@ -67,32 +104,32 @@ export default function App() {
             query: `
               query {
                 allFoodFacts {
-                  food_facts_id
-                  food_name
-                  public_food_key
+                  foodFactsId: food_facts_id
+                  foodName: food_name
+                  publicFoodKey: public_food_key
                   calcium
                   carbohydrates
                   classification
                   energy
-                  fat_total
+                  fatTotal: fat_total
                   iodine
                   magnesium
                   potassium
                   protein
-                  saturated_fat
+                  saturatedFat: saturated_fat
                   sodium
-                  total_dietary_fibre
-                  total_sugars
-                  creation_ts
-                  last_modified_ts
+                  totalDietaryFibre: total_dietary_fibre
+                  totalSugars: total_sugars
+                  creationTs: creation_ts
+                  lastModifiedTs: last_modified_ts
                 }
               }
             `,
           },
         })
 
-        console.log('Food facts client data:' + foodFactsResponse.data)
-        return foodFactsResponse.data // use or return the response data as needed
+        setFoodData(foodFactsResponse.data.data.allFoodFacts)
+        return foodFactsResponse.data.data.allFoodFacts
       } catch (error) {
         console.error('Error fetching food facts:', error)
       }
@@ -145,6 +182,7 @@ export default function App() {
               consumptionLogWithFoodFacts.map((item) => {
                 return {
                   id: item.consumption_log_id.toString(),
+                  foodFactsId: item.food_facts_id.toString(),
                   description: item.food_name,
                   carbAmt: item.carbohydrates,
                   giAmt: 30, // Placeholder value as giAmt is not available in the response
@@ -172,33 +210,6 @@ export default function App() {
             )
           }
         }
-        // setTrackerItems(
-        //   consumptionResponse.data.consumptionLogWithFoodFacts.map((item) => ({
-        //     id: item.consumption_log_id.toString(),
-        //     description: item.food_name,
-        //     carbAmt: item.carbohydrates,
-        //     giAmt: 30,
-        //     glAmt: 30,
-        //     fiberAmt: item.total_dietary_fibre,
-        //     proteinAmt: item.protein,
-        //     fatAmt: item.fat_total,
-        //     energyAmt: item.energy,
-        //     sugarsAmt: item.total_sugars,
-        //     sodiumAmt: item.sodium,
-
-        //     giBackgroundColor: '#350244', // TODO remove or use
-        //     glBackgroundColor: '#350244', // TODO remove or use
-        //     carbBackgroundColor:
-        //       item.carbohydrates > 22
-        //         ? '#1A0546'
-        //         : item.carbohydrates > 11
-        //         ? '#5C6500'
-        //         : '#350244',
-
-        //     portionAmount: 0, // TODO remove or use
-        //     consumptionDate: new Date(parseInt(item.consumption_date, 10)),
-        //   }))
-        // )
 
         return consumptionResponse.data
       } catch (error) {
@@ -211,11 +222,11 @@ export default function App() {
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen
     SplashScreen.hide()
-  }, [selectedDate])
+  }, []) //selectedDate
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <TrackerProvider value={value}>
+    <TrackerProvider value={value}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
         <NavigationContainer>
           <Tab.Navigator
             tabBar={(props) => <AnimatedTabBar {...props} />}
@@ -398,8 +409,8 @@ export default function App() {
             />
           </Tab.Navigator>
         </NavigationContainer>
-      </TrackerProvider>
-    </GestureHandlerRootView>
+      </GestureHandlerRootView>
+    </TrackerProvider>
   )
 }
 
