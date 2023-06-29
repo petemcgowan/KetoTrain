@@ -16,24 +16,20 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./db-scripts:/docker-entrypoint-initdb.d
-  redis-server:
-    image: redis/redis-stack:latest
-    ports:
-      - '6379:6379'
-    #   stdin_open: true
-    networks:
-      - pern-app
+  # redis-server:
+  # image: redis/redis-stack:latest
+  # ports:
+  #   - '6379:6379'
+  # #   stdin_open: true
+  # networks:
+  #   - pern-app
   keto-api-server:
     image: keto-api-server
     build: ./server/
     ports:
-      # - '5000:5000' # for REST (which may go away)
       - '4001:4001' # for graphQL
     networks:
       - pern-app
-    #    volumes:
-    #      - ./server/:usr/src/app
-    #      - /usr/src/app/node_modules
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -41,7 +37,9 @@ services:
       PGHOST: ${PGHOST} #name of the service
     depends_on:
       - postgres
-      - redis-server
+      # - redis-server
+    volumes:
+      - ./server:/usr/src/app # <- Mounts the code from local directory to container.
 networks:
   pern-app:
     driver: bridge
