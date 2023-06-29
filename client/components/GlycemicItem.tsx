@@ -1,18 +1,22 @@
 import React, { useState, memo, useContext } from 'react'
 
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import axios from 'axios'
 
 import BoxesLayout from './BoxesLayout'
 
 import TrackerContext from '../state/TrackerContext'
 // import GlycemicContext from '../state/GlycemicContext'
-import { TrackerItemType } from './TrackerItemType'
+import { TrackerItemType } from '../types/TrackerItemType'
 import { TrackerContextType } from '../state/TrackerContextType'
+import {
+  saveConsumptionLogs,
+  formatDateToYYYYMMDD,
+} from '../utils/GlycemicUtils'
 
 interface GlycemicItemProps {
   descriptionGI: string
-  setTotalCarbs: (value: number) => void
-  setTotalGILoad: (value: number) => void
+  foodFactsId: string
   carbAmt: number
   giAmt: number
   glAmt: number
@@ -22,16 +26,15 @@ interface GlycemicItemProps {
   energyAmt: number
   sugarsAmt: number
   sodiumAmt: number
-  animatedOpacitySequence: () => void
+  // animatedOpacitySequence: () => void
   setSearchItemSelected: (index: number) => void
   searchItemSelected: number
-  glycemicData: Array<any> // replace 'any' with appropriate type for your data
+  // glycemicData: Array<any> // replace 'any' with appropriate type for your data
 }
 
 const GlycemicItem: React.FC<GlycemicItemProps> = ({
   descriptionGI,
-  setTotalCarbs,
-  setTotalGILoad,
+  foodFactsId,
   carbAmt,
   giAmt,
   glAmt,
@@ -41,16 +44,21 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
   energyAmt,
   sugarsAmt,
   sodiumAmt,
-  animatedOpacitySequence,
+  // animatedOpacitySequence,
   setSearchItemSelected,
   searchItemSelected,
-  glycemicData,
+  // glycemicData,
 }) => {
-  const [modalVisible, setModalVisible] = useState<boolean>(false)
-  const { trackerItems, setTrackerItems } =
-    useContext<TrackerContextType>(TrackerContext)
-
-  // const { glycemicData } = useContext(GlycemicContext)
+  const {
+    trackerItems,
+    setTrackerItems,
+    itemsForSelectedDate,
+    selectedDate,
+    setItemsForSelectedDate,
+    setTotalCarbs,
+    setTotalGILoad,
+    foodData,
+  } = useContext<TrackerContextType>(TrackerContext)
 
   let giBackgroundColor = '#350244'
   if (glAmt > 60) {
@@ -90,49 +98,73 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
         const trackerClicked = trackerItems.find(
           (item: TrackerItemType) => item.description === descriptionGI
         )
+        const trackerItem = {
+          id: descriptionGI,
+          foodFactsId: foodFactsId,
+          description: descriptionGI,
+          carbAmt: carbAmt,
+          giAmt: giAmt,
+          glAmt: glAmt,
+          fiberAmt: fiberAmt,
+          proteinAmt: proteinAmt,
+          fatAmt: fatAmt,
+          energyAmt: energyAmt,
+          sugarsAmt: sugarsAmt,
+          sodiumAmt: sodiumAmt,
+          giBackgroundColor: giBackgroundColor,
+          glBackgroundColor: glBackgroundColor,
+          carbBackgroundColor: carbBackgroundColor,
+          portionAmount: 1,
+          consumptionDate: selectedDate,
+        }
+
         if (trackerClicked) {
           trackerClicked.portionAmount++
+          console.log('trackerClicked, increasing portion amount')
         } else {
-          setTrackerItems([
-            ...trackerItems,
-            {
-              id: descriptionGI,
-              description: descriptionGI,
-              carbAmt: carbAmt,
-              giAmt: giAmt,
-              glAmt: glAmt,
-              fiberAmt: fiberAmt,
-              proteinAmt: proteinAmt,
-              fatAmt: fatAmt,
-              energyAmt: energyAmt,
-              sugarsAmt: sugarsAmt,
-              sodiumAmt: sodiumAmt,
-              giBackgroundColor: giBackgroundColor,
-              glBackgroundColor: glBackgroundColor,
-              carbBackgroundColor: carbBackgroundColor,
-              portionAmount: 1,
-              consumptionDate: new Date(),
-            },
-          ])
+          console.log(
+            'trackerItem(before setTrackerItems): ' +
+              JSON.stringify(trackerItem)
+          )
+
+          setTrackerItems([...trackerItems, trackerItem])
+          setItemsForSelectedDate([...itemsForSelectedDate, trackerItem])
         } // if
         let totalCarbs = 0
         let totalGILoad = 0
-        trackerItems.map((trackerItem: TrackerItemType) => {
+        // let logs = [
+        //   { food_facts_id: 516, consumption_date: '2023-06-24' },
+        //   { food_facts_id: 517, consumption_date: '2023-06-24' },
+        // ]
+        // you know food_facts_id and date, delete everything for that, don't delete everything.  For search screen, you don't have to delete anything.  For delete, you do.  So add a delete flag, which we send over.
+
+        itemsForSelectedDate.map((trackerItem: TrackerItemType) => {
           totalCarbs += trackerItem.carbAmt
           totalGILoad += trackerItem.glAmt
         })
 
         setTotalCarbs(totalCarbs)
         setTotalGILoad(totalGILoad)
-        // setModalVisible(true);
-        const index = glycemicData.findIndex(
-          ({ description }) => description === descriptionGI
+        // const index = glycemicData.findIndex(
+        //   ({ description }) => description === descriptionGI
+        // )
+        const index = foodData.findIndex(
+          ({ foodName }) => foodName === descriptionGI
         )
         if (index > -1) {
           setSearchItemSelected(index)
         }
-        // Make the nutritional panel appear briefly here
-        animatedOpacitySequence()
+
+        const logs = []
+        logs.push({
+          food_facts_id: Number(trackerItem.foodFactsId),
+          consumption_date: formatDateToYYYYMMDD(trackerItem.consumptionDate),
+        })
+        console.log('logs:' + JSON.stringify(logs))
+        const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
+        console.log('dayToUpdate:' + dayToUpdate) // Output: '2023-06-24'
+
+        saveConsumptionLogs(trackerItem, logs, dayToUpdate, false, true)
       }}
     >
       <View style={dynamicStyles.listItemContainerStyle}>

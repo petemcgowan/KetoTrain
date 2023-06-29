@@ -9,6 +9,13 @@ const defaultValues: TrackerContextType = {
   setTotalCarbs: () => {},
   totalGILoad: 0,
   setTotalGILoad: () => {},
+  selectedDate: new Date(),
+  setSelectedDate: () => {},
+  itemsForSelectedDate: [],
+  setItemsForSelectedDate: () => {},
+  handlePrevDay: () => {},
+  handleNextDay: () => {},
+  foodData: [],
 }
 
 const TrackerContext = React.createContext<TrackerContextType>(defaultValues)
