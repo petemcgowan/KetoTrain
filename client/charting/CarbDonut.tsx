@@ -43,9 +43,8 @@ export default function CarbDonut({
   const { totalCarbs } = useContext(TrackerContext)
 
   const animation = (toValue: number) => {
-    console.log('animation, toValue:' + toValue)
     return Animated.timing(animated, {
-      delay: 300,
+      delay: 200,
       toValue,
       duration,
       useNativeDriver: true,
@@ -65,12 +64,9 @@ export default function CarbDonut({
   }
 
   useEffect(() => {
-    console.log('CarbDonut useEffect')
     if (focused) {
-      console.log('Is focused, run animation')
       animation(percentage) // Run the animation
     } else {
-      console.log('Is NOT focused, reset value')
       resetAnimation() // Reset and start the animation
     }
     // animation(percentage)
