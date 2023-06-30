@@ -1,65 +1,97 @@
+/* eslint-disable react/display-name */
 import React from 'react'
-import { StyleSheet, TextInput, View, Keyboard, Button } from 'react-native'
-// import {Feather, Entypo} from '@expo/vector-icons';
-// import {FontAwesomeIcon} from '@fortawesome/free-solid-svg-icons';
+import { memo, useEffect, useCallback } from 'react'
+import { View, TextInput, Button, Keyboard, StyleSheet } from 'react-native'
 
-const SearchBar = ({ searchPhrase, setSearchPhrase, clicked, setClicked }) => {
-  return (
-    <View style={styles.container}>
-      <View
-        style={
-          !clicked ? styles.searchBar__unclicked : styles.searchBar__clicked
-        }
-      >
-        {/* <FontAwesomeIcon
-          icon="fa-solid fa-magnifying-glass"
-          size={20}
-          color="black"
-          style={{marginLeft: 1}}
-        /> */}
-        {/* <Feather
-          name="search"
-          size={20}
-          color="black"
-          style={{marginLeft: 1}}
-        /> */}
-        <TextInput
-          style={styles.input}
-          placeholder="Search"
-          value={searchPhrase}
-          onChangeText={setSearchPhrase}
-          onFocus={() => {
-            setClicked(true)
-          }}
-        />
-        {/* {clicked &&
-          {
-            /* <FontAwesomeIcon
-            icon="fa-solid fa-xmark"
-            size={20}
-            color="black"
-            style={{padding: 1}}
-            onPress={() => {
-              setSearchPhrase('');
-            }}
-          />
-        } */}
-      </View>
-      {clicked && (
-        <View style={{ color: 'purple' }}>
-          <Button
-            style={{ color: 'purple' }}
-            title="Cancel"
-            onPress={() => {
-              Keyboard.dismiss()
-              setClicked(false)
-            }}
+const SearchBar = memo(
+  ({ searchPhrase, setSearchPhrase, clicked, setClicked }) => {
+    const handleFocus = useCallback(() => {
+      console.log('handleFocus')
+      setClicked(true)
+    }, [setClicked])
+
+    const handlePress = useCallback(() => {
+      console.log('handlePress')
+      Keyboard.dismiss()
+      setClicked(false)
+    }, [setClicked])
+
+    useEffect(() => {
+      console.log('SearchBar useEffect')
+    }, [])
+
+    return (
+      <View style={styles.container}>
+        <View
+          style={
+            !clicked ? styles.searchBar__unclicked : styles.searchBar__clicked
+          }
+        >
+          <TextInput
+            style={styles.input}
+            placeholder="Search"
+            value={searchPhrase}
+            onChangeText={setSearchPhrase}
+            onFocus={handleFocus}
           />
         </View>
-      )}
-    </View>
-  )
-}
+        {clicked && (
+          <View style={{ color: 'purple' }}>
+            <Button
+              style={{ color: 'purple' }}
+              title="Cancel"
+              onPress={handlePress}
+            />
+          </View>
+        )}
+      </View>
+    )
+  }
+)
+
+// const SearchBarComponent = ({
+//   searchPhrase,
+//   setSearchPhrase,
+//   clicked,
+//   setClicked,
+// }) => {
+//   useEffect(() => {
+//     console.log('SearchBar, useEffect')
+//   }, [])
+
+//   return (
+//     <View style={styles.container}>
+//       <View
+//         style={
+//           !clicked ? styles.searchBar__unclicked : styles.searchBar__clicked
+//         }
+//       >
+//         <TextInput
+//           style={styles.input}
+//           placeholder="Search"
+//           value={searchPhrase}
+//           onChangeText={setSearchPhrase}
+//           onFocus={() => {
+//             setClicked(true)
+//           }}
+//         />
+//       </View>
+//       {clicked && (
+//         <View style={{ color: 'purple' }}>
+//           <Button
+//             title="Cancel"
+//             onPress={() => {
+//               Keyboard.dismiss()
+//               setClicked(false)
+//             }}
+//           />
+//         </View>
+//       )}
+//     </View>
+//   )
+// }
+
+// const SearchBar = memo(SearchBarComponent)
 
 export default SearchBar
 

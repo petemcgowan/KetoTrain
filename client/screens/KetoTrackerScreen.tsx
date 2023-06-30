@@ -49,7 +49,9 @@ const KetoTrackerScreen = () => {
 
   const clickNutrientPanel = (item: TrackerItemType, index: number) => {
     console.log('clickNutrientPanel, index:' + index)
-    setTrackerSelected(index)
+    if (index > -1) {
+      setTrackerSelected(index)
+    }
     console.log('clickNutrientPanel, item.carbAmt:' + item.carbAmt)
     if (isSheetOpen) {
       sheetRef.current?.snapTo(0)

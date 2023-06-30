@@ -10,6 +10,11 @@ export function formatDateToYYYYMMDD(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
+export type DataPoint = {
+  date: string
+  carbAmt: number
+}
+
 export const saveConsumptionLogs = async (
   trackerItem: TrackerItemType,
   logs: { food_facts_id: number; consumption_date: string }[],
