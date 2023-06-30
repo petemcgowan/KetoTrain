@@ -44,7 +44,7 @@ export default function CarbDonut({
 
   const animation = (toValue: number) => {
     return Animated.timing(animated, {
-      delay: 200,
+      delay: 50,
       toValue,
       duration,
       useNativeDriver: true,
@@ -60,7 +60,6 @@ export default function CarbDonut({
       })
     }
     animated.setValue(0) // Reset the Animated Value
-    // animation(percentage) // Start the animation again
   }
 
   useEffect(() => {
@@ -69,24 +68,20 @@ export default function CarbDonut({
     } else {
       resetAnimation() // Reset and start the animation
     }
-    // animation(percentage)
-    animated.addListener(
-      (v) => {
-        const maxPerc = (100 * v.value) / max
-        const strokeDashoffset = circumference - (circumference * maxPerc) / 100
-        if (inputRef?.current) {
-          inputRef.current.setNativeProps({
-            text: `${Math.round(v.value)}`,
-          })
-        }
-        if (circleRef?.current) {
-          circleRef.current.setNativeProps({
-            strokeDashoffset,
-          })
-        }
+    animated.addListener((v) => {
+      const maxPerc = (100 * v.value) / max
+      const strokeDashoffset = circumference - (circumference * maxPerc) / 100
+      if (inputRef?.current) {
+        inputRef.current.setNativeProps({
+          text: `${Math.round(v.value)}`,
+        })
       }
-      // [max, percentage]
-    )
+      if (circleRef?.current) {
+        circleRef.current.setNativeProps({
+          strokeDashoffset,
+        })
+      }
+    })
 
     return () => {
       animated.removeAllListeners()
