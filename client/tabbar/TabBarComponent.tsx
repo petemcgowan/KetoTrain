@@ -1,8 +1,8 @@
-import React, {useEffect, useRef} from 'react';
-import {Pressable, Text} from 'react-native';
-import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
-import {styles} from '../App';
-import {TabBarComponentProps} from './TabBarComponentProps';
+import React, { useEffect, useRef } from 'react'
+import { Pressable, Text } from 'react-native'
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { styles } from '../screens/BottomTabNavigator'
+import { TabBarComponentProps } from './TabBarComponentProps'
 
 export const TabBarComponent = ({
   active,
@@ -10,31 +10,31 @@ export const TabBarComponent = ({
   onLayout,
   onPress,
 }: TabBarComponentProps) => {
-  const ref = useRef(null);
+  const ref = useRef(null)
 
   useEffect(() => {
     if (active && ref?.current) {
       // @ts-ignore
-      ref.current.play();
+      ref.current.play()
     }
-  }, [active]);
+  }, [active])
 
   // animations ------------------------------------------------------
   const animatedComponentCircleStyles = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          scale: withTiming(active ? 1 : 0, {duration: 250}),
+          scale: withTiming(active ? 1 : 0, { duration: 250 }),
         },
       ],
-    };
-  });
+    }
+  })
 
   const animatedIconContainerStyles = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(active ? 1 : 0.5, {duration: 250}),
-    };
-  });
+      opacity: withTiming(active ? 1 : 0.5, { duration: 250 }),
+    }
+  })
 
   return (
     <Pressable onPress={onPress} onLayout={onLayout} style={styles.component}>
@@ -42,10 +42,11 @@ export const TabBarComponent = ({
         style={[styles.componentCircle, animatedComponentCircleStyles]}
       />
       <Animated.View
-        style={[styles.iconContainer, animatedIconContainerStyles]}>
+        style={[styles.iconContainer, animatedIconContainerStyles]}
+      >
         {/* @ts-ignore */}
-        {options.tabBarIcon ? options.tabBarIcon({ref}) : <Text>?</Text>}
+        {options.tabBarIcon ? options.tabBarIcon({ ref }) : <Text>?</Text>}
       </Animated.View>
     </Pressable>
-  );
-};
+  )
+}

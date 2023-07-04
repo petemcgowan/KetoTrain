@@ -8,7 +8,7 @@ import {
   withTiming,
   useDerivedValue,
 } from 'react-native-reanimated'
-import { styles, AnimatedSvg } from '../App'
+import { styles, AnimatedSvg } from '../screens/BottomTabNavigator'
 import { TabBarComponent } from './TabBarComponent'
 
 export const AnimatedTabBar = ({
