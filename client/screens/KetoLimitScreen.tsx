@@ -34,7 +34,7 @@ const KetoLimitScreen = ({ totalCarbsForReals }: KetoLimitScreenProps) => {
   return (
     <View style={styles.ketoLimitContainer}>
       <SafeAreaView style={styles.root}>
-        <DonutFactory />
+        {/* <DonutFactory /> */}
         <LineChartContainer />
       </SafeAreaView>
     </View>

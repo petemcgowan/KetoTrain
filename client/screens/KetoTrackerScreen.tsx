@@ -24,12 +24,12 @@ const KetoTrackerScreen = () => {
     trackerItems,
     totalCarbs,
     selectedDate,
+    handlePrevDay,
+    handleNextDay,
     setSelectedDate,
     setTotalCarbs,
     itemsForSelectedDate,
     setItemsForSelectedDate,
-    handlePrevDay,
-    handleNextDay,
   } = useContext(TrackerContext)
   const [trackerSelected, setTrackerSelected] = useState(0)
   const sheetRef = useRef<BottomSheet>(null)
