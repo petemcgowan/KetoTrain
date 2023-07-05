@@ -21,6 +21,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 ios/.xcode.env.local
+client/ios/.xcode.env.local
 
 # Android/IntelliJ
 #
@@ -33,6 +34,8 @@ local.properties
 
 # node.js
 #
+client/node_modules/
+server/node_modules/
 node_modules/
 npm-debug.log
 yarn-error.log
@@ -59,7 +62,9 @@ buck-out/
 *.jsbundle
 
 # Ruby / CocoaPods
-/ios/Pods/
+/client/ios/Pods/
+client/ios/Pods/
+/client/vendor/bundle/
 /vendor/bundle/
 
 # macOS
