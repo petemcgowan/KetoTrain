@@ -25,6 +25,7 @@ export default function App() {
   const [totalCarbs, setTotalCarbs] = useState(0)
   const [totalGILoad, setTotalGILoad] = useState(0)
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [userId, setUserId] = useState(null)
   const [itemsForSelectedDate, setItemsForSelectedDate] = useState([])
   const [foodData, setFoodData] = useState()
 
@@ -83,6 +84,7 @@ export default function App() {
     handleNextDay,
     foodData,
     setFoodData,
+    userId,
   }
 
   useEffect(() => {
@@ -95,7 +97,9 @@ export default function App() {
           data: {
             query: `
               query {
-                allFoodFacts {
+                allFoodFacts(
+                    userId: "peteburquette@gmail.com"
+                ) {
                   foodFactsId: food_facts_id
                   foodName: food_name
                   publicFoodKey: public_food_key
@@ -114,12 +118,16 @@ export default function App() {
                   totalSugars: total_sugars
                   creationTs: creation_ts
                   lastModifiedTs: last_modified_ts
+                  isFavourite
                 }
               }
             `,
           },
         })
-
+        console.log(
+          'foodFactsResponse.data.data.allFoodFacts:' +
+            JSON.stringify(foodFactsResponse.data.data.allFoodFacts)
+        )
         setFoodData(foodFactsResponse.data.data.allFoodFacts)
         return foodFactsResponse.data.data.allFoodFacts
       } catch (error) {
@@ -210,7 +218,8 @@ export default function App() {
     }
 
     getConsumptionLogs()
-
+    // TODO Pete: This should be set by the Google login
+    setUserId('peteburquette@gmail.com')
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen
     SplashScreen.hide()
