@@ -22,7 +22,7 @@
     "redisTest": "nodemon redisTest",
     "dockerServer": "docker compose up -d",
     "dockerDown": "docker compose down",
-    "server": "node server.mjs",
+    "server": "nodemon server.mjs",
     "serverPreApr18Pt2": "node --loader ts-node/esm -r ts-node/register server.mjs",
     "serverPreApr18": "ts-node-esm server.mjs",
     "start": "babel-node server.ts --extensions \".ts\"",

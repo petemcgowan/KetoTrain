@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Dimensions, StyleSheet, Image } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
-import productivity_replenishing_sleep_cleansing_rain_calming from '../../assets/images/productivity_replenishing_sleep_cleansing_rain_calming.png'
+import productivity_replenishing_sleep_cleansing_rain_calming from '../assets/images/productivity_replenishing_sleep_cleansing_rain_calming.png'
 
 const { width, height } = Dimensions.get('window')
 

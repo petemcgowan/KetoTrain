@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Dimensions, StyleSheet, Image } from 'react-native'
-import surreal_sand_timer from '../../assets/images/surreal_sand_timer.png'
+import surreal_sand_timer from '../assets/images/surreal_sand_timer.png'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
 const { width, height } = Dimensions.get('window')

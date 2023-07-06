@@ -18,70 +18,70 @@ const slides = [
     title: 'Keto Basics',
     description:
       'The ketogenic diet involves consuming high fats, moderate proteins, and low carbs to get your body into a state of ketosis, where it burns fat for fuel instead of carbs.',
-    image: require('../../assets/images/rain_falling_brain_alpha_waves_energy.png'),
+    image: require('../assets/images/rain_falling_brain_alpha_waves_energy.png'),
   },
   {
     component: SlideComponent,
     title: 'Fat Burning Zone',
     description:
       'When you consume under 50g of carbs daily, your body enters ketosis and efficiently burns fat for energy. This is optimal for weight loss and a boost in energy levels.',
-    image: require('../../assets/images/productivity_replenishing_sleep_cleansing_rain_calming.png'),
+    image: require('../assets/images/productivity_replenishing_sleep_cleansing_rain_calming.png'),
   },
   {
     component: SlideComponent,
     title: 'Intermittent Fasting',
     description:
       'Combine the keto diet with intermittent fasting, where you eat during a specific window of the day, to enhance fat loss and improve metabolic health.',
-    image: require('../../assets/images/surreal_sand_timer.png'),
+    image: require('../assets/images/surreal_sand_timer.png'),
   },
   {
     component: SlideComponent,
     title: 'Avocado Power',
     description:
       'Avocados are a keto superstar! Rich in healthy fats, fiber, and micronutrients, they keep you full and are perfect for maintaining a low carb intake.',
-    image: require('../../assets/images/surreal_sand_timer.png'),
+    image: require('../assets/images/surreal_sand_timer.png'),
   },
   {
     component: SlideComponent,
     title: 'Drink Up',
     description:
       'Staying hydrated is key. Water boosts metabolism, helps in fat burning, and keeps you full. Swap sugary drinks for water, tea, or coffee.',
-    image: require('../../assets/images/surreal_sand_timer.png'),
+    image: require('../assets/images/surreal_sand_timer.png'),
   },
   {
     component: SlideComponent,
     title: 'Fiber Focus',
     description:
       'Fiber is crucial in a keto diet. It helps in digestion and keeps you full longer. Include high-fiber, low-carb vegetables like spinach and broccoli in your diet.',
-    image: require('../../assets/images/surreal_sand_timer.png'),
+    image: require('../assets/images/surreal_sand_timer.png'),
   },
   {
     component: SlideComponent,
     title: 'Brain Boost',
     description:
       'Ketosis can improve brain function by providing ketones, a more efficient fuel than glucose, especially helpful in reducing seizures in epilepsy. ',
-    image: require('../../assets/images/surreal_sand_timer.png'),
+    image: require('../assets/images/surreal_sand_timer.png'),
   },
   {
     component: SlideComponent,
     title: 'Healthy Fats',
     description:
       'Opt for healthy fats like nuts, seeds, and olive oil. These are not only keto-friendly but also beneficial for your heart and overall health.',
-    image: require('../../assets/images/surreal_sand_timer.png'),
+    image: require('../assets/images/surreal_sand_timer.png'),
   },
   {
     component: SlideComponent,
     title: 'Keto Flu Alert',
     description:
       'When starting a keto diet, some people experience flu-like symptoms. Stay hydrated and balance electrolytes to alleviate these symptoms.',
-    image: require('../../assets/images/surreal_sand_timer.png'),
+    image: require('../assets/images/surreal_sand_timer.png'),
   },
   {
     component: SlideComponent,
     title: 'Track and Thrive',
     description:
       'Keep track of your carb intake to stay in ketosis. Use our app to easily log and monitor your daily carbs and make informed food choices.',
-    image: require('../../assets/images/surreal_sand_timer.png'),
+    image: require('../assets/images/surreal_sand_timer.png'),
   },
 ]
 

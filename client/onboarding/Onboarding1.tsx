@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Dimensions, StyleSheet, Image } from 'react-native'
-import rain_falling_brain_alpha_waves_energy from '../../assets/images/rain_falling_brain_alpha_waves_energy.png'
+import rain_falling_brain_alpha_waves_energy from '../assets/images/rain_falling_brain_alpha_waves_energy.png'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
 const { width, height } = Dimensions.get('window')
