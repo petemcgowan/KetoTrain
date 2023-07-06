@@ -34,7 +34,7 @@ const BottomTabNavigator = () => {
               <Lottie
                 ref={ref}
                 loop={false}
-                source={require('../../assets/lottie/125888-avocado-fruit-exercise-animation.json')}
+                source={require('../assets/lottie/125888-avocado-fruit-exercise-animation.json')}
                 style={styles.icon}
               />
             ),
@@ -56,7 +56,7 @@ const BottomTabNavigator = () => {
               <Lottie
                 ref={ref}
                 loop={false}
-                source={require('../../assets/lottie/88719-checklist.json')}
+                source={require('../assets/lottie/88719-checklist.json')}
                 style={styles.icon}
               />
             ),
@@ -87,7 +87,7 @@ const BottomTabNavigator = () => {
               <Lottie
                 ref={ref}
                 loop={false}
-                source={require('../../assets/lottie/64165-statistics-chart.json')}
+                source={require('../assets/lottie/64165-statistics-chart.json')}
                 style={styles.icon}
               />
             ),
@@ -121,7 +121,7 @@ const BottomTabNavigator = () => {
               <Lottie
                 ref={ref}
                 loop={false}
-                source={require('../../assets/lottie/33101-light-bulb-animation.json')}
+                source={require('../assets/lottie/33101-light-bulb-animation.json')}
                 style={styles.icon}
               />
             ),

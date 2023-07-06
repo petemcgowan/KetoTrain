@@ -45,7 +45,7 @@ function HelpScreen() {
         </Text>
         <Image
           style={styles.tinyLogo}
-          source={require('../../assets/images/breakfast-food-1296x728-header.jpg')}
+          source={require('../assets/images/breakfast-food-1296x728-header.jpg')}
         />
         <Text style={styles.subHeading}>What is the glycemic index?</Text>
         <Text style={styles.paragraph}>

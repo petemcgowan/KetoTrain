@@ -18,4 +18,6 @@ export type TrackerContextType = {
   handlePrevDay: () => void
   handleNextDay: () => void
   foodData: FoodDataType[]
+  userId: string | null
+  setUserId: React.Dispatch<React.SetStateAction<string>>
 }

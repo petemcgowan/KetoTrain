@@ -116,14 +116,6 @@ export default function NutrientBottomSheet({
 }
 
 const styles = StyleSheet.create({
-  bottomContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'red',
-    alignItems: 'center',
-    // height: 400,
-    // backgroundColor: 'white',
-  },
   panel: {
     // backgroundColor: 'green', //temp
     backgroundColor: 'rgb(32, 32, 32)',

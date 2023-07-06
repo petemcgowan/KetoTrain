@@ -55,6 +55,36 @@ export const saveConsumptionLogs = async (
   }
 }
 
+export const saveFavouriteFoods = async (
+  favouriteFoods: { food_facts_id: number }[],
+  userId: string
+) => {
+  try {
+    console.log('saveFavouriteFoods, userId:' + userId)
+    const favouriteFoodResponse = await axios({
+      url: 'http://localhost:4001/pete-graphql',
+      method: 'post',
+      data: {
+        query: `
+          mutation setFavouriteFoods($favouriteFoods: [FavouriteFoodsInput]!, $userId: String!) {
+            setFavouriteFoods(favouriteFoods: $favouriteFoods, userId: $userId) {
+              food_facts_id
+            }
+          }
+        `,
+        variables: {
+          favouriteFoods,
+          userId,
+        },
+      },
+    })
+
+    return favouriteFoodResponse.data
+  } catch (error) {
+    console.error('Error fetching favourite foods:', error)
+  }
+}
+
 export const getTotalCarbsForSpecificDay = () => {
   const { trackerItems, setTotalCarbs, selectedDate } =
     useContext(TrackerContext)

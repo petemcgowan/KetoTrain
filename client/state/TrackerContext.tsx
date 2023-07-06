@@ -16,6 +16,8 @@ const defaultValues: TrackerContextType = {
   handlePrevDay: () => {},
   handleNextDay: () => {},
   foodData: [],
+  userId: null,
+  setUserId: () => {},
 }
 
 const TrackerContext = React.createContext<TrackerContextType>(defaultValues)
