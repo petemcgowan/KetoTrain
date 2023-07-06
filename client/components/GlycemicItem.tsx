@@ -1,6 +1,12 @@
 import React, { useState, memo, useContext } from 'react'
 
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native'
 import axios from 'axios'
 
 import BoxesLayout from './BoxesLayout'
@@ -11,8 +17,12 @@ import { TrackerItemType } from '../types/TrackerItemType'
 import { TrackerContextType } from '../state/TrackerContextType'
 import {
   saveConsumptionLogs,
+  saveFavouriteFoods,
   formatDateToYYYYMMDD,
 } from '../utils/GlycemicUtils'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+
+const { width, height } = Dimensions.get('screen')
 
 interface GlycemicItemProps {
   descriptionGI: string
@@ -58,6 +68,7 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
     setTotalCarbs,
     setTotalGILoad,
     foodData,
+    userId,
   } = useContext<TrackerContextType>(TrackerContext)
 
   let giBackgroundColor = '#350244'
@@ -91,6 +102,22 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
       alignItems: 'center',
     },
   })
+
+  const favouriteTrackerItem = () => {
+    console.log('favouriteTrackerItem')
+
+    // Find out the row that they've clicked on, and get the food_facts_id for it.
+
+    // Our array is only going to have one item in it.  If they click more than one, that means multiple calls!  Would be too clunky any other way.
+
+    const favouriteFoods = []
+    favouriteFoods.push({
+      food_facts_id: Number(foodFactsId),
+    })
+    console.log('favouriteFoods:' + JSON.stringify(favouriteFoods))
+
+    saveFavouriteFoods(favouriteFoods, userId)
+  }
 
   return (
     <TouchableOpacity
@@ -168,7 +195,13 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
       }}
     >
       <View style={dynamicStyles.listItemContainerStyle}>
-        <Text style={styles.listItemStyle}>{descriptionGI}</Text>
+        <Text style={styles.description}>{descriptionGI}</Text>
+        <TouchableOpacity
+          onPress={favouriteTrackerItem}
+          style={{ width: width * 0.1 }}
+        >
+          <FontAwesome5 name="heart" size={35} color="#2196F3" solid />
+        </TouchableOpacity>
         <BoxesLayout
           giAmt={giAmt}
           glAmt={glAmt}
@@ -194,13 +227,13 @@ function arePropsEqual(
 export default memo(GlycemicItem, arePropsEqual)
 
 const styles = StyleSheet.create({
-  listItemStyle: {
-    width: '63%',
+  description: {
+    width: width * 0.7,
     textAlign: 'right',
     borderRightColor: 'pink',
     borderRightWidth: 1,
-    fontSize: 30,
-    fontWeight: '200',
+    fontSize: 28,
+    fontWeight: '300',
     color: 'rgba(201, 189, 187, 1)',
   },
 })

@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from 'react-native'
 import TrackerContext from '../state/TrackerContext'
-import PortionLayout from './PortionLayout'
+// import PortionLayout from './PortionLayout'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { TrackerItemProps } from '../types/ItemTypes'
@@ -49,6 +49,10 @@ const TrackerItem = ({
     if (dateBasedIndex > -1) {
       setTrackerSelected(dateBasedIndex)
     }
+  }
+
+  const favouriteTrackerItem = () => {
+    console.log('favouriteTrackerItem')
   }
 
   const deleteTrackerItem = () => {
@@ -96,33 +100,39 @@ const TrackerItem = ({
   }, [item.portionAmount, totalCarbs])
 
   return (
-    <View>
-      <View
-        style={{
-          flexDirection: 'row',
-        }}
+    <View
+      style={{
+        flexDirection: 'row',
+        width: width,
+        alignItems: 'center',
+      }}
+    >
+      <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>
+        <View style={{ width: width * 0.1 }}>
+          <FontAwesome5 name="info-circle" size={35} color="#2196F3" />
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={pressTrackerItem}
+        style={{ width: width * 0.7 }}
       >
-        <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>
-          <View style={{ width: width * 0.1 }}>
-            <FontAwesome5 name="heartbeat" size={40} color="#2196F3" />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={pressTrackerItem}>
-          <View
-            style={{
-              flexDirection: 'row',
-              width: width * 0.8,
-            }}
-          >
-            <Text style={styles.description}>{item.description}</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={deleteTrackerItem}>
-          <View style={{ width: width * 0.1 }}>
-            <FontAwesome5 name="trash" size={40} color="#2196F3" />
-          </View>
-        </TouchableOpacity>
-      </View>
+        <Text style={styles.description}>{item.description}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={favouriteTrackerItem}
+        style={{ width: width * 0.1 }}
+      >
+        <FontAwesome5 name="heart" size={35} color="#2196F3" />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={deleteTrackerItem}
+        style={{ width: width * 0.1 }}
+      >
+        <FontAwesome5 name="trash" size={35} color="#2196F3" />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -133,7 +143,7 @@ const styles = StyleSheet.create({
   description: {
     color: 'rgb(124, 131, 134)',
     alignItems: 'center',
-    fontSize: 32,
-    fontWeight: '200',
+    fontSize: 28,
+    fontWeight: '300',
   },
 })
