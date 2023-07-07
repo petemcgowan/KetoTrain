@@ -3,7 +3,7 @@ import Sequelize from 'sequelize'
 
 const { DataTypes } = Sequelize
 
-export const ConsumptionLog = sequelize.define(
+export const ConsumptionLogs = sequelize.define(
   'consumption_logs',
   {
     consumption_log_id: {
