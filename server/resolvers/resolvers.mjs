@@ -5,6 +5,9 @@ import {
   getAllConsumptionLog,
   getConsumptionLogWithFoodFacts,
   replaceConsumptionLogs,
+  setFavouriteFoodsDB,
+  getWaterConsumptions,
+  getWeightLogs,
 } from './resolverFunctions.mjs'
 
 // export const testResolvers = {
@@ -19,9 +22,35 @@ export const peteResolvers = {
     console.log('Pete resolver invoked')
     return 'Pete Test successful'
   },
-  allFoodFacts: () => {
-    console.log('allFoodFacts resolver')
-    return getAllFoodFacts()
+  allFoodFacts: async (args, context, info) => {
+    console.log('allFoodFacts resolver, userId' + args.userId)
+    const response = await getAllFoodFacts(args.userId)
+    return response
+  },
+  getUserDashboardData: async (args, context, info) => {
+    try {
+      const userId = args.userId
+      console.log('userId:' + userId)
+
+      // Retrieve food facts
+      const foodFacts = await getAllFoodFacts(userId)
+
+      // Retrieve water logs
+      const waterConsumptions = await getWaterConsumptions(userId)
+
+      // Retrieve weight logs
+      const weightLogs = await getWeightLogs(userId)
+
+      // Construct and return the data
+      return {
+        foodFacts,
+        waterConsumptions,
+        weightLogs,
+      }
+    } catch (error) {
+      console.error('Error retrieving dashboard data:', error)
+      throw error
+    }
   },
   consumptionLogWithFoodFacts: async (args, context, info) => {
     console.log(
@@ -41,6 +70,15 @@ export const peteResolvers = {
     console.log('resolvers fillFoodFacts')
     return fillFoodFacts()
   },
+  setFavouriteFoods: async (args, context, info) => {
+    console.log('setFavouriteFoods args' + JSON.stringify(args))
+    // Delete existing records for the current day and add new ones
+    const newFavouriteFood = await setFavouriteFoodsDB(
+      args.favouriteFoods,
+      args.userId
+    )
+    return newFavouriteFood
+  },
   replaceConsumptionLogs: async (args, context, info) => {
     console.log('replaceConsumptionLogs args' + JSON.stringify(args))
     // Delete existing records for the current day and add new ones
@@ -51,6 +89,16 @@ export const peteResolvers = {
       args.toBeInserted
     )
     return newConsumptionLogs
+  },
+  setGLWaterConsumption: async (args, context, info) => {
+    // const waterConsumption = { args }
+    console.log('waterConsumption:', args.waterConsumption)
+    return setWaterConsumption(args.waterConsumption)
+  },
+  setGLWeightLogs: async (args, context, info) => {
+    const weightLogs = { args }
+    console.log('weightLogs:', weightLogs)
+    return setWeightLogs(args.weightLogs)
   },
 }
 
