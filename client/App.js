@@ -89,6 +89,11 @@ export default function App() {
 
   useEffect(() => {
     console.log('App, useEffect')
+    const userId = 'peteburquette@gmail.com'
+    const consumptionDate = '2023-07-07'
+    // TODO Pete: This should be set by the Google login
+    setUserId('peteburquette@gmail.com')
+
     const getFoodFacts = async () => {
       try {
         const foodFactsResponse = await axios({
@@ -98,7 +103,7 @@ export default function App() {
             query: `
               query {
                 allFoodFacts(
-                    userId: "peteburquette@gmail.com"
+                  userId: "${userId}",
                 ) {
                   foodFactsId: food_facts_id
                   foodName: food_name
@@ -147,8 +152,8 @@ export default function App() {
             query {
               consumptionLogWithFoodFacts(
                 consumptioninput: {
-                  userId: "peteburquette@gmail.com",
-                  consumptionDate: "2023-06-24"
+                  userId: "${userId}",
+                  consumptionDate: "${consumptionDate}"
                 }
               ) {
                 consumption_log_id
@@ -218,8 +223,72 @@ export default function App() {
     }
 
     getConsumptionLogs()
-    // TODO Pete: This should be set by the Google login
-    setUserId('peteburquette@gmail.com')
+
+    const getUserDashboardData = async () => {
+      try {
+        const userDashboardDataResponse = await axios({
+          url: 'http://localhost:4001/pete-graphql',
+          method: 'post',
+          data: {
+            query: `
+              query {
+                getUserDashboardData(
+                  userId: "${userId}",
+                ) {
+                  foodFacts {
+                    foodFactsId: food_facts_id
+                    foodName: food_name
+                    publicFoodKey: public_food_key
+                    calcium
+                    carbohydrates
+                    classification
+                    energy
+                    fatTotal: fat_total
+                    iodine
+                    magnesium
+                    potassium
+                    protein
+                    saturatedFat: saturated_fat
+                    sodium
+                    totalDietaryFibre: total_dietary_fibre
+                    totalSugars: total_sugars
+                    creationTs: creation_ts
+                    lastModifiedTs: last_modified_ts
+                    isFavourite
+                  }
+                  waterConsumptions {
+                    water_consumption_id
+                    userId
+                    consumptionDate
+                    litreAmount
+                  }
+                  weightLogs {
+                    weight_logs_id
+                    userId
+                    weighInTimestamp
+                    kgAmount
+                  }
+                }
+              }
+            `,
+          },
+        })
+        // console.log(
+        //   'foodFactsResponse.data.data.allFoodFacts:' +
+        //     JSON.stringify(userDashboardDataResponse.data.data.allFoodFacts)
+        // )
+        console.log(
+          'foodFactsResponse.data.data:' +
+            JSON.stringify(userDashboardDataResponse.data.data)
+        )
+        // setFoodData(userDashboardDataResponse.data.data.allFoodFacts)
+        return userDashboardDataResponse.data.data.allFoodFacts
+      } catch (error) {
+        console.error('Error fetching food facts:', error)
+      }
+    }
+
+    getUserDashboardData()
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen
     SplashScreen.hide()
