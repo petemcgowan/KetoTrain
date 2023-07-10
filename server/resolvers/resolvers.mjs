@@ -8,14 +8,8 @@ import {
   setFavouriteFoodsDB,
   getWaterConsumptions,
   getWeightLogs,
+  getUserInfo,
 } from './resolverFunctions.mjs'
-
-// export const testResolvers = {
-//   test: () => {
-//     console.log('Test resolver invoked')
-//     return 'Test Test successful'
-//   },
-// }
 
 export const peteResolvers = {
   test: () => {
@@ -29,23 +23,41 @@ export const peteResolvers = {
   },
   getUserDashboardData: async (args, context, info) => {
     try {
-      const userId = args.userId
-      console.log('userId:' + userId)
+      const emailAddress = args.userDashboardInput.emailAddress
+      const consumptionDate = args.userDashboardInput.consumptionDate
+      console.log(
+        'getUserDashboardData, emailAddress:' +
+          emailAddress +
+          ', consumptionDate:' +
+          consumptionDate +
+          ', args:' +
+          JSON.stringify(args)
+      )
+      // get the user's info (or create it)
+      const userInfo = await getUserInfo(emailAddress)
+      console.log('RESOLVER: userInfo.user_id:' + userInfo.user_id)
 
       // Retrieve food facts
-      const foodFacts = await getAllFoodFacts(userId)
+      const foodFacts = await getAllFoodFacts(userInfo.user_id)
 
       // Retrieve water logs
-      const waterConsumptions = await getWaterConsumptions(userId)
+      const waterConsumptions = await getWaterConsumptions(userInfo.user_id)
 
       // Retrieve weight logs
-      const weightLogs = await getWeightLogs(userId)
+      const weightLogs = await getWeightLogs(userInfo.user_id)
+
+      const consumptionLogWithFoodFacts = await getConsumptionLogWithFoodFacts(
+        consumptionDate,
+        userInfo.user_id
+      )
 
       // Construct and return the data
       return {
+        userInfo,
         foodFacts,
         waterConsumptions,
         weightLogs,
+        consumptionLogWithFoodFacts,
       }
     } catch (error) {
       console.error('Error retrieving dashboard data:', error)
@@ -101,38 +113,3 @@ export const peteResolvers = {
     return setWeightLogs(args.weightLogs)
   },
 }
-
-// The resolvers provides a resolver function for each API endpoint
-// export const resolvers = {
-//   Query: {
-//     hello: () => {
-//       try {
-//         console.log('Hello world called')
-//         return 'Hello, world!'
-//       } catch (error) {
-//         console.error('Error in hello resolver:', error)
-//         throw new Error('Failed to resolve hello')
-//       }
-//     },
-//     allFoodFacts: () => {
-//       return getAllFoodFacts()
-//     },
-//     consumptionLogs: () => {
-//       console.log('consumptionLogs resolver called')
-//       return getAllConsumptionLog()
-//     },
-//   },
-//   Mutation: {
-//     fillFoodFacts: () => {
-//       console.log('resolvers fillFoodFacts')
-//       return fillFoodFacts()
-//     },
-//     replaceConsumptionLogs: async (_, { logs, dayToUpdate }) => {
-//       // Delete the existing records for the current day and add new ones
-//       const newConsumptionLogs = await replaceConsumptionLogs(logs, dayToUpdate)
-
-//       // Return the new consumption logs
-//       return newConsumptionLogs
-//     },
-//   },
-// }

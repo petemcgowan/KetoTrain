@@ -4,9 +4,28 @@ import {
   ConsumptionLogs,
   WaterConsumptions,
   WeightLogs,
+  Users,
 } from '../models/associations.mjs'
 import Sequelize, { Op } from 'sequelize'
 import { sequelize } from '../db/sequelizeSetup.mjs'
+import { toSnakeCase } from '../schema/DatabaseUtils.mjs'
+
+export async function getUserInfo(emailAddress) {
+  try {
+    // Retrieve user details
+    let user = await Users.findOne({ where: { email_address: emailAddress } })
+
+    // If user does not exist, create a new user
+    if (!user) {
+      user = await Users.create({ email_address: emailAddress })
+    }
+
+    return user
+  } catch (error) {
+    console.error('getUserInfo, error:' + error)
+    throw error
+  }
+}
 
 export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
   try {
@@ -17,7 +36,7 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
         userId
     )
 
-    const logs = await ConsumptionLog.findAll({
+    const logs = await ConsumptionLogs.findAll({
       where: {
         // consumption_date: consumptionDate,
         user_id: userId,
@@ -38,14 +57,19 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
           ],
         },
       ],
-      attributes: ['consumption_log_id', 'consumption_date', 'food_facts_id'],
+      attributes: [
+        'consumption_log_id',
+        'consumption_date',
+        'food_facts_id',
+        'user_id',
+      ],
     })
 
     const result = logs.map((log) => {
       return {
         consumption_log_id: log.consumption_log_id,
         consumption_date: log.consumption_date,
-        food_facts_id: log.food_facts_id,
+        food_facts_id: parseInt(log.food_facts_id, 10),
         food_name: log.food_fact.food_name,
         public_food_key: log.food_fact.public_food_key,
         carbohydrates: log.food_fact.carbohydrates,
@@ -55,6 +79,7 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
         sodium: log.food_fact.sodium,
         total_dietary_fibre: log.food_fact.total_dietary_fibre,
         total_sugars: log.food_fact.total_sugars,
+        user_id: log.food_fact.user_id,
       }
     })
 
@@ -101,18 +126,12 @@ export async function getAllFoodFacts(userId) {
 export async function getWaterConsumptions(userId) {
   try {
     const waterConsumptions = await WaterConsumptions.findAll({
-      raw: true,
-      include: {
-        model: WaterConsumptions,
-        as: 'waterConsumption',
-        where: { user_id: userId },
-        required: false,
-      },
+      where: { user_id: userId },
       attributes: [
-        'water_consumption_id',
-        'userId',
+        'water_consumptions_id',
+        'user_id',
         'consumption_date',
-        'litreAmount',
+        'litre_amount',
       ],
     })
 
@@ -125,14 +144,13 @@ export async function getWaterConsumptions(userId) {
 export async function getWeightLogs(userId) {
   try {
     const weightLogs = await WeightLogs.findAll({
-      raw: true,
-      include: {
-        model: WeightLogs,
-        as: 'weightLogs',
-        where: { user_id: userId },
-        required: false,
-      },
-      attributes: ['weight_logs_id', 'userId', 'weighInTimestamp', 'kgAmount'],
+      where: { user_id: userId },
+      attributes: [
+        'weight_logs_id',
+        'user_id',
+        'weigh_in_timestamp',
+        'kg_amount',
+      ],
     })
 
     return weightLogs
@@ -173,7 +191,7 @@ export async function fillFoodFacts() {
 
 export async function getAllConsumptionLog() {
   try {
-    const allConsumptionLog = await ConsumptionLog.findAll()
+    const allConsumptionLog = await ConsumptionLogs.findAll()
 
     return allConsumptionLog
   } catch (error) {
@@ -192,15 +210,14 @@ export async function replaceConsumptionLogs(
     console.log('replaceConsumptionLogs called, logs: ', JSON.stringify(logs))
     console.log('replaceConsumptionLogs called, toBeDeleted: ', toBeDeleted)
 
-    // Start a transaction
-    t = await ConsumptionLog.sequelize.transaction()
+    t = await ConsumptionLogs.sequelize.transaction()
 
-    // Delete specific records based on consumption_date and food_facts_id
+    // Delete records if needed/specified
     if (toBeDeleted) {
-      const foodFactsIdsToDelete = logs.map((log) => log.food_facts_id)
+      const foodFactsIdsToDelete = logs.map((log) => log.foodFactsId)
       console.log('foodFactsIdsToDelete:' + foodFactsIdsToDelete)
 
-      await ConsumptionLog.destroy({
+      await ConsumptionLogs.destroy({
         where: {
           consumption_date: {
             [Op.eq]: dayToUpdate,
@@ -216,12 +233,13 @@ export async function replaceConsumptionLogs(
     // Insert new records
     let newConsumptionLogs = []
     if (toBeInserted) {
-      newConsumptionLogs = await ConsumptionLog.bulkCreate(logs, {
+      const snakeCasedLogs = logs.map(toSnakeCase)
+      console.log('snakeCasedLogs:' + JSON.stringify(snakeCasedLogs))
+      newConsumptionLogs = await ConsumptionLogs.bulkCreate(snakeCasedLogs, {
         transaction: t,
       })
     }
 
-    // Commit the transaction
     await t.commit()
 
     return newConsumptionLogs
@@ -252,18 +270,18 @@ export async function setFavouriteFoodsDB(favouriteFoods, userId) {
       await FavouriteFoods.destroy({
         where: {
           user_id: userId,
-          food_facts_id: favouriteFoods[0].food_facts_id,
+          food_facts_id: favouriteFoods[0].foodFactsId,
         },
         transaction,
       })
       console.log(
-        'favouriteFoods[0].is_favourite:' + favouriteFoods[0].is_favourite
+        'favouriteFoods[0].is_favourite:' + favouriteFoods[0].isFavourite
       )
-      if (favouriteFoods[0].is_favourite) {
+      if (favouriteFoods[0].isFavourite) {
         console.log('Preparing new record:')
         // Prepare new record
         const newFavouriteFood = {
-          food_facts_id: favouriteFoods[0].food_facts_id,
+          food_facts_id: favouriteFoods[0].foodFactsId,
           user_id: userId,
           created_at: new Date(),
           updated_at: new Date(),
@@ -301,8 +319,8 @@ export async function setWaterConsumptions(waterConsumptions) {
         {
           returning: true,
           where: {
-            userId: waterConsumptionEntry.userId,
-            consumptionDate: waterConsumptionEntry.consumptionDate,
+            user_id: waterConsumptionEntry.userId,
+            consumption_date: waterConsumptionEntry.consumptionDate,
           },
         }
       )
@@ -325,8 +343,8 @@ export async function setWeightLogs(weightLogs) {
       const [weightLogRecord, created] = await WeightLogs.upsert(weightLog, {
         returning: true,
         where: {
-          userId: weightLog.userId,
-          consumptionDate: weightLog.consumptionDate,
+          user_id: weightLog.userId,
+          consumption_date: weightLog.consumptionDate,
         },
       })
       console.log('WeightLog created or updated:', weightLogRecord.dataValues)
