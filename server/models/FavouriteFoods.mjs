@@ -19,16 +19,21 @@ export const FavouriteFoods = sequelize.define(
       },
     },
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'users',
+        key: 'user_id',
+      },
+      allowNull: false,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.NOW,
-    },
+    // created_at: {
+    //   type: DataTypes.DATE,
+    //   defaultValue: Sequelize.NOW,
+    // },
+    // updated_at: {
+    //   type: DataTypes.DATE,
+    //   defaultValue: Sequelize.NOW,
+    // },
   },
   {
     timestamps: false,

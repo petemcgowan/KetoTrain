@@ -26,14 +26,14 @@ export const FoodFacts = sequelize.define(
     sodium: { type: DataTypes.FLOAT, allowNull: false },
     total_dietary_fibre: { type: DataTypes.FLOAT, allowNull: false },
     total_sugars: { type: DataTypes.FLOAT, allowNull: false },
-    creation_ts: {
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.NOW,
-    },
-    last_modified_ts: {
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.NOW,
-    },
+    // creation_ts: {
+    //   type: DataTypes.DATE,
+    //   defaultValue: Sequelize.NOW,
+    // },
+    // last_modified_ts: {
+    //   type: DataTypes.DATE,
+    //   defaultValue: Sequelize.NOW,
+    // },
   },
   {
     timestamps: false,
