@@ -1,14 +1,13 @@
 import { buildSchema } from 'graphql'
 
-// export const testSchema = buildSchema(`
-//     type Query {
-//         test: String
-//         hello: String
-//       }
-// `)
-
 export const peteSchema = buildSchema(`
 
+  type UserInfo {
+    user_id: ID!
+    email_address: String!
+    user_name: String
+    last_login_date: String
+  }
   type FoodFacts {
     food_facts_id: Int
     food_name: String
@@ -26,8 +25,6 @@ export const peteSchema = buildSchema(`
     sodium: Float
     total_dietary_fibre: Float
     total_sugars: Float
-    creation_ts: String
-    last_modified_ts: String
     isFavourite: Boolean
   }
   type ConsumptionLogWithFoodFacts {
@@ -43,127 +40,80 @@ export const peteSchema = buildSchema(`
     sodium: Float
     total_dietary_fibre: Float
     total_sugars: Float
+    user_id: Int
   }
-  type ConsumptionLog {
+  type ConsumptionLogs {
     consumption_log_id: Int
     food_facts_id: Int
     consumption_date: String
-    created_at: String
-    updated_at: String
+    user_id: Int
   }
   type FavouriteFoods {
     favourite_foods_id: Int
     food_facts_id: Int
-    user_id: String
-    created_at: String
-    updated_at: String
+    user_id: Int
   }
   type WeightLogs {
     weight_logs_id: ID!
-    userId: String!
-    weighInTimestamp: String
-    kgAmount: Float
+    user_id: Int!
+    weigh_in_timestamp: String
+    kg_amount: Float
   }
   type WaterConsumptions {
     water_consumptions_id: ID!
-    userId: String!
-    consumptionDate: String
-    litreAmount: Float
+    user_id: Int!
+    consumption_date: String
+    litre_amount: Float
   }
   type UserDashboardData {
+    userInfo: UserInfo
     foodFacts: [FoodFacts]
-    waterLogs: [WaterConsumptions]
+    waterConsumptions: [WaterConsumptions]
     weightLogs: [WeightLogs]
+    consumptionLogWithFoodFacts: [ConsumptionLogWithFoodFacts]
   }
   input WeightLogsInput {
-    userId: String!
-    emailAddress: String!
+    userId: Int!
     weighInTimestamp: String
     kgAmount: Float!
   }
   input WaterConsumptionsInput {
-    userId: String!
+    userId: Int!
     consumptionDate: String!
     litreAmount: Float!
   }
   input UserInput {
-    userId: String!
+    userId: Int!
     emailAddress: String!
   }
+  input UserDashboardInput {
+    emailAddress: String!
+    consumptionDate: String!
+  }
   input ConsumptionLogInput {
-    food_facts_id: Int!
-    consumption_date: String!
+    foodFactsId: Int!
+    consumptionDate: String!
+    userId: Int!
   }
   input ConsumptionLogFoodFactsInput {
-    userId: String!
+    userId: Int!
     consumptionDate: String!
   }
   input FavouriteFoodsInput {
-    food_facts_id: Int!
-    is_favourite: Boolean!
+    foodFactsId: Int!
+    isFavourite: Boolean!
   }
   type Query {
     test: String
-    allFoodFacts(userId: String!): [FoodFacts]
-    getWaterWeightLogs(userId: String!): [FoodFacts]
-    consumptionLogs: [ConsumptionLog]
+    allFoodFacts(userId: Int!): [FoodFacts]
+    getUserDashboardData(userDashboardInput: UserDashboardInput!): UserDashboardData
     consumptionLogWithFoodFacts(consumptioninput: ConsumptionLogFoodFactsInput!): [ConsumptionLogWithFoodFacts]
   }
   type Mutation {
     fillFoodFacts: [FoodFacts]
-    replaceConsumptionLogs(logs: [ConsumptionLogInput]!, dayToUpdate: String!, toBeDeleted: Boolean!, toBeInserted: Boolean! ): [ConsumptionLog]
-    setFavouriteFoods(favouriteFoods: [FavouriteFoodsInput]!, userId: String!): FavouriteFoods
+    replaceConsumptionLogs(logs: [ConsumptionLogInput]!, dayToUpdate: String!, toBeDeleted: Boolean!, toBeInserted: Boolean! ): [ConsumptionLogs]
+    setFavouriteFoods(favouriteFoods: [FavouriteFoodsInput]!, userId: Int!): FavouriteFoods
     setGLWaterConsumption(waterConsumptions: [WaterConsumptionsInput!]!): [WaterConsumptions]!
     setGLWeightLogs(weightLogs: [WeightLogsInput!]!): [WeightLogs]!
     }
 `)
-
-// Construct a schema, using GraphQL schema language aka typedefs
-// export var schema = buildSchema(`
-
-// type FoodFacts {
-//   food_facts_id: Int
-//   food_name: String
-//   public_food_key: String
-//   calcium: Float
-//   carbohydrates: Float
-//   classification: Float
-//   energy: Float
-//   fat_total: Float
-//   iodine: Float
-//   magnesium: Float
-//   potassium: Float
-//   protein: Float
-//   saturated_fat: Float
-//   sodium: Float
-//   total_dietary_fibre: Float
-//   total_sugars: Float
-//   creation_ts: String
-//   last_modifed_ts: String
-// }
-
-// type ConsumptionLog {
-//   consumption_log_id: Int
-//   food_facts_id: Int
-//   consumption_date: String
-//   created_at: String
-//   updated_at: String
-// }
-
-// input ConsumptionLogInput {
-//   food_facts_id: Int!
-//   consumption_date: String!
-// }
-
-// type Mutation {
-//   fillFoodFacts: [FoodFacts]
-//   replaceConsumptionLogs(logs: [ConsumptionLogInput]!, dayToUpdate: String! ): [ConsumptionLog]
-// }
-
-// type Query {
-//   hello: String
-//   allFoodFacts: [FoodFacts]
-//   consumptionLogs: [ConsumptionLog]
-// }
-
-// `)
