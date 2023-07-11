@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from 'react-native'
 import TrackerContext from '../state/TrackerContext'
+import UserContext from '../state/UserContext'
 // import PortionLayout from './PortionLayout'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
@@ -35,6 +36,8 @@ const TrackerItem = ({
     setTotalGILoad,
     totalCarbs,
   } = useContext(TrackerContext)
+
+  const { userId } = useContext(UserContext)
 
   const pressTrackerItem = () => {
     // const index = itemsForSelectedDate.findIndex(
@@ -84,8 +87,9 @@ const TrackerItem = ({
 
     const logs = [
       {
-        food_facts_id: Number(item.foodFactsId),
-        consumption_date: formatDateToYYYYMMDD(item.consumptionDate),
+        foodFactsId: Number(item.foodFactsId),
+        consumptionDate: formatDateToYYYYMMDD(item.consumptionDate),
+        userId: userId,
       },
     ]
 

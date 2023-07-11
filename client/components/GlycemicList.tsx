@@ -7,12 +7,15 @@ import {
   Animated,
   SafeAreaView,
   Easing,
+  TouchableOpacity,
+  Text,
 } from 'react-native'
 
 import TrackerContext from '../state/TrackerContext'
 // import GlycemicContext from '../state/GlycemicContext'
 import GlycemicItem from './GlycemicItem'
 import { getGLResult } from '../utils/GlycemicUtils'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 interface GlycemicListProps {
   searchPhrase: string
@@ -32,51 +35,21 @@ const GlycemicList = ({
 }: GlycemicListProps) => {
   const { setTotalCarbs, setTotalGILoad, foodData } = useContext(TrackerContext)
   // const { glycemicData } = useContext(GlycemicContext)
-  const [searchItemSelected, setSearchItemSelected] = useState(0)
+  // const [searchItemSelected, setSearchItemSelected] = useState(0)
   const [searchPhraseNew, setSearchPhraseNew] = useState('')
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
 
-  // const [opacityAnimatedValue, setOpacityAnimatedValue] = useState(
-  //   new Animated.Value(0)
-  // )
-
-  // const animatedOpacitySequence = () => {
-  //   Animated.sequence([
-  //     Animated.timing(opacityAnimatedValue, {
-  //       toValue: 1,
-  //       easing: Easing.inOut(Easing.ease),
-  //       duration: 1200,
-  //       useNativeDriver: true,
-  //     }),
-  //     Animated.timing(opacityAnimatedValue, {
-  //       toValue: 0,
-  //       duration: 1000,
-  //       useNativeDriver: true,
-  //     }),
-  //   ]).start()
-  // }
-
-  // const animatedStyle = {
-  //   opacity: opacityAnimatedValue,
-  // }
-
-  useEffect(() => {
-    // if (foodData) {
-    //   // console.log(Object.keys(foodData))
-    //   Object.keys(foodData).forEach((key) => {
-    //     console.log(key) // 👉️ 1, 2, 3, 4,
-    //     console.log(foodData[key]) // 👉️ calcium, carbohydrates...
-    //   })
-    // }
-  }, [])
+  useEffect(() => {}, [])
 
   // item is an entry in the glycemicData/data list
   const renderItem = ({ item }) => {
     // const giLoad = getGLResult(item.carbAmt, item.giAmt, item.glAmt);
     // when no input, show all
-    // console.log("renderItem calle for " + item.description);
-    // console.log('renderItem, item:' + JSON.stringify(item))
 
-    if (searchPhraseNew === '') {
+    if (
+      searchPhraseNew === '' &&
+      (!showOnlyFavorites || (showOnlyFavorites && item.isFavourite))
+    ) {
       return (
         <GlycemicItem
           descriptionGI={item.foodName}
@@ -90,10 +63,7 @@ const GlycemicList = ({
           energyAmt={item.energy}
           sugarsAmt={item.totalSugars}
           sodiumAmt={item.sodium}
-          // animatedOpacitySequence={animatedOpacitySequence}
-          setSearchItemSelected={setSearchItemSelected}
-          searchItemSelected={searchItemSelected}
-          // glycemicData={glycemicData}
+          isFavourite={item.isFavourite}
         />
       )
     }
@@ -101,7 +71,8 @@ const GlycemicList = ({
     if (
       item.foodName
         .toUpperCase()
-        .includes(searchPhraseNew.toUpperCase().trim().replace(/\s/g, ''))
+        .includes(searchPhraseNew.toUpperCase().trim().replace(/\s/g, '')) &&
+      (!showOnlyFavorites || (showOnlyFavorites && item.isFavourite))
     ) {
       return (
         <GlycemicItem
@@ -116,10 +87,7 @@ const GlycemicList = ({
           energyAmt={item.energy}
           sugarsAmt={item.totalSugars}
           sodiumAmt={item.sodium}
-          // animatedOpacitySequence={animatedOpacitySequence}
-          setSearchItemSelected={setSearchItemSelected}
-          searchItemSelected={searchItemSelected}
-          // glycemicData={glycemicData}
+          isFavourite={item.isFavourite}
         />
       )
     }
@@ -127,17 +95,26 @@ const GlycemicList = ({
 
   return (
     <SafeAreaView style={styles.list__container}>
-      <View
-      // onStartShouldSetResponder={() => {
-      //   setClicked(false);
-      // }}
-      >
-        <TextInput
-          placeholder="Search"
-          style={styles.input}
-          value={searchPhraseNew}
-          onChangeText={setSearchPhraseNew}
-        />
+      <View>
+        <View style={styles.searchContainer}>
+          <TextInput
+            placeholder="Search"
+            style={styles.input}
+            placeholderTextColor="#FFFFFF"
+            value={searchPhraseNew}
+            onChangeText={setSearchPhraseNew}
+          />
+          <TouchableOpacity
+            onPress={() => setShowOnlyFavorites(!showOnlyFavorites)}
+          >
+            <FontAwesome5
+              name="heart"
+              size={24}
+              color={showOnlyFavorites ? 'lime' : '#FFFFFF'}
+              solid={showOnlyFavorites}
+            />
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={foodData}
           renderItem={renderItem}
@@ -168,10 +145,25 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
   },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#000000',
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginVertical: 5,
+  },
   input: {
-    fontSize: 30,
+    paddingTop: 5,
+    fontSize: 22,
+    color: '#FFFFFF',
     marginLeft: 10,
-    width: '90%',
+    flex: 1,
+  },
+  checkbox: {
+    marginLeft: 10,
   },
   // box: {
   //   backgroundColor: 'rgba(59, 73, 55, 1)',

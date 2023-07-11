@@ -12,6 +12,7 @@ import axios from 'axios'
 import BoxesLayout from './BoxesLayout'
 
 import TrackerContext from '../state/TrackerContext'
+import UserContext, { UserContextProps } from '../state/UserContext'
 // import GlycemicContext from '../state/GlycemicContext'
 import { TrackerItemType } from '../types/TrackerItemType'
 import { TrackerContextType } from '../state/TrackerContextType'
@@ -36,9 +37,10 @@ interface GlycemicItemProps {
   energyAmt: number
   sugarsAmt: number
   sodiumAmt: number
+  isFavourite: boolean
   // animatedOpacitySequence: () => void
-  setSearchItemSelected: (index: number) => void
-  searchItemSelected: number
+  // setSearchItemSelected: (index: number) => void
+  // searchItemSelected: number
   // glycemicData: Array<any> // replace 'any' with appropriate type for your data
 }
 
@@ -54,11 +56,14 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
   energyAmt,
   sugarsAmt,
   sodiumAmt,
+  isFavourite,
   // animatedOpacitySequence,
-  setSearchItemSelected,
-  searchItemSelected,
+  // setSearchItemSelected,
+  // searchItemSelected,
   // glycemicData,
 }) => {
+  const [itemIsFavourite, setItemIsFavourite] = useState(isFavourite)
+
   const {
     trackerItems,
     setTrackerItems,
@@ -68,8 +73,9 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
     setTotalCarbs,
     setTotalGILoad,
     foodData,
-    userId,
   } = useContext<TrackerContextType>(TrackerContext)
+
+  const { userId } = useContext<UserContextProps>(UserContext)
 
   let giBackgroundColor = '#350244'
   if (glAmt > 60) {
@@ -106,15 +112,15 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
   const favouriteTrackerItem = () => {
     console.log('favouriteTrackerItem')
 
-    // Find out the row that they've clicked on, and get the food_facts_id for it.
-
     // Our array is only going to have one item in it.  If they click more than one, that means multiple calls!  Would be too clunky any other way.
 
     const favouriteFoods = []
     favouriteFoods.push({
-      food_facts_id: Number(foodFactsId),
+      foodFactsId: Number(foodFactsId),
+      isFavourite: !itemIsFavourite,
     })
     console.log('favouriteFoods:' + JSON.stringify(favouriteFoods))
+    setItemIsFavourite(!itemIsFavourite)
 
     saveFavouriteFoods(favouriteFoods, userId)
   }
@@ -178,14 +184,15 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
         const index = foodData.findIndex(
           ({ foodName }) => foodName === descriptionGI
         )
-        if (index > -1) {
-          setSearchItemSelected(index)
-        }
+        // if (index > -1) {
+        //   setSearchItemSelected(index)
+        // }
 
         const logs = []
         logs.push({
-          food_facts_id: Number(trackerItem.foodFactsId),
-          consumption_date: formatDateToYYYYMMDD(trackerItem.consumptionDate),
+          foodFactsId: Number(trackerItem.foodFactsId),
+          consumptionDate: formatDateToYYYYMMDD(trackerItem.consumptionDate),
+          userId: userId,
         })
         console.log('logs:' + JSON.stringify(logs))
         const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
@@ -200,7 +207,12 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
           onPress={favouriteTrackerItem}
           style={{ width: width * 0.1 }}
         >
-          <FontAwesome5 name="heart" size={35} color="#2196F3" solid />
+          <FontAwesome5
+            name="heart"
+            size={35}
+            color="#2196F3"
+            solid={itemIsFavourite ? true : false}
+          />
         </TouchableOpacity>
         <BoxesLayout
           giAmt={giAmt}
