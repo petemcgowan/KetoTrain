@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import {
   ScrollView,
   Dimensions,
@@ -13,6 +13,7 @@ import SlideComponent from '../components/SlideComponent'
 import BottomSheet from 'reanimated-bottom-sheet'
 import LoginBottomSheet from './LoginBottomSheet'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import UserContext, { UserContextProps } from '../state/UserContext'
 const { height } = Dimensions.get('window')
 
 // const slides = [Onboarding1, Onboarding2, Onboarding3]
@@ -71,6 +72,7 @@ const OnboardingDeck = () => {
     'rgb(38, 27, 21)',
     'rgb(25, 26, 29)',
   ]
+  const { setEmailAddress } = useContext(UserContext) as UserContextProps
 
   const onScroll = (event: any) => {
     const slide = Math.ceil(
@@ -99,7 +101,8 @@ const OnboardingDeck = () => {
       })
       // Here you will get user information, you can send it to your backend server for verification
       console.log('userInfo:' + JSON.stringify(userInfo))
-      navigation.navigate('MainApp')
+      setEmailAddress(userInfo.email)
+      navigation.navigate('LoadingScreen')
       setSigninInProgress(false)
     } catch (error) {
       console.log('Error in handleGoogleLogin:' + error)

@@ -1,5 +1,12 @@
 import React, { Fragment, useState, useContext, useEffect } from 'react'
-import { StyleSheet, SafeAreaView, View, Button, Text } from 'react-native'
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Button,
+  Text,
+  TouchableOpacity,
+} from 'react-native'
 
 import GlycemicList from '../components/GlycemicList'
 import SearchBar from '../components/SearchBar'
@@ -27,11 +34,17 @@ const SearchScreen = ({ route }) => {
           {!clicked}
 
           <View style={styles.dateHeader}>
-            <Button title="<" onPress={handlePrevDay} />
-            <Text style={{ color: 'blue', fontSize: 20 }}>
-              {selectedDate.toDateString()}
-            </Text>
-            <Button title=">" onPress={handleNextDay} />
+            <TouchableOpacity style={styles.dateButton} onPress={handlePrevDay}>
+              <Text style={styles.dateButtonText}>&lt;</Text>
+            </TouchableOpacity>
+            <View style={styles.dateDisplayContainer}>
+              <Text style={styles.dateDisplayText}>
+                {selectedDate.toDateString()}
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.dateButton} onPress={handleNextDay}>
+              <Text style={styles.dateButtonText}>&gt;</Text>
+            </TouchableOpacity>
           </View>
           {/* <SearchBar
             searchPhrase={searchPhrase}
@@ -69,5 +82,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: 5,
+    backgroundColor: '#F5F5F5',
+    marginBottom: 15,
+  },
+  dateButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 20,
+  },
+  dateButtonText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  dateDisplayContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  dateDisplayText: {
+    color: 'blue',
+    fontSize: 20,
   },
 })
