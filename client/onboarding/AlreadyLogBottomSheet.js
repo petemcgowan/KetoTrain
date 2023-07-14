@@ -10,7 +10,7 @@ import {
 
 import BottomSheet from 'reanimated-bottom-sheet'
 import surreal_sand_timer from '../assets/images/surreal_sand_timer.png'
-import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
+import GoogleSignInButton from './GoogleSignInButton'
 
 const { height } = Dimensions.get('screen')
 
@@ -40,9 +40,7 @@ export default function AlreadyLogBottomSheet({
         <View style={styles.panelHeader}>
           <Text style={styles.panelTitle}>Sign In</Text>
         </View>
-        <GoogleSigninButton
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
+        <GoogleSignInButton
           onPress={handleGoogleLogin}
           disabled={isSigninInProgress}
         />

@@ -12,8 +12,6 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import hands_logging_in from '../assets/images/login_hands_logging_in_2.png'
 import GoogleSignInButton from './GoogleSignInButton'
 
-import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
-
 const { height, width } = Dimensions.get('screen')
 
 export default function LoginBottomSheet({
@@ -39,13 +37,6 @@ export default function LoginBottomSheet({
           <Image style={styles.image} source={hands_logging_in}></Image>
         </View>
         <View style={styles.panelFooter}>
-          {/* <GoogleSigninButton
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            style={{ width: 312, height: 48, textAlign: 'center' }}
-            onPress={handleGoogleLogin}
-            disabled={isSigninInProgress}
-          /> */}
           <GoogleSignInButton
             onPress={handleGoogleLogin}
             disabled={isSigninInProgress}
