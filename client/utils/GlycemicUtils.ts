@@ -17,7 +17,7 @@ export type DataPoint = {
 
 export const saveConsumptionLogs = async (
   trackerItem: TrackerItemType,
-  logs: { food_facts_id: number; consumption_date: string }[],
+  logs: { foodFactsId: number; consumptionDate: string; userId: number }[],
   dayToUpdate: string,
   toBeDeleted: boolean,
   toBeInserted: boolean
@@ -26,6 +26,14 @@ export const saveConsumptionLogs = async (
     console.log(
       'saveConsumptionLogs, trackerItem:',
       JSON.stringify(trackerItem) + ', dayToUpdate:' + dayToUpdate
+    )
+    console.log(
+      'saveConsumptionLogs, logs:',
+      JSON.stringify(logs) +
+        ', toBeDeleted:' +
+        toBeDeleted +
+        ', toBeInserted:' +
+        toBeInserted
     )
     const consumptionResponse = await axios({
       url: 'http://localhost:4001/pete-graphql',
@@ -56,17 +64,20 @@ export const saveConsumptionLogs = async (
 }
 
 export const saveFavouriteFoods = async (
-  favouriteFoods: { food_facts_id: number }[],
-  userId: string
+  favouriteFoods: { foodFactsId: number; isFavourite: boolean }[],
+  userId: number
 ) => {
   try {
     console.log('saveFavouriteFoods, userId:' + userId)
+    console.log(
+      'saveFavouriteFoods, favouriteFoods:' + JSON.stringify(favouriteFoods)
+    )
     const favouriteFoodResponse = await axios({
       url: 'http://localhost:4001/pete-graphql',
       method: 'post',
       data: {
         query: `
-          mutation setFavouriteFoods($favouriteFoods: [FavouriteFoodsInput]!, $userId: String!) {
+          mutation setFavouriteFoods($favouriteFoods: [FavouriteFoodsInput]!, $userId: Int!) {
             setFavouriteFoods(favouriteFoods: $favouriteFoods, userId: $userId) {
               food_facts_id
             }

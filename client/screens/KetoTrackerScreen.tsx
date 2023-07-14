@@ -6,6 +6,7 @@ import {
   View,
   Button,
   Text,
+  TouchableOpacity,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import TrackerContext from '../state/TrackerContext'
@@ -91,13 +92,18 @@ const KetoTrackerScreen = () => {
   return (
     <SafeAreaView style={styles.trackerContainer}>
       <View style={styles.dateHeader}>
-        <Button title="<" onPress={handlePrevDay} />
-        <Text style={{ color: 'white', fontSize: 20 }}>
-          {selectedDate.toDateString()}
-        </Text>
-        <Button title=">" onPress={handleNextDay} />
+        <TouchableOpacity style={styles.dateButton} onPress={handlePrevDay}>
+          <Text style={styles.dateButtonText}>&lt;</Text>
+        </TouchableOpacity>
+        <View style={styles.dateDisplayContainer}>
+          <Text style={styles.dateDisplayText}>
+            {selectedDate.toDateString()}
+          </Text>
+        </View>
+        <TouchableOpacity style={styles.dateButton} onPress={handleNextDay}>
+          <Text style={styles.dateButtonText}>&gt;</Text>
+        </TouchableOpacity>
       </View>
-
       <FlatList
         data={itemsForSelectedDate}
         renderItem={renderTrackerItem}
@@ -129,6 +135,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#F5F5F5',
+  },
+  dateButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 20,
+  },
+  dateButtonText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  dateDisplayContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  dateDisplayText: {
+    color: 'blue',
+    fontSize: 20,
   },
 
   //////////////////////////////////
