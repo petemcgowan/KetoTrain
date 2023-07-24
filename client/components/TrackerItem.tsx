@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import TrackerContext from '../state/TrackerContext'
 import UserContext from '../state/UserContext'
-// import PortionLayout from './PortionLayout'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { TrackerItemProps } from '../types/ItemTypes'
@@ -17,7 +16,7 @@ import {
   formatDateToYYYYMMDD,
 } from '../utils/GlycemicUtils'
 
-const { width, height } = Dimensions.get('screen')
+const { width } = Dimensions.get('screen')
 
 const TrackerItem = ({
   item,
@@ -33,19 +32,12 @@ const TrackerItem = ({
     setItemsForSelectedDate,
     setTrackerItems,
     setTotalCarbs,
-    setTotalGILoad,
     totalCarbs,
   } = useContext(TrackerContext)
 
   const { userId } = useContext(UserContext)
 
   const pressTrackerItem = () => {
-    // const index = itemsForSelectedDate.findIndex(
-    //   ({ description }) => description === item.description
-    // )
-    // if (index > -1) {
-    //   setTrackerSelected(index)
-    // }
     const dateBasedIndex = itemsForSelectedDate.findIndex(
       ({ description }) => description === item.description
     )
@@ -59,15 +51,13 @@ const TrackerItem = ({
   }
 
   const deleteTrackerItem = () => {
-    const newTrackerItems = trackerItems.filter(
-      ({ description, consumptionDate }) => {
-        return description !== item.description
-      }
-    )
+    const newTrackerItems = trackerItems.filter(({ description }) => {
+      return description !== item.description
+    })
     setTrackerItems(newTrackerItems)
 
     const newItemsForSelectedDate = itemsForSelectedDate.filter(
-      ({ description, consumptionDate }) => {
+      ({ description }) => {
         return description !== item.description
       }
     )
@@ -76,32 +66,24 @@ const TrackerItem = ({
     setTrackerSelected(0)
 
     let totalCarbs = 0
-    let totalGILoad = 0
     newItemsForSelectedDate.forEach((trackerItem) => {
       totalCarbs += trackerItem.carbAmt
-      totalGILoad += trackerItem.giAmt
     })
 
     setTotalCarbs(totalCarbs)
-    setTotalGILoad(totalGILoad)
 
-    const logs = [
+    const itemsToSerialize = [
       {
         foodFactsId: Number(item.foodFactsId),
         consumptionDate: formatDateToYYYYMMDD(item.consumptionDate),
         userId: userId,
       },
     ]
-
     const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
 
     // save to the database (including the delete)
-    saveConsumptionLogs(item, logs, dayToUpdate, true, false)
+    saveConsumptionLogs(item, itemsToSerialize, dayToUpdate, true, false)
   }
-
-  useEffect(() => {
-    // }
-  }, [item.portionAmount, totalCarbs])
 
   return (
     <View

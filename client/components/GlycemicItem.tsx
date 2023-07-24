@@ -101,7 +101,7 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
         type AddItem = {
           foodFactsId: number
           consumptionDate: string
-          userId: string | null
+          userId: number | null
         }
         const addedItems: AddItem[] = []
 

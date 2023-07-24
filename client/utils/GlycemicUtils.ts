@@ -17,7 +17,11 @@ export type DataPoint = {
 
 export const saveConsumptionLogs = async (
   trackerItem: TrackerItemType,
-  logs: { foodFactsId: number; consumptionDate: string; userId: number }[],
+  addedItems: {
+    foodFactsId: number
+    consumptionDate: string
+    userId: number | null
+  }[],
   dayToUpdate: string,
   toBeDeleted: boolean,
   toBeInserted: boolean
@@ -28,8 +32,8 @@ export const saveConsumptionLogs = async (
       JSON.stringify(trackerItem) + ', dayToUpdate:' + dayToUpdate
     )
     console.log(
-      'saveConsumptionLogs, logs:',
-      JSON.stringify(logs) +
+      'saveConsumptionLogs, addedItems:',
+      JSON.stringify(addedItems) +
         ', toBeDeleted:' +
         toBeDeleted +
         ', toBeInserted:' +
@@ -40,8 +44,8 @@ export const saveConsumptionLogs = async (
       method: 'post',
       data: {
         query: `
-          mutation ReplaceConsumptionLogs($logs: [ConsumptionLogInput]!, $dayToUpdate: String!, $toBeDeleted: Boolean!, $toBeInserted: Boolean!) {
-            replaceConsumptionLogs(logs: $logs, dayToUpdate: $dayToUpdate, toBeDeleted: $toBeDeleted, toBeInserted: $toBeInserted) {
+          mutation ReplaceConsumptionLogs($addedItems: [ConsumptionLogInput]!, $dayToUpdate: String!, $toBeDeleted: Boolean!, $toBeInserted: Boolean!) {
+            replaceConsumptionLogs(addedItems: $addedItems, dayToUpdate: $dayToUpdate, toBeDeleted: $toBeDeleted, toBeInserted: $toBeInserted) {
               consumption_log_id
               food_facts_id
               consumption_date
@@ -49,7 +53,7 @@ export const saveConsumptionLogs = async (
           }
         `,
         variables: {
-          logs,
+          addedItems,
           dayToUpdate,
           toBeDeleted,
           toBeInserted,
@@ -59,18 +63,20 @@ export const saveConsumptionLogs = async (
 
     return consumptionResponse.data
   } catch (error) {
-    console.error('Error fetching consumption:', error)
+    console.error('Error fetching consumption, saveConsumptionLogs:', error)
   }
 }
 
 export const saveFavouriteFoods = async (
   favouriteFoods: { foodFactsId: number; isFavourite: boolean }[],
-  userId: number
+  userId: number | null
 ) => {
   try {
-    console.log('saveFavouriteFoods, userId:' + userId)
     console.log(
-      'saveFavouriteFoods, favouriteFoods:' + JSON.stringify(favouriteFoods)
+      'saveFavouriteFoods, userId:' +
+        userId +
+        ', favouriteFoods:' +
+        JSON.stringify(favouriteFoods)
     )
     const favouriteFoodResponse = await axios({
       url: 'http://localhost:4001/pete-graphql',
@@ -120,9 +126,9 @@ export const getTotalCarbsForSpecificDay = () => {
 
 export const getGLResult = (carbAmt: number, giAmt: number) => {
   const carbsRatio = +carbAmt / 100
-  const unit = 'g' // hard coding for now
+  const unit = 'g'
   const servingFactor = { g: 1, oz: 28.3495231 }[unit]
-  const serving = 100 // hard coding for now
+  const serving = 100
 
   let glAmt = (giAmt * serving * carbsRatio * servingFactor) / 100
   glAmt = Math.round(glAmt * 100) / 100 //round 2 decimals

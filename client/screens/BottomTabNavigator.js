@@ -23,7 +23,7 @@ const BottomTabNavigator = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Tab.Navigator tabBar={(props) => <AnimatedTabBar {...props} />}>
         <Tab.Screen
-          name="Food Search"
+          name="Search"
           component={SearchScreen}
           initialParams={{
             itemId: 42,
@@ -40,8 +40,8 @@ const BottomTabNavigator = () => {
             ),
             headerTitleStyle: {
               color: 'rgb(124, 131, 134)',
-              fontSize: 44,
-              fontWeight: '200',
+              fontSize: 38,
+              fontWeight: '300',
             },
             headerStyle: {
               backgroundColor: '#1A0546',
@@ -63,8 +63,8 @@ const BottomTabNavigator = () => {
             tabBarBadge: trackerItems.length,
             headerTitleStyle: {
               color: 'rgb(124, 131, 134)',
-              fontSize: 44,
-              fontWeight: '200',
+              fontSize: 38,
+              fontWeight: '300',
             },
             headerStyle: {
               backgroundColor: '#350244',
@@ -98,8 +98,8 @@ const BottomTabNavigator = () => {
             },
             headerTitleStyle: {
               color: 'rgb(124, 131, 134)',
-              fontSize: 44,
-              fontWeight: '200',
+              fontSize: 38,
+              fontWeight: '300',
             },
             tabBarItemStyle: {
               backgroundColor: 'rgba(59, 73, 55, 1)',
@@ -114,7 +114,7 @@ const BottomTabNavigator = () => {
           }}
         />
         <Tab.Screen
-          name="Help"
+          name="Learn"
           component={LearnDeck}
           options={{
             tabBarIcon: ({ ref }) => (
@@ -132,8 +132,8 @@ const BottomTabNavigator = () => {
             },
             headerTitleStyle: {
               color: 'rgb(124, 131, 134)',
-              fontSize: 44,
-              fontWeight: '200',
+              fontSize: 38,
+              fontWeight: '300',
             },
             headerStyle: {
               backgroundColor: '#5C6500',
