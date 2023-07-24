@@ -4,23 +4,17 @@ import {
   TextInput,
   View,
   FlatList,
-  Animated,
   SafeAreaView,
-  Easing,
-  TouchableOpacity,
   Text,
+  TouchableOpacity,
 } from 'react-native'
 
 import TrackerContext from '../state/TrackerContext'
-// import GlycemicContext from '../state/GlycemicContext'
 import GlycemicItem from './GlycemicItem'
-import { getGLResult } from '../utils/GlycemicUtils'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 interface GlycemicListProps {
   searchPhrase: string
-  // glycemicData: any
-  // foodData: any
   setClicked: (clicked: boolean) => void
   itemId: number
 }
@@ -28,69 +22,31 @@ interface GlycemicListProps {
 // the filter
 const GlycemicList = ({
   searchPhrase,
-  // glycemicData,
-  // foodData,
   setClicked,
   itemId,
 }: GlycemicListProps) => {
-  const { setTotalCarbs, setTotalGILoad, foodData } = useContext(TrackerContext)
-  // const { glycemicData } = useContext(GlycemicContext)
-  // const [searchItemSelected, setSearchItemSelected] = useState(0)
+  const { searchFoodList, favFoodList } = useContext(TrackerContext)
   const [searchPhraseNew, setSearchPhraseNew] = useState('')
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
 
   useEffect(() => {}, [])
 
-  // item is an entry in the glycemicData/data list
   const renderItem = ({ item }) => {
-    // const giLoad = getGLResult(item.carbAmt, item.giAmt, item.glAmt);
-    // when no input, show all
+    const shouldRender =
+      (searchPhraseNew === '' ||
+        item.foodName
+          .toUpperCase()
+          .includes(searchPhraseNew.toUpperCase().trim().replace(/\s/g, ''))) &&
+      (!showOnlyFavorites || (showOnlyFavorites && item.isFavourite))
 
-    if (
-      searchPhraseNew === '' &&
-      (!showOnlyFavorites || (showOnlyFavorites && item.isFavourite))
-    ) {
-      return (
-        <GlycemicItem
-          descriptionGI={item.foodName}
-          foodFactsId={item.foodFactsId}
-          carbAmt={Math.round(item.carbohydrates)}
-          giAmt={30} // todo remove when GI goes, it's now carb based
-          glAmt={30} // todo remove when GI goes, it's now carb based
-          fiberAmt={item.totalDietaryFibre}
-          proteinAmt={item.protein}
-          fatAmt={item.fatTotal}
-          energyAmt={item.energy}
-          sugarsAmt={item.totalSugars}
-          sodiumAmt={item.sodium}
-          isFavourite={item.isFavourite}
-        />
-      )
-    }
-    // filter of the foodName
-    if (
-      item.foodName
-        .toUpperCase()
-        .includes(searchPhraseNew.toUpperCase().trim().replace(/\s/g, '')) &&
-      (!showOnlyFavorites || (showOnlyFavorites && item.isFavourite))
-    ) {
-      return (
-        <GlycemicItem
-          descriptionGI={item.foodName}
-          foodFactsId={item.foodFactsId}
-          carbAmt={Math.round(item.carbohydrates)}
-          giAmt={30}
-          glAmt={30}
-          fiberAmt={item.totalDietaryFibre}
-          proteinAmt={item.protein}
-          fatAmt={item.fatTotal}
-          energyAmt={item.energy}
-          sugarsAmt={item.totalSugars}
-          sodiumAmt={item.sodium}
-          isFavourite={item.isFavourite}
-        />
-      )
-    }
+    return shouldRender ? (
+      <GlycemicItem
+        descriptionGI={item.foodName}
+        carbAmt={item.carbohydrates}
+        isFavourite={item.isFavourite}
+        carbBackgroundColor={item.carbBackgroundColor}
+      />
+    ) : null
   }
 
   return (
@@ -115,31 +71,43 @@ const GlycemicList = ({
             />
           </TouchableOpacity>
         </View>
-        <FlatList
-          data={foodData}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.publicFoodKey}
-        />
+        {favFoodList && showOnlyFavorites && (
+          <FlatList
+            data={favFoodList}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.publicFoodKey}
+          />
+        )}
+        {favFoodList && !showOnlyFavorites && (
+          <FlatList
+            data={searchFoodList}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.publicFoodKey}
+          />
+        )}
+        {(!favFoodList || favFoodList.length === 0) && (
+          <View style={styles.errorContainer}>
+            <FontAwesome5 name="frown" size={50} color="grey" />
+            <Text style={styles.errorText}>
+              Oh no! We couldn't load your favorite foods.
+            </Text>
+            <Text style={styles.errorText}>
+              Please check your internet connection and try again.
+            </Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   )
 }
 
 function arePropsEqual(prevProps, nextProps) {
-  console.log('**********prevProps:' + prevProps + ', nextProps:' + nextProps)
   return prevProps.foodName === nextProps.foodName
 }
 
 export default memo(GlycemicList, arePropsEqual)
 
 const styles = StyleSheet.create({
-  // nutritionElementBox: {
-  //   flexDirection: 'row',
-  // },
-  // valueText: {},
-  // labelText: {
-  //   fontWeight: 'bold',
-  // },
   list__container: {
     height: '88%',
     width: '100%',
@@ -165,13 +133,16 @@ const styles = StyleSheet.create({
   checkbox: {
     marginLeft: 10,
   },
-  // box: {
-  //   backgroundColor: 'rgba(59, 73, 55, 1)',
-  //   textAlign: 'center',
-  //   justifyContent: 'center',
-  //   position: 'absolute',
-  //   color: 'white',
-  //   left: 70,
-  //   top: 20,
-  // },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 18,
+    color: 'grey',
+    textAlign: 'center',
+    marginTop: 10,
+  },
 })

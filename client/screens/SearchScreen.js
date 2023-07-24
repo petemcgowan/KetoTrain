@@ -3,21 +3,17 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
-  Button,
   Text,
   TouchableOpacity,
 } from 'react-native'
 
 import GlycemicList from '../components/GlycemicList'
-import SearchBar from '../components/SearchBar'
 import TrackerContext from '../state/TrackerContext'
-
-import usdaNutrition from '../data/usdaNutrition.json'
 
 const SearchScreen = ({ route }) => {
   const [searchPhrase, setSearchPhrase] = useState('')
   const [clicked, setClicked] = useState(false)
-  const { selectedDate, handlePrevDay, handleNextDay, foodData } =
+  const { selectedDate, handlePrevDay, handleNextDay } =
     useContext(TrackerContext)
 
   useEffect(() => {
@@ -55,7 +51,6 @@ const SearchScreen = ({ route }) => {
 
           <GlycemicList
             searchPhrase={searchPhrase}
-            foodData={foodData}
             setClicked={setClicked}
             itemId={route.params.itemId}
           />
@@ -74,7 +69,6 @@ export default SearchScreen
 
 const styles = StyleSheet.create({
   searchPageContainer: {
-    // justifyContent: 'center',
     alignItems: 'center',
     color: '#FFF',
   },
