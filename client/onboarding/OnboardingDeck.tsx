@@ -14,25 +14,19 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import LoginBottomSheet from './LoginBottomSheet'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import UserContext, { UserContextProps } from '../state/UserContext'
-const { height } = Dimensions.get('window')
+// const { height } = Dimensions.get('window')
 
 // const slides = [Onboarding1, Onboarding2, Onboarding3]
 
 const slides = [
   {
     component: SlideComponent,
-    title: 'Achieve Ketosis Naturally',
+    title: 'Stay Informed and Motivated',
     description:
-      'Track your carbohydrate intake and stay within your limits to achieve ketosis. In ketosis, your body switches to burning fat as its primary fuel source, promoting natural weight loss and a boost in energy levels.',
-    // image: require('../assets/images/achieve_ketosis_naturally_2.png'),
-    image: require('../assets/images/achieve_ketosis_naturally_3.png'),
-  },
-  {
-    component: SlideComponent,
-    title: 'Health Benefits Abound',
-    description:
-      'Staying in ketosis is linked to numerous health benefits. Aside from weight loss, it may improve heart health, combat brain disorders, and help in managing diabetes. Our app helps you stay on top of your carb intake to reap these rewards.',
-    image: require('../assets/images/health_benefits_abound.png'),
+      'Our app empowers you with knowledge about ketosis and the ketogenic diet. Track your progress, set goals, and gain insights that keep you motivated on your journey towards improved health.',
+    // image: require('../assets/images/stay_informed_and_motivated_2.png'),
+    image: require('../assets/images/stay_informed_and_motivated.png'),
+    color: 'rgb(38, 27, 21)',
   },
   {
     component: SlideComponent,
@@ -41,20 +35,31 @@ const slides = [
       'With access to an extensive list of over 2000 foods, finding and tracking the carbohydrate content of what you eat is effortless. Make informed choices and easily manage your daily intake.',
     // image: require('../assets/images/extensive_food_database_3.png'),
     image: require('../assets/images/extensive_food_database_4.png'),
+    color: 'rgb(9, 21, 39)',
   },
   {
     component: SlideComponent,
-    title: 'Stay Informed and Motivated',
+    title: 'Health Benefits Abound',
     description:
-      'Our app empowers you with knowledge about ketosis and the ketogenic diet. Track your progress, set goals, and gain insights that keep you motivated on your journey towards improved health.',
-    // image: require('../assets/images/stay_informed_and_motivated_2.png'),
-    image: require('../assets/images/stay_informed_and_motivated.png'),
+      'Staying in ketosis is linked to numerous health benefits. Aside from weight loss, it may improve heart health, combat brain disorders, and help in managing diabetes. Our app helps you stay on top of your carb intake to reap these rewards.',
+    image: require('../assets/images/health_benefits_abound.png'),
+    color: 'rgb(25, 26, 29)',
   },
   {
     component: SlideComponent,
     title: 'Tailored to Your Journey',
     description: `Whether you're just starting out or have been following a ketogenic lifestyle for a while, our app provides the tools you need to effectively track your carbohydrate intake and stay in ketosis.`,
     image: require('../assets/images/tailored_to_your_journey.png'),
+    color: 'rgb(25, 26, 29)',
+  },
+  {
+    component: SlideComponent,
+    title: 'Achieve Ketosis Naturally',
+    description:
+      'Track your carbohydrate intake and stay within your limits to achieve ketosis. In ketosis, your body switches to burning fat as its primary fuel source, promoting natural weight loss and a boost in energy levels.',
+    // image: require('../assets/images/achieve_ketosis_naturally_2.png'),
+    image: require('../assets/images/achieve_ketosis_naturally_3.png'),
+    color: 'rgb(38, 27, 21)',
   },
 ]
 
@@ -65,13 +70,13 @@ const OnboardingDeck = () => {
   const [isSigninInProgress, setSigninInProgress] = useState(false)
   const navigation = useNavigation()
   const [backgroundColor, setBackgroundColor] = useState('#000')
-  const slideColors = [
-    'rgb(38, 27, 21)',
-    'rgb(25, 26, 29)',
-    'rgb(9, 21, 39)',
-    'rgb(38, 27, 21)',
-    'rgb(25, 26, 29)',
-  ]
+  // const slideColors = [
+  //   'rgb(38, 27, 21)', // 1
+  //   'rgb(25, 26, 29)', // 2
+  //   'rgb(9, 21, 39)', // 3
+  //   'rgb(38, 27, 21)', // 4
+  //   'rgb(25, 26, 29)', // 5
+  // ]
   const { setEmailAddress } = useContext(UserContext) as UserContextProps
 
   const onScroll = (event: any) => {
@@ -85,8 +90,8 @@ const OnboardingDeck = () => {
       if (slide > slides.length - 1) {
         console.log('Slides end reached')
       } else {
-        setBackgroundColor(slideColors[slide]) // Set the background color when the slide changes
-        console.log(slideColors[slide])
+        setBackgroundColor(slides[slide].color) // Set the background color when the slide changes
+        console.log('slides[slide].color:' + slides[slide].color)
       }
     }
   }

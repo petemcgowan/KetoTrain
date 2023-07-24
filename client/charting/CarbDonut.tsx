@@ -12,7 +12,7 @@ import TrackerContext from '../state/TrackerContext'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
-const { height, width } = Dimensions.get('screen')
+const { width } = Dimensions.get('screen')
 
 interface DonutProps {
   percentage: number

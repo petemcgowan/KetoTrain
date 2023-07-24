@@ -1,15 +1,29 @@
 import React, { useEffect, useContext } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, Dimensions } from 'react-native'
 import LottieView from 'lottie-react-native'
 import { useNavigation } from '@react-navigation/native'
 import TrackerContext from '../state/TrackerContext'
 import UserContext from '../state/UserContext'
 import axios from 'axios'
 
+const { height, width } = Dimensions.get('screen')
+
 export default function LoadingScreen() {
   const navigation = useNavigation()
-  const { setTrackerItems, setFoodData } = useContext(TrackerContext)
+  const { setTrackerItems, setFoodData, setSearchFoodList, setFavFoodList } =
+    useContext(TrackerContext)
   const { emailAddress, consumptionDate, setUserId } = useContext(UserContext)
+
+  const findDuplicates = (data) => {
+    const publicFoodKeys = data.map((item) => item.publicFoodKey)
+    const duplicates = data.filter(
+      (item, index) =>
+        publicFoodKeys.indexOf(item.publicFoodKey) !== index &&
+        publicFoodKeys.lastIndexOf(item.publicFoodKey) === index
+    )
+
+    return duplicates
+  }
 
   useEffect(() => {
     console.log('App, useEffect')
@@ -91,16 +105,50 @@ export default function LoadingScreen() {
             `,
           },
         })
+        // augment the return  with calculated values
+        const foodFacts =
+          userDashboardDataResponse.data.data.getUserDashboardData.foodFacts
+        // console.log('foodFacts:' + JSON.stringify(foodFacts))
+        const processedFoodData = foodFacts.map((item) => ({
+          ...item,
+          carbBackgroundColor:
+            item.carbohydrates > 22
+              ? '#1A0546'
+              : item.carbohydrates > 11
+              ? '#5C6500'
+              : '#350244',
+          carbohydrates: Math.round(item.carbohydrates),
+        }))
+
+        setFoodData(processedFoodData)
+
+        const searchFoodList = processedFoodData.map((item) => ({
+          foodName: item.foodName,
+          foodFactsId: item.foodFactsId,
+          publicFoodKey: item.publicFoodKey,
+          isFavourite: item.isFavourite,
+          carbBackgroundColor: item.carbBackgroundColor,
+          carbohydrates: item.carbohydrates,
+        }))
+        // console.log('searchFoodList:' + JSON.stringify(searchFoodList))
+
+        setSearchFoodList(searchFoodList)
+
+        // console.log(
+        //   'findDuplicates processedFoodData:' +
+        //     JSON.stringify(findDuplicates(processedFoodData))
+        // )
         console.log(
-          'getUserDashboardData.data.data.getUserDashboardData.userInfo:' +
-            JSON.stringify(
-              userDashboardDataResponse.data.data.getUserDashboardData.userInfo
-            )
+          'findDuplicates searchFoodList:' +
+            JSON.stringify(findDuplicates(searchFoodList))
         )
 
-        setFoodData(
-          userDashboardDataResponse.data.data.getUserDashboardData.foodFacts
-        )
+        const favFoodList = processedFoodData.filter((item) => item.isFavourite)
+        setFavFoodList(favFoodList)
+        console.log('favFoodList:' + JSON.stringify(favFoodList))
+
+        // Create favourites view array
+
         setUserId(
           parseInt(
             userDashboardDataResponse.data.data.getUserDashboardData.userInfo
@@ -111,24 +159,6 @@ export default function LoadingScreen() {
         const consumptionLogWithFoodFacts =
           userDashboardDataResponse.data.data.getUserDashboardData
             .consumptionLogWithFoodFacts
-        console.log(
-          'consumptionLogWithFoodFacts:' +
-            JSON.stringify(consumptionLogWithFoodFacts)
-        )
-        console.log(
-          'waterConsumptions:' +
-            JSON.stringify(
-              userDashboardDataResponse.data.data.getUserDashboardData
-                .waterConsumptions
-            )
-        )
-        console.log(
-          'weightLogs:' +
-            JSON.stringify(
-              userDashboardDataResponse.data.data.getUserDashboardData
-                .weightLogs
-            )
-        )
 
         if (Array.isArray(consumptionLogWithFoodFacts)) {
           setTrackerItems(
@@ -138,16 +168,12 @@ export default function LoadingScreen() {
                 foodFactsId: item.food_facts_id.toString(),
                 description: item.food_name,
                 carbAmt: item.carbohydrates,
-                giAmt: 30, // Placeholder value as giAmt is not available in the response
-                glAmt: 30, // Placeholder value as glAmt is not available in the response
                 fiberAmt: item.total_dietary_fibre,
                 proteinAmt: item.protein,
                 fatAmt: item.fat_total,
                 energyAmt: item.energy,
                 sugarsAmt: item.total_sugars,
                 sodiumAmt: item.sodium,
-                giBackgroundColor: '#350244', // Placeholder value as giBackgroundColor is not available in the response
-                glBackgroundColor: '#350244', // Placeholder value as glBackgroundColor is not available in the response
                 carbBackgroundColor:
                   item.carbohydrates > 22
                     ? '#1A0546'
@@ -160,8 +186,6 @@ export default function LoadingScreen() {
             })
           )
         }
-
-        // return userDashboardDataResponse.data.data.allFoodFacts
       } catch (error) {
         console.error('Error fetching food facts:', error)
       }
@@ -170,40 +194,55 @@ export default function LoadingScreen() {
     getUserDashboardData()
     const timeoutId = setTimeout(() => {
       console.log('about to navigate to MainApp')
-      navigation.navigate('MainApp')
-    }, 2000) // wait 2 seconds
+      // navigation.navigate('MainApp')
+    }, 5000) // wait 2.8 seconds
     // navigation.navigate('MainApp')
     return () => clearTimeout(timeoutId) // cleanup on component unmount
   }, [navigation])
 
   return (
     <View style={styles.container}>
-      <View style={styles.text}>
-        <Text>Setting up your data...</Text>
-      </View>
-      <View style={styles.lottie}>
+      <View style={styles.lottieContainer}>
         <LottieView
           source={require('../assets/lottie/97930-loading.json')}
           autoPlay
-          loop
+          // loop
+          style={{ width: width * 0.6, height: height * 0.3 }}
         />
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.settingUpText}>Setting up your data...</Text>
       </View>
     </View>
   )
 }
+// rgb(16, 7, 159) dark blue
+// rgb(1, 179, 136) light green
+// rgb(91 194 231) pale blue
+// rgb(255, 191, 63) yellow
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#2f5da3',
+    backgroundColor: '#F5F5DC', // '#D8EAD2' best/green
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
-    height: 100,
+  textContainer: {
+    height: 80,
+    backgroundColor: 'rgb(91,194,231)',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    borderRadius: 80,
   },
-  lottie: {
+  settingUpText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  lottieContainer: {
     height: 200,
   },
 })
