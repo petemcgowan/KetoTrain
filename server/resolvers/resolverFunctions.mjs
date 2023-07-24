@@ -36,7 +36,7 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
         userId
     )
 
-    const logs = await ConsumptionLogs.findAll({
+    const consumptionLogs = await ConsumptionLogs.findAll({
       where: {
         // consumption_date: consumptionDate,
         user_id: userId,
@@ -65,7 +65,7 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
       ],
     })
 
-    const result = logs.map((log) => {
+    const result = consumptionLogs.map((log) => {
       return {
         consumption_log_id: log.consumption_log_id,
         consumption_date: log.consumption_date,
@@ -85,7 +85,7 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
 
     return result
   } catch (error) {
-    console.error('Error fetching consumption logs with food facts:', error)
+    console.error('Error fetching  consumptionLogs with food facts:', error)
     throw error
   }
 }
@@ -200,21 +200,24 @@ export async function getAllConsumptionLog() {
 }
 
 export async function replaceConsumptionLogs(
-  logs,
+  addedItems,
   dayToUpdate,
   toBeDeleted,
   toBeInserted
 ) {
   let t
   try {
-    console.log('replaceConsumptionLogs called, logs: ', JSON.stringify(logs))
+    console.log(
+      'replaceConsumptionLogs called, addedItems: ',
+      JSON.stringify(addedItems)
+    )
     console.log('replaceConsumptionLogs called, toBeDeleted: ', toBeDeleted)
 
     t = await ConsumptionLogs.sequelize.transaction()
 
     // Delete records if needed/specified
     if (toBeDeleted) {
-      const foodFactsIdsToDelete = logs.map((log) => log.foodFactsId)
+      const foodFactsIdsToDelete = addedItems.map((log) => log.foodFactsId)
       console.log('foodFactsIdsToDelete:' + foodFactsIdsToDelete)
 
       await ConsumptionLogs.destroy({
@@ -231,24 +234,29 @@ export async function replaceConsumptionLogs(
     }
 
     // Insert new records
-    let newConsumptionLogs = []
+    let newConsumptionAddedItems = []
     if (toBeInserted) {
-      const snakeCasedLogs = logs.map(toSnakeCase)
-      console.log('snakeCasedLogs:' + JSON.stringify(snakeCasedLogs))
-      newConsumptionLogs = await ConsumptionLogs.bulkCreate(snakeCasedLogs, {
-        transaction: t,
-      })
+      const snakeCasedAddedItems = addedItems.map(toSnakeCase)
+      console.log(
+        'snakeCasedAddedItems:' + JSON.stringify(snakeCasedAddedItems)
+      )
+      newConsumptionAddedItems = await ConsumptionLogs.bulkCreate(
+        snakeCasedAddedItems,
+        {
+          transaction: t,
+        }
+      )
     }
 
     await t.commit()
 
-    return newConsumptionLogs
+    return newConsumptionAddedItems
   } catch (error) {
     // Handle error and maybe rollback the transaction
     if (t) {
       await t.rollback()
     }
-    console.error('Error replacing consumption logs:', error)
+    console.error('Error replacing consumption addedItems:', error)
     throw error
   }
 }

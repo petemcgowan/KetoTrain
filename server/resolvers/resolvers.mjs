@@ -95,7 +95,7 @@ export const peteResolvers = {
     console.log('replaceConsumptionLogs args' + JSON.stringify(args))
     // Delete existing records for the current day and add new ones
     const newConsumptionLogs = await replaceConsumptionLogs(
-      args.logs,
+      args.addedItems,
       args.dayToUpdate,
       args.toBeDeleted,
       args.toBeInserted

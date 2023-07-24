@@ -111,7 +111,7 @@ export const peteSchema = buildSchema(`
   }
   type Mutation {
     fillFoodFacts: [FoodFacts]
-    replaceConsumptionLogs(logs: [ConsumptionLogInput]!, dayToUpdate: String!, toBeDeleted: Boolean!, toBeInserted: Boolean! ): [ConsumptionLogs]
+    replaceConsumptionLogs(addedItems: [ConsumptionLogInput]!, dayToUpdate: String!, toBeDeleted: Boolean!, toBeInserted: Boolean! ): [ConsumptionLogs]
     setFavouriteFoods(favouriteFoods: [FavouriteFoodsInput]!, userId: Int!): FavouriteFoods
     setGLWaterConsumption(waterConsumptions: [WaterConsumptionsInput!]!): [WaterConsumptions]!
     setGLWeightLogs(weightLogs: [WeightLogsInput!]!): [WeightLogs]!
