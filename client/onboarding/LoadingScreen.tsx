@@ -194,8 +194,8 @@ export default function LoadingScreen() {
     getUserDashboardData()
     const timeoutId = setTimeout(() => {
       console.log('about to navigate to MainApp')
-      // navigation.navigate('MainApp')
-    }, 5000) // wait 2.8 seconds
+      navigation.navigate('MainApp')
+    }, 2000) // wait
     // navigation.navigate('MainApp')
     return () => clearTimeout(timeoutId) // cleanup on component unmount
   }, [navigation])
@@ -206,7 +206,7 @@ export default function LoadingScreen() {
         <LottieView
           source={require('../assets/lottie/97930-loading.json')}
           autoPlay
-          // loop
+          loop
           style={{ width: width * 0.6, height: height * 0.3 }}
         />
       </View>
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#F5F5DC', // '#D8EAD2' best/green
+    backgroundColor: '#F5F5DC', // '#D8EAD2' alt colour green
     alignItems: 'center',
     justifyContent: 'center',
   },

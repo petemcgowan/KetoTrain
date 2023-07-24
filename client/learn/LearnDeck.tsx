@@ -156,6 +156,16 @@ const LearnDeck = () => {
           )
         })}
       </ScrollView>
+      <View style={styles.pagination}>
+        {slides.map((_, index) => (
+          <Text
+            key={index}
+            style={index === activeSlide ? styles.activeDot : styles.dot}
+          >
+            •
+          </Text>
+        ))}
+      </View>
     </SafeAreaView>
   )
 }
