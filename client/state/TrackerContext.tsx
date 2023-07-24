@@ -1,21 +1,24 @@
 import React from 'react'
-import { TrackerContextType } from './TrackerContextType' // adjust the path to your actual file
+import { TrackerContextType } from './TrackerContextType'
 
 // Initial values are not really used, they serve as a "fallback" and for type inference
 const defaultValues: TrackerContextType = {
   trackerItems: [],
-  setTrackerItems: () => {},
+  setTrackerItems: (value) => {},
   totalCarbs: 0,
-  setTotalCarbs: () => {},
-  totalGILoad: 0,
-  setTotalGILoad: () => {},
+  setTotalCarbs: (value) => {},
   selectedDate: new Date(),
-  setSelectedDate: () => {},
+  setSelectedDate: (value) => {},
   itemsForSelectedDate: [],
-  setItemsForSelectedDate: () => {},
+  setItemsForSelectedDate: (value) => {},
   handlePrevDay: () => {},
   handleNextDay: () => {},
   foodData: [],
+  setFoodData: (value) => {},
+  searchFoodList: [],
+  setSearchFoodList: (value) => {},
+  favFoodList: [],
+  setFavFoodList: (value) => {},
 }
 
 const TrackerContext = React.createContext<TrackerContextType>(defaultValues)

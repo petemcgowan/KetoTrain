@@ -1,5 +1,5 @@
 export type FoodDataType = {
-  food_facts_id: string
+  foodFactsId: number
   foodName: string
   carbohydrates: number
   totalDietaryFibre: number
