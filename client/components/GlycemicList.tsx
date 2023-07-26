@@ -13,6 +13,8 @@ import TrackerContext from '../state/TrackerContext'
 import GlycemicItem from './GlycemicItem'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
+import { ThemeContext } from '../state/ThemeContext'
+
 interface GlycemicListProps {
   searchPhrase: string
   setClicked: (clicked: boolean) => void
@@ -26,10 +28,19 @@ const GlycemicList = ({
   itemId,
 }: GlycemicListProps) => {
   const { searchFoodList, favFoodList } = useContext(TrackerContext)
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
   const [searchPhraseNew, setSearchPhraseNew] = useState('')
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
-
-  useEffect(() => {}, [])
+  console.log('theme.navigationBackground:' + theme.navigationBackground)
+  console.log('theme.tableBackground:' + theme.tableBackground)
+  useEffect(() => {
+    console.log('theme:' + JSON.stringify(theme))
+  }, [theme])
 
   const renderItem = ({ item }) => {
     const shouldRender =
@@ -50,12 +61,12 @@ const GlycemicList = ({
   }
 
   return (
-    <SafeAreaView style={styles.list__container}>
+    <SafeAreaView style={styles.searchAndList_container}>
       <View>
         <View style={styles.searchContainer}>
           <TextInput
             placeholder="Search"
-            style={styles.input}
+            style={styles.searchInput}
             placeholderTextColor="#FFFFFF"
             value={searchPhraseNew}
             onChangeText={setSearchPhraseNew}
@@ -107,42 +118,46 @@ function arePropsEqual(prevProps, nextProps) {
 
 export default memo(GlycemicList, arePropsEqual)
 
-const styles = StyleSheet.create({
-  list__container: {
-    height: '88%',
-    width: '100%',
-    justifyContent: 'center',
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#000000',
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    marginHorizontal: 10,
-    marginVertical: 5,
-  },
-  input: {
-    paddingTop: 5,
-    fontSize: 22,
-    color: '#FFFFFF',
-    marginLeft: 10,
-    flex: 1,
-  },
-  checkbox: {
-    marginLeft: 10,
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  errorText: {
-    fontSize: 18,
-    color: 'grey',
-    textAlign: 'center',
-    marginTop: 10,
-  },
-})
+const getStyles = (theme) =>
+  StyleSheet.create({
+    searchAndList_container: {
+      height: '88%',
+      width: '100%',
+      justifyContent: 'center',
+      backgroundColor: theme.viewBackground,
+    },
+    searchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: theme.viewBackground,
+      // backgroundColor: '#000000',
+      paddingHorizontal: 10,
+      borderRadius: 10,
+      marginHorizontal: 10,
+      marginVertical: 5,
+    },
+    searchInput: {
+      paddingTop: 5,
+      fontSize: 22,
+      color: theme.buttonText,
+      // color: '#FFFFFF',
+      marginLeft: 10,
+      flex: 1,
+    },
+    checkbox: {
+      marginLeft: 10,
+    },
+    errorContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    },
+    errorText: {
+      fontSize: 18,
+      color: 'grey',
+      textAlign: 'center',
+      marginTop: 10,
+    },
+  })

@@ -9,6 +9,7 @@ import {
 import TrackerContext from '../state/TrackerContext'
 import UserContext from '../state/UserContext'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { ThemeContext } from '../state/ThemeContext'
 
 import { TrackerItemProps } from '../types/ItemTypes'
 import {
@@ -34,6 +35,12 @@ const TrackerItem = ({
     setTotalCarbs,
     totalCarbs,
   } = useContext(TrackerContext)
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
 
   const { userId } = useContext(UserContext)
 
@@ -95,7 +102,7 @@ const TrackerItem = ({
     >
       <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>
         <View style={{ width: width * 0.1 }}>
-          <FontAwesome5 name="info-circle" size={35} color="#2196F3" />
+          <FontAwesome5 name="info-circle" size={35} color={theme.iconFill} />
         </View>
       </TouchableOpacity>
 
@@ -110,14 +117,14 @@ const TrackerItem = ({
         onPress={favouriteTrackerItem}
         style={{ width: width * 0.1 }}
       >
-        <FontAwesome5 name="heart" size={35} color="#2196F3" />
+        <FontAwesome5 name="heart" size={35} color={theme.iconFill} />
       </TouchableOpacity>
 
       <TouchableOpacity
         onPress={deleteTrackerItem}
         style={{ width: width * 0.1 }}
       >
-        <FontAwesome5 name="trash" size={35} color="#2196F3" />
+        <FontAwesome5 name="trash" size={35} color={theme.iconFill} />
       </TouchableOpacity>
     </View>
   )
@@ -125,11 +132,12 @@ const TrackerItem = ({
 
 export default TrackerItem
 
-const styles = StyleSheet.create({
-  description: {
-    color: 'rgb(124, 131, 134)',
-    alignItems: 'center',
-    fontSize: 28,
-    fontWeight: '300',
-  },
-})
+const getStyles = (theme) =>
+  StyleSheet.create({
+    description: {
+      color: 'rgb(124, 131, 134)',
+      alignItems: 'center',
+      fontSize: 28,
+      fontWeight: '300',
+    },
+  })

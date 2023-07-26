@@ -18,6 +18,7 @@ import {
   formatDateToYYYYMMDD,
 } from '../utils/GlycemicUtils'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { ThemeContext } from '../state/ThemeContext'
 
 const { width } = Dimensions.get('screen')
 
@@ -47,6 +48,12 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
   } = useContext<TrackerContextType>(TrackerContext)
 
   const { userId } = useContext<UserContextProps>(UserContext)
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
 
   const dynamicStyles = useMemo(
     () =>
@@ -139,17 +146,22 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
   return (
     <TouchableOpacity onPress={addTrackerItem}>
       <View style={dynamicStyles.listItemContainerStyle}>
-        <Text style={styles.description}>{descriptionGI}</Text>
+        <Text style={styles.tableText}>{descriptionGI}</Text>
         <TouchableOpacity onPress={favouriteFoodItem}>
           <FontAwesome5
             name="heart"
             size={35}
-            color="#2196F3"
+            color={theme.iconFill}
             solid={itemIsFavourite ? true : false}
           />
         </TouchableOpacity>
-        <View style={[styles.box, { backgroundColor: carbBackgroundColor }]}>
-          <Text style={styles.text}>{carbAmt}</Text>
+        <View
+          style={[
+            styles.carbAmtTableCell,
+            { backgroundColor: carbBackgroundColor },
+          ]}
+        >
+          <Text style={styles.carbAmtTableText}>{carbAmt}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -164,26 +176,28 @@ function arePropsEqual(
 }
 export default memo(GlycemicItem, arePropsEqual)
 
-const styles = StyleSheet.create({
-  description: {
-    width: width * 0.7,
-    textAlign: 'right',
-    borderRightColor: 'pink',
-    borderRightWidth: 1,
-    fontSize: 28,
-    fontWeight: '300',
-    color: 'rgba(201, 189, 187, 1)',
-  },
-  box: {
-    width: 48,
-    height: 48,
-  },
-  text: {
-    color: 'rgba(201, 189, 187, 1)',
-    fontSize: 30,
-    textAlign: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontWeight: '200',
-  },
-})
+const getStyles = (theme) =>
+  StyleSheet.create({
+    tableText: {
+      width: width * 0.7,
+      textAlign: 'right',
+      borderRightColor: theme.tableLineColor,
+      borderRightWidth: 1,
+      fontSize: 28,
+      fontWeight: '300',
+      color: theme.buttonText,
+    },
+    carbAmtTableCell: {
+      width: 48,
+      height: 48,
+      backgroundColor: theme.tableBackground,
+    },
+    carbAmtTableText: {
+      color: theme.buttonText,
+      fontSize: 30,
+      textAlign: 'center',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontWeight: '200',
+    },
+  })

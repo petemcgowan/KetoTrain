@@ -3,13 +3,20 @@ import { useEffect, useContext } from 'react'
 import { View, SafeAreaView, StyleSheet } from 'react-native'
 import CarbDonut from './CarbDonut'
 import TrackerContext from '../state/TrackerContext'
+import { ThemeContext } from '../state/ThemeContext'
 
 export default function CarbCircleChart({ focused }) {
   const { totalCarbs } = useContext(TrackerContext)
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
 
-  let colorOfCarbChart = 'aqua'
+  let colorOfCarbChart = theme.middlingBackground
   if (totalCarbs > 50) {
-    colorOfCarbChart = 'tomato'
+    colorOfCarbChart = theme.badBackground
   }
 
   useEffect(() => {
@@ -42,8 +49,9 @@ export default function CarbCircleChart({ focused }) {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#000',
-  },
-})
+const getStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      backgroundColor: theme.viewBackground,
+    },
+  })
