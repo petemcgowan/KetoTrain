@@ -11,17 +11,29 @@ import Lottie from 'lottie-react-native'
 import SearchScreen from './SearchScreen'
 import KetoTrackerScreen from './KetoTrackerScreen'
 import KetoLimitScreen from './KetoLimitScreen'
-import LearnDeck from '../learn/LearnDeck'
+import LearnDeck from './LearnDeck'
+import { ThemeContext } from '../state/ThemeContext'
 
 const Tab = createBottomTabNavigator()
 export const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
 const BottomTabNavigator = () => {
   const { totalCarbs, trackerItems } = useContext(TrackerContext)
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Tab.Navigator tabBar={(props) => <AnimatedTabBar {...props} />}>
+      <Tab.Navigator
+        screenOptions={{
+          cardStyle: { backgroundColor: theme.viewBackground },
+        }}
+        tabBar={(props) => <AnimatedTabBar {...props} />}
+      >
         <Tab.Screen
           name="Search"
           component={SearchScreen}
@@ -39,12 +51,12 @@ const BottomTabNavigator = () => {
               />
             ),
             headerTitleStyle: {
-              color: 'rgb(124, 131, 134)',
+              color: theme.tabHeaderText,
               fontSize: 38,
               fontWeight: '300',
             },
             headerStyle: {
-              backgroundColor: '#1A0546',
+              backgroundColor: theme.tabHeaderBackground,
             },
           }}
         />
@@ -62,12 +74,12 @@ const BottomTabNavigator = () => {
             ),
             tabBarBadge: trackerItems.length,
             headerTitleStyle: {
-              color: 'rgb(124, 131, 134)',
+              color: theme.tabHeaderText,
               fontSize: 38,
               fontWeight: '300',
             },
             headerStyle: {
-              backgroundColor: '#350244',
+              backgroundColor: theme.tabHeaderBackground,
             },
             tabBarItemStyle: {
               backgroundColor: 'rgba(59, 73, 55, 1)',
@@ -94,10 +106,10 @@ const BottomTabNavigator = () => {
             tabBarBadge: totalCarbs,
             headerStyle: {
               opacity: 0.9,
-              backgroundColor: 'aqua',
+              backgroundColor: theme.tabHeaderBackground,
             },
             headerTitleStyle: {
-              color: 'rgb(124, 131, 134)',
+              color: theme.tabHeaderText,
               fontSize: 38,
               fontWeight: '300',
             },
@@ -107,7 +119,6 @@ const BottomTabNavigator = () => {
             },
             tabBarBadgeStyle: {
               backgroundColor: '#2196F3',
-
               color: '#BBBccc',
               fontSize: 17,
             },
@@ -131,12 +142,12 @@ const BottomTabNavigator = () => {
               padding: 10,
             },
             headerTitleStyle: {
-              color: 'rgb(124, 131, 134)',
+              color: theme.tabHeaderText,
               fontSize: 38,
               fontWeight: '300',
             },
             headerStyle: {
-              backgroundColor: '#5C6500',
+              backgroundColor: theme.tabHeaderBackground,
             },
             tabBarItemStyle: {
               backgroundColor: 'rgba(59, 73, 55, 1)',
@@ -150,38 +161,15 @@ const BottomTabNavigator = () => {
 
 export default BottomTabNavigator
 
-export const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: '#350244',
-  },
-  activeBackground: {
-    position: 'absolute',
-  },
-  tabBarContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  component: {
-    height: 60,
-    width: 60,
-    marginTop: -5,
-  },
-  componentCircle: {
-    flex: 1,
-    borderRadius: 30,
-    backgroundColor: '#3490dc',
-  },
-  iconContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  icon: {
-    height: 55,
-    width: 55,
-  },
-})
+const getStyles = (theme) =>
+  StyleSheet.create({
+    component: {
+      height: 60,
+      width: 60,
+      marginTop: -5,
+    },
+    icon: {
+      height: 55,
+      width: 55,
+    },
+  })

@@ -15,6 +15,7 @@ import CarbCircleChart from '../charting/CarbCircleChart'
 import NutrientBottomSheet from './NutrientBottomSheet'
 import BottomSheet from 'reanimated-bottom-sheet'
 import { TrackerItemType } from '../types/TrackerItemType'
+import { ThemeContext } from '../state/ThemeContext'
 
 type TrackerItemProps = {
   item: TrackerItemType
@@ -37,6 +38,12 @@ const KetoTrackerScreen = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [focused, setFocused] = useState(false)
   const navigation = useNavigation()
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
 
   const renderTrackerItem = ({ item, index }: TrackerItemProps) => (
     <TrackerItem
@@ -123,85 +130,37 @@ const KetoTrackerScreen = () => {
 
 export default KetoTrackerScreen
 
-const styles = StyleSheet.create({
-  trackerContainer: {
-    flex: 1,
-    backgroundColor: 'black',
-    color: '#FFF',
-    // marginTop: 27,
-    // height: height * 0.4,
-  },
-  dateHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#F5F5F5',
-  },
-  dateButton: {
-    backgroundColor: '#007BFF',
-    padding: 10,
-    borderRadius: 20,
-  },
-  dateButtonText: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  dateDisplayContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  dateDisplayText: {
-    color: 'blue',
-    fontSize: 20,
-  },
-
-  //////////////////////////////////
-  panel: {
-    // backgroundColor: 'green', //temp
-    backgroundColor: 'rgb(32, 32, 32)',
-    // height: height * 0.4,
-    padding: 20,
-  },
-  panelHeader: {
-    // backgroundColor: 'yellow', //temp
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  panelTitle: {
-    fontSize: 20,
-    color: 'rgb(2, 158, 147)',
-    textAlign: 'center',
-  },
-  panelContent: {
-    // backgroundColor: 'red', //temp
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  panelFooter: {
-    // backgroundColor: 'pink', //temp
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  button: {
-    // backgroundColor: 'blue', //temp
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgb(27, 46, 46)',
-    padding: 10,
-    marginHorizontal: 10,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    textTransform: 'uppercase',
-  },
-})
+const getStyles = (theme) =>
+  StyleSheet.create({
+    trackerContainer: {
+      flex: 1,
+      backgroundColor: theme.viewBackground,
+      color: theme.buttonText,
+    },
+    dateHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 5,
+      backgroundColor: theme.viewBackground,
+    },
+    dateButton: {
+      backgroundColor: theme.buttonBackground,
+      paddingVertical: 10,
+      paddingHorizontal: 18,
+      borderRadius: 20,
+    },
+    dateButtonText: {
+      color: theme.buttonText,
+      fontSize: 24,
+      fontWeight: 'bold',
+    },
+    dateDisplayContainer: {
+      flex: 1,
+      alignItems: 'center',
+    },
+    dateDisplayText: {
+      color: theme.buttonText,
+      fontSize: 24,
+    },
+  })

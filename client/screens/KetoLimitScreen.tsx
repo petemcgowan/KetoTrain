@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
-
-import { StyleSheet, View, SafeAreaView } from 'react-native'
-
+import { StyleSheet, View, SafeAreaView, Text, Dimensions } from 'react-native'
 import DonutFactory from '../charting/DonutFactory'
-
 import LineChartContainer from '../charting/LineChartContainer'
+import { ThemeContext } from '../state/ThemeContext'
+
+const { width, height } = Dimensions.get('window')
 
 // for reference only, this is the old chart config
 const chartConfigs = [
@@ -26,16 +26,22 @@ const chartConfigs = [
   },
 ]
 
-interface KetoLimitScreenProps {
-  totalCarbsForReals: number
-}
+const KetoLimitScreen = () => {
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
+  // /*style={{ backgroundColor: 'green', width: width, height: height }}*/
 
-const KetoLimitScreen = ({ totalCarbsForReals }: KetoLimitScreenProps) => {
   return (
-    <View style={styles.ketoLimitContainer}>
-      <SafeAreaView style={styles.root}>
-        {/* <DonutFactory /> */}
-        <LineChartContainer />
+    <View style={styles.tabContainer}>
+      <SafeAreaView style={styles.chartContainer}>
+        <View style={styles.ketoLimitContainer}>
+          {/* <DonutFactory /> */}
+          <LineChartContainer />
+        </View>
       </SafeAreaView>
     </View>
   )
@@ -43,16 +49,21 @@ const KetoLimitScreen = ({ totalCarbsForReals }: KetoLimitScreenProps) => {
 
 export default KetoLimitScreen
 
-const styles = StyleSheet.create({
-  ketoLimitContainer: {
-    marginTop: 40,
-    backgroundColor: 'pink',
-  },
-  root: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    color: '#FFF',
-    fontFamily: 'Karla-Light',
-  },
-})
+const getStyles = (theme) =>
+  StyleSheet.create({
+    tabContainer: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: theme.viewBackground,
+    },
+    ketoLimitContainer: {
+      marginTop: 40,
+      backgroundColor: theme.viewBackground,
+    },
+    chartContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.viewBackground,
+      color: theme.buttonText,
+      fontFamily: 'Karla-Light',
+    },
+  })

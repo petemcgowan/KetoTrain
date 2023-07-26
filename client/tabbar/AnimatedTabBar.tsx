@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useContext, useReducer } from 'react'
 import { View, LayoutChangeEvent, StyleSheet } from 'react-native'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -8,8 +8,9 @@ import {
   withTiming,
   useDerivedValue,
 } from 'react-native-reanimated'
-import { styles, AnimatedSvg } from '../screens/BottomTabNavigator'
+import { AnimatedSvg } from '../screens/BottomTabNavigator'
 import { TabBarComponent } from './TabBarComponent'
+import { ThemeContext } from '../state/ThemeContext'
 
 export const AnimatedTabBar = ({
   state: { index: activeIndex, routes },
@@ -17,6 +18,12 @@ export const AnimatedTabBar = ({
   descriptors,
 }: BottomTabBarProps) => {
   const { bottom } = useSafeAreaInsets()
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
 
   // get information about the components position on the screen -----
   const reducer = (state: any, action: { x: number; index: number }) => {
@@ -62,7 +69,7 @@ export const AnimatedTabBar = ({
         style={[styles.activeBackground, animatedStyles]}
       >
         <Path
-          fill="#604AE6"
+          fill={theme.tabIconBorderFill}
           d="M20 0H0c11.046 0 20 8.953 20 20v5c0 19.33 15.67 35 35 35s35-15.67 35-35v-5c0-11.045 8.954-20 20-20H20z"
         />
       </AnimatedSvg>
@@ -87,38 +94,16 @@ export const AnimatedTabBar = ({
   )
 }
 
-// export const styles = StyleSheet.create({
-//   tabBar: {
-//     backgroundColor: '#350244',
-//   },
-//   activeBackground: {
-//     position: 'absolute',
-//   },
-//   tabBarContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-evenly',
-//   },
-//   component: {
-//     height: 60,
-//     width: 60,
-//     marginTop: -5,
-//   },
-//   componentCircle: {
-//     flex: 1,
-//     borderRadius: 30,
-//     backgroundColor: '#350244',
-//   },
-//   iconContainer: {
-//     position: 'absolute',
-//     top: 0,
-//     left: 0,
-//     right: 0,
-//     bottom: 0,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   icon: {
-//     height: 60,
-//     width: 60,
-//   },
-// })
+const getStyles = (theme) =>
+  StyleSheet.create({
+    tabBar: {
+      backgroundColor: theme.tabBackground,
+    },
+    activeBackground: {
+      position: 'absolute',
+    },
+    tabBarContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+    },
+  })
