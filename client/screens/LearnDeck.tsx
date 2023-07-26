@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   ScrollView,
   Dimensions,
@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import SlideComponent from '../components/SlideComponent'
+import { ThemeContext } from '../state/ThemeContext'
 
 const { width, height } = Dimensions.get('window')
 const slides = [
@@ -101,6 +102,12 @@ const LearnDeck = () => {
     'rgb(9, 21, 39)',
     'rgb(38, 27, 21)',
   ]
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
 
   const onScroll = (event: any) => {
     const slide = Math.ceil(
@@ -128,13 +135,9 @@ const LearnDeck = () => {
 
   useEffect(() => {}, [])
 
-  /*
-  OK so the parent needs the colour, but its the slide that would theoretically "know" that.  Of course the parent
-  */
-
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: backgroundColor }]}
+      style={[styles.container /*, { backgroundColor: backgroundColor }*/]}
     >
       <ScrollView
         horizontal
@@ -170,80 +173,82 @@ const LearnDeck = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    // height: height * 0.7,
-    flex: 0.55,
-    paddingTop: 20,
-    // flexDirection: 'row',
-  },
-  imageBox: {
-    width,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  pagination: {
-    flexDirection: 'row',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: height * 0.3 + 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dot: {
-    fontSize: 50,
-    color: '#888',
-    margin: 5,
-  },
-  activeDot: {
-    fontSize: 50,
-    color: '#FFF',
-    margin: 5,
-  },
-  button: {
-    position: 'absolute',
-    bottom: 50,
-    backgroundColor: 'rgb(44, 207, 157)',
-    padding: 10,
-    borderRadius: 20,
-    elevation: 5, // for Android
-    shadowOffset: {
-      // for iOS
-      width: 0,
-      height: 2,
+const getStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.viewBackground,
     },
-    shadowOpacity: 0.25, // for iOS
-    shadowRadius: 3.84, // for iOS
-  },
-  buttonText: {
-    color: '#FFF',
-    fontSize: 18,
-  },
-  link: {
-    position: 'absolute',
-    bottom: 20,
-  },
-  linkText: {
-    color: 'rgb(44, 207, 157)',
-    fontSize: 16,
-    textDecorationLine: 'underline',
-  },
-  buttonContainer: {
-    flex: 0.15,
-    justifyContent: 'center',
-  },
-  bottomContainer: {
-    flex: 0.15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // flexDirection: 'row',
-    // justifyContent: 'space-around',
-    // paddingBottom: 20,
-  },
-})
+    scrollView: {
+      // height: height * 0.7,
+      flex: 0.55,
+      paddingTop: 20,
+      // flexDirection: 'row',
+    },
+    imageBox: {
+      width,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    pagination: {
+      flexDirection: 'row',
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: height * 0.3 + 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    dot: {
+      fontSize: 50,
+      color: '#888',
+      margin: 5,
+    },
+    activeDot: {
+      fontSize: 50,
+      color: '#FFF',
+      margin: 5,
+    },
+    button: {
+      position: 'absolute',
+      bottom: 50,
+      backgroundColor: 'rgb(44, 207, 157)',
+      padding: 10,
+      borderRadius: 20,
+      elevation: 5, // for Android
+      shadowOffset: {
+        // for iOS
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25, // for iOS
+      shadowRadius: 3.84, // for iOS
+    },
+    buttonText: {
+      color: '#FFF',
+      fontSize: 18,
+    },
+    link: {
+      position: 'absolute',
+      bottom: 20,
+    },
+    linkText: {
+      color: 'rgb(44, 207, 157)',
+      fontSize: 16,
+      textDecorationLine: 'underline',
+    },
+    buttonContainer: {
+      flex: 0.15,
+      justifyContent: 'center',
+    },
+    bottomContainer: {
+      flex: 0.15,
+      justifyContent: 'center',
+      alignItems: 'center',
+      // flexDirection: 'row',
+      // justifyContent: 'space-around',
+      // paddingBottom: 20,
+    },
+  })
 
 export default LearnDeck

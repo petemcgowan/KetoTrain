@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import TrackerContext from '../state/TrackerContext'
 import UserContext from '../state/UserContext'
 import axios from 'axios'
+import { ThemeContext } from '../state/ThemeContext'
 
 const { height, width } = Dimensions.get('screen')
 
@@ -13,6 +14,12 @@ export default function LoadingScreen() {
   const { setTrackerItems, setFoodData, setSearchFoodList, setFavFoodList } =
     useContext(TrackerContext)
   const { emailAddress, consumptionDate, setUserId } = useContext(UserContext)
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
 
   const findDuplicates = (data) => {
     const publicFoodKeys = data.map((item) => item.publicFoodKey)
@@ -27,10 +34,6 @@ export default function LoadingScreen() {
 
   useEffect(() => {
     console.log('App, useEffect')
-    // const userId = 'peteburquette@gmail.com'
-    // const consumptionDate = '2023-07-07'
-    // TODO Pete: This should be set by the Google login
-    // setUserId('peteburquette@gmail.com')
     if (emailAddress) {
       console.log(`User ID is ${emailAddress}`)
     }
@@ -113,10 +116,10 @@ export default function LoadingScreen() {
           ...item,
           carbBackgroundColor:
             item.carbohydrates > 22
-              ? '#1A0546'
+              ? theme.badBackground
               : item.carbohydrates > 11
-              ? '#5C6500'
-              : '#350244',
+              ? theme.middlingBackground
+              : theme.tableBackground,
           carbohydrates: Math.round(item.carbohydrates),
         }))
 
@@ -195,7 +198,7 @@ export default function LoadingScreen() {
     const timeoutId = setTimeout(() => {
       console.log('about to navigate to MainApp')
       navigation.navigate('MainApp')
-    }, 2000) // wait
+    }, 1600) // wait
     // navigation.navigate('MainApp')
     return () => clearTimeout(timeoutId) // cleanup on component unmount
   }, [navigation])
@@ -204,9 +207,13 @@ export default function LoadingScreen() {
     <View style={styles.container}>
       <View style={styles.lottieContainer}>
         <LottieView
+          ref={(animation) => {
+            this.animation = animation
+          }}
           source={require('../assets/lottie/97930-loading.json')}
           autoPlay
           loop
+          onAnimationFinish={() => {}}
           style={{ width: width * 0.6, height: height * 0.3 }}
         />
       </View>
@@ -221,28 +228,29 @@ export default function LoadingScreen() {
 // rgb(91 194 231) pale blue
 // rgb(255, 191, 63) yellow
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#F5F5DC', // '#D8EAD2' alt colour green
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textContainer: {
-    height: 80,
-    backgroundColor: 'rgb(91,194,231)',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    borderRadius: 80,
-  },
-  settingUpText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  lottieContainer: {
-    height: 200,
-  },
-})
+const getStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      flexDirection: 'column',
+      backgroundColor: theme.viewBackground, //  '#F5F5DC', // '#D8EAD2' alt colour green
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    textContainer: {
+      height: 80,
+      backgroundColor: theme.buttonBackground,
+      justifyContent: 'center',
+      paddingHorizontal: 20,
+      borderRadius: 80,
+    },
+    settingUpText: {
+      color: theme.buttonText,
+      fontSize: 20,
+      fontWeight: '500',
+      textAlign: 'center',
+    },
+    lottieContainer: {
+      height: 200,
+    },
+  })

@@ -10,7 +10,7 @@ import {
 import WeeklyLineChartContainer from '../charting/WeeklyLineChartContainer'
 import TrackerContext from '../state/TrackerContext'
 
-function HelpScreen() {
+function LearnScreen() {
   const { width } = Dimensions.get('window')
   const height = 256
   const { trackerItems } = useContext(TrackerContext)
@@ -153,7 +153,7 @@ function HelpScreen() {
   )
 }
 
-export default HelpScreen
+export default LearnScreen
 
 const styles = StyleSheet.create({
   mainContainer: {
