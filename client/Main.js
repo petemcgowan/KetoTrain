@@ -1,12 +1,15 @@
 import React from 'react'
 import { UserProvider } from './state/UserContext'
+import { ThemeProvider } from './state/ThemeContext'
 import App from './App'
 
 export const Main: React.FC = () => {
   return (
-    <UserProvider>
-      <App />
-    </UserProvider>
+    <ThemeProvider>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </ThemeProvider>
   )
 }
 

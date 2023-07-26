@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react'
 
 import { TrackerProvider } from './state/TrackerContext'
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { SearchListType } from './types/SearchListType'
 import BottomTabNavigator from './screens/BottomTabNavigator'
 import SplashScreen from 'react-native-splash-screen'
 import OnboardingDeck from './onboarding/OnboardingDeck'
 import LoadingScreen from './onboarding/LoadingScreen'
 
-const MyTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: 'black',
-    notification: 'blue',
-  },
-}
+// const MyTheme = {
+//   ...DefaultTheme,
+//   colors: {
+//     ...DefaultTheme.colors,
+//     background: 'black',
+//     notification: 'blue',
+//   },
+// }
 const Stack = createStackNavigator()
 
 export default function App() {
