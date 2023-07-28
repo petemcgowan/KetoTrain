@@ -11,21 +11,27 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import NutritionItem from './NutritionItem'
 import TrackerContext from '../state/TrackerContext'
 import TrackerItem from '../components/TrackerItem'
+import { ThemeContext } from '../state/ThemeContext'
 
-const { height } = Dimensions.get('screen')
+const { width, height } = Dimensions.get('screen')
 
 export default function NutrientBottomSheet({
   sheetRef,
   clickNutrientPanel,
   trackerSelected,
 }) {
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
+
   const {
     itemsForSelectedDate,
     // itemsForSelectedDate,
   } = useContext(TrackerContext)
-  console.log('NutrientBottomSheet, trackerSelected:' + trackerSelected)
   const currentItem: TrackerItem = itemsForSelectedDate[trackerSelected]
-  console.log('NutrientBottomSheet, currentItem:' + currentItem)
 
   useEffect(() => {
     console.log('NutrientBottomSheet, useEffect')
@@ -86,12 +92,6 @@ export default function NutrientBottomSheet({
         )}
         {currentItem && (
           <View style={styles.panelFooter}>
-            {/* <TouchableOpacity
-            style={styles.button}
-            onPress={() => sheetRef.current.snapTo(1)}
-          >
-            <Text style={styles.buttonText}>OK</Text>
-          </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.button}
               onPress={clickNutrientPanel}
@@ -107,7 +107,6 @@ export default function NutrientBottomSheet({
   return (
     <BottomSheet
       ref={sheetRef}
-      // snapPoints={[0, '40%']}
       snapPoints={[0, height * 0.5]}
       borderRadius={10}
       renderContent={renderContent}
@@ -115,62 +114,57 @@ export default function NutrientBottomSheet({
   )
 }
 
-const styles = StyleSheet.create({
-  panel: {
-    // backgroundColor: 'green', //temp
-    backgroundColor: 'rgb(32, 32, 32)',
-    height: height * 0.5,
-    padding: 20,
-  },
-  panelHeader: {
-    // backgroundColor: 'yellow', //temp
+const getStyles = (theme) =>
+  StyleSheet.create({
+    panel: {
+      backgroundColor: theme.tableBackground,
+      height: height * 0.5,
+    },
+    panelHeader: {
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 20,
+    },
+    panelTitle: {
+      fontSize: 20,
+      color: theme.buttonText,
+      textAlign: 'center',
+    },
+    panelContent: {
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    panelFooter: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingBottom: 10,
+      // width: width * 0.8,
+    },
+    button: {
+      width: width * 0.75,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center',
+      backgroundColor: theme.buttonBackground,
+      paddingBottom: 10,
 
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  panelTitle: {
-    fontSize: 20,
-    color: 'rgb(2, 158, 147)',
-    textAlign: 'center',
-  },
-  panelContent: {
-    // backgroundColor: 'red', //temp
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  panelFooter: {
-    // backgroundColor: 'pink', //temp
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  button: {
-    // backgroundColor: 'blue', //temp
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: 'rgb(27, 46, 46)',
-    backgroundColor: 'rgb(34, 34, 34)',
-    padding: 10,
-    marginHorizontal: 10,
+      // Shadow properties for iOS
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
 
-    // Shadow properties for iOS
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    // Elevation for Android
-    elevation: 5,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    textTransform: 'uppercase',
-  },
-})
+      // Elevation for Android
+      elevation: 5,
+    },
+    buttonText: {
+      fontSize: 18,
+      color: theme.buttonText,
+      textTransform: 'uppercase',
+    },
+  })
