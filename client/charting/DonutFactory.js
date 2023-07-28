@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View, SafeAreaView, StyleSheet } from 'react-native'
 import Donut from './Donut'
 
-import { getTotalCarbs } from '../utils/GlycemicUtils'
+import { getTotalCarbs } from '../components/GlycemicUtils'
 
 export default function DonutFactory() {
   let totalCarbsCapped = getTotalCarbs()

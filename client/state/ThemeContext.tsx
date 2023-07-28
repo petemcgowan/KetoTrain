@@ -36,7 +36,7 @@ type ThemeStyles = {
   splitComplementary2: Theme
 }
 
-const themes: ThemeStyles = {
+export const themes: ThemeStyles = {
   monochromatic: {
     viewBackground: 'rgb(25, 50, 75)',
     buttonBackground: 'rgb(30, 60, 90)',
@@ -286,12 +286,12 @@ type ThemeContextProps = { theme: Theme; setTheme: (Theme) => void }
 //   undefined
 // )
 export const ThemeContext = createContext<ThemeContextProps>({
-  theme: themes.analogous3,
+  theme: themes.splitComplementary2,
   setTheme: (theme) => console.warn('no theme provider'),
 })
 
 export const ThemeProvider: React.FC = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(themes.analogous3) // monochromatic and splitComplementary are good
+  const [theme, setTheme] = useState<Theme>(themes.splitComplementary2) // monochromatic and splitComplementary are good
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

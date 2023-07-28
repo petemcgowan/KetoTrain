@@ -15,4 +15,5 @@ export type FoodDataType = {
   potassium: number
   publicFoodKey: string
   saturatedFat: number
+  isFavourite: boolean
 }

@@ -46,11 +46,7 @@ const SearchScreen = ({ route }) => {
               <Text style={styles.dateButtonText}>&gt;</Text>
             </TouchableOpacity>
           </View>
-          <GlycemicList
-            searchPhrase={searchPhrase}
-            setClicked={setClicked}
-            itemId={route.params.itemId}
-          />
+          <GlycemicList searchPhrase={searchPhrase} setClicked={setClicked} />
         </SafeAreaView>
       </Fragment>
     )
@@ -68,7 +64,7 @@ const getStyles = (theme) =>
   StyleSheet.create({
     searchPageContainer: {
       alignItems: 'center',
-      color: '#FFF',
+      // color: '#FFF',
       backgroundColor: theme.viewBackground,
     },
     dateHeader: {

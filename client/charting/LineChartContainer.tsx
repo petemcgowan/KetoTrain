@@ -6,7 +6,7 @@ import { Dimensions, StyleSheet } from 'react-native'
 import TrackerContext from '../state/TrackerContext'
 
 import { parse, Path as RePath } from 'react-native-redash'
-import { DataPoint } from '../utils/GlycemicUtils'
+import { DataPoint } from '../components/GlycemicUtils'
 
 import Animated from 'react-native-reanimated'
 

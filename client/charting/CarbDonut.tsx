@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import Svg, { G, Circle } from 'react-native-svg'
 import TrackerContext from '../state/TrackerContext'
+import { ThemeContext } from '../state/ThemeContext'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
@@ -28,9 +29,9 @@ interface DonutProps {
 export default function CarbDonut({
   percentage = 75,
   radius = width * 0.35,
-  strokeWidth = 10,
+  strokeWidth = 15,
   duration = 720,
-  color = 'tomato',
+  color,
   max = 100,
   textColor,
   focused,
@@ -41,6 +42,12 @@ export default function CarbDonut({
   const circumference = 2 * Math.PI * radius
   const halfCircle = radius + strokeWidth
   const { totalCarbs } = useContext(TrackerContext)
+  const context = useContext(ThemeContext)
+  if (!context) {
+    throw new Error('useContext was used outside of the theme provider')
+  }
+  const { theme } = context
+  const styles = getStyles(theme)
 
   const animation = (toValue: number) => {
     return Animated.timing(animated, {
@@ -135,6 +142,7 @@ export default function CarbDonut({
   )
 }
 
-const styles = StyleSheet.create({
-  text: { fontWeight: '900', textAlign: 'center' },
-})
+const getStyles = (theme) =>
+  StyleSheet.create({
+    text: { fontWeight: '900', textAlign: 'center' },
+  })

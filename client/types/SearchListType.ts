@@ -3,4 +3,5 @@ export type SearchListType = {
   carbohydrates: number
   publicFoodKey: string
   carbBackgroundColor: string
+  isFavourite: boolean
 }
