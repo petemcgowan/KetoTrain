@@ -63,7 +63,7 @@ const getStyles = (theme) =>
     componentCircle: {
       flex: 1,
       borderRadius: 30,
-      backgroundColor: theme.tabIconCircleBackground,
+      // backgroundColor: theme.tabIconCircleBackground,
     },
     iconContainer: {
       position: 'absolute',

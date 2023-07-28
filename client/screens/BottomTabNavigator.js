@@ -1,8 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { AnimatedTabBar } from '../tabbar/AnimatedTabBar'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, Text, Modal } from 'react-native'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Svg from 'react-native-svg'
 import Animated from 'react-native-reanimated'
 import TrackerContext from '../state/TrackerContext'
@@ -12,12 +13,15 @@ import SearchScreen from './SearchScreen'
 import KetoTrackerScreen from './KetoTrackerScreen'
 import KetoLimitScreen from './KetoLimitScreen'
 import LearnDeck from './LearnDeck'
-import { ThemeContext } from '../state/ThemeContext'
-
+import { ThemeContext, themes } from '../state/ThemeContext'
+import ThemeModal from '../components/ThemeModal'
 const Tab = createBottomTabNavigator()
 export const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
 const BottomTabNavigator = () => {
+  const [modalVisible, setModalVisible] = useState(false)
+  const { setTheme } = useContext(ThemeContext)
+
   const { totalCarbs, trackerItems } = useContext(TrackerContext)
   const context = useContext(ThemeContext)
   if (!context) {
@@ -28,19 +32,10 @@ const BottomTabNavigator = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Tab.Navigator
-        screenOptions={{
-          cardStyle: { backgroundColor: theme.viewBackground },
-        }}
-        tabBar={(props) => <AnimatedTabBar {...props} />}
-      >
+      <Tab.Navigator tabBar={(props) => <AnimatedTabBar {...props} />}>
         <Tab.Screen
           name="Search"
           component={SearchScreen}
-          initialParams={{
-            itemId: 42,
-            itemId2: 67,
-          }}
           options={{
             tabBarIcon: ({ ref }) => (
               <Lottie
@@ -49,6 +44,21 @@ const BottomTabNavigator = () => {
                 source={require('../assets/lottie/125888-avocado-fruit-exercise-animation.json')}
                 style={styles.icon}
               />
+            ),
+            headerRight: () => (
+              <View>
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                  <FontAwesome5
+                    name="palette"
+                    size={29}
+                    color={theme.iconFill}
+                  />
+                </TouchableOpacity>
+                <ThemeModal
+                  modalVisible={modalVisible}
+                  setModalVisible={setModalVisible}
+                />
+              </View>
             ),
             headerTitleStyle: {
               color: theme.tabHeaderText,

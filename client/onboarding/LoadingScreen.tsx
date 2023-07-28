@@ -148,7 +148,9 @@ export default function LoadingScreen() {
 
         const favFoodList = processedFoodData.filter((item) => item.isFavourite)
         setFavFoodList(favFoodList)
-        console.log('favFoodList:' + JSON.stringify(favFoodList))
+        console.log(
+          'Loading Screen, favFoodList:' + JSON.stringify(favFoodList)
+        )
 
         // Create favourites view array
 

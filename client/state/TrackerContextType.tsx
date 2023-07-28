@@ -20,6 +20,6 @@ export type TrackerContextType = {
   setFoodData: React.Dispatch<React.SetStateAction<FoodDataType[]>>
   searchFoodList: SearchListType[]
   setSearchFoodList: React.Dispatch<React.SetStateAction<SearchListType[]>>
-  favFoodList: SearchListType[]
-  setFavFoodList: React.Dispatch<React.SetStateAction<SearchListType[]>>
+  favFoodList: FoodDataType[]
+  setFavFoodList: React.Dispatch<React.SetStateAction<FoodDataType[]>>
 }
