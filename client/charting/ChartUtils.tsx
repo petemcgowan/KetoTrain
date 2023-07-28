@@ -1,5 +1,5 @@
 import { TrackerItemType } from '../types/TrackerItemType'
-import { DataPoint } from '../utils/GlycemicUtils'
+import { DataPoint } from '../components/GlycemicUtils'
 
 export const getLast7Dates = () => {
   const result = []

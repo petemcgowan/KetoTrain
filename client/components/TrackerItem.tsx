@@ -12,10 +12,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { ThemeContext } from '../state/ThemeContext'
 
 import { TrackerItemProps } from '../types/ItemTypes'
-import {
-  saveConsumptionLogs,
-  formatDateToYYYYMMDD,
-} from '../utils/GlycemicUtils'
+import { saveConsumptionLogs, formatDateToYYYYMMDD } from './GlycemicUtils'
 
 const { width } = Dimensions.get('screen')
 
@@ -135,9 +132,9 @@ export default TrackerItem
 const getStyles = (theme) =>
   StyleSheet.create({
     description: {
-      color: 'rgb(124, 131, 134)',
+      color: theme.buttonText,
       alignItems: 'center',
-      fontSize: 28,
+      fontSize: 26,
       fontWeight: '300',
     },
   })

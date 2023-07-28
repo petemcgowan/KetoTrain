@@ -1,4 +1,4 @@
-import React, { useState, memo, useContext, useMemo } from 'react'
+import React, { useState, memo, useContext, useMemo, useEffect } from 'react'
 
 import {
   StyleSheet,
@@ -16,9 +16,11 @@ import {
   saveConsumptionLogs,
   saveFavouriteFoods,
   formatDateToYYYYMMDD,
-} from '../utils/GlycemicUtils'
+} from './GlycemicUtils'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { ThemeContext } from '../state/ThemeContext'
+import { SearchListType } from '../types/SearchListType'
+// import { FoodDataType } from '../types/FoodDataType'
 
 const { width } = Dimensions.get('screen')
 
@@ -44,7 +46,12 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
     selectedDate,
     setItemsForSelectedDate,
     setTotalCarbs,
+    searchFoodList,
+    setSearchFoodList,
     foodData,
+    setFoodData,
+    favFoodList,
+    setFavFoodList,
   } = useContext<TrackerContextType>(TrackerContext)
 
   const { userId } = useContext<UserContextProps>(UserContext)
@@ -59,14 +66,14 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
     () =>
       StyleSheet.create({
         listItemContainerStyle: {
-          borderColor: 'white',
+          borderColor: theme.tableLineColor,
           borderWidth: 1,
           flexDirection: 'row',
           backgroundColor: carbBackgroundColor,
           alignItems: 'center',
         },
       }),
-    [carbBackgroundColor]
+    [carbBackgroundColor, favFoodList]
   )
 
   const addTrackerItem = () => {
@@ -93,7 +100,7 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
         portionAmount: 1,
         consumptionDate: selectedDate,
       }
-      console.log('trackerItem:' + JSON.stringify(trackerItem))
+
       if (trackerItem != null) {
         setTrackerItems([...trackerItems, trackerItem])
         setItemsForSelectedDate([...itemsForSelectedDate, trackerItem])
@@ -124,13 +131,24 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
     }
   }
 
+  useEffect(() => {
+    // console.log(
+    //   'useEffect(GlycemicItem), favFoodList:' + JSON.stringify(favFoodList)
+    // )
+  }, [favFoodList])
+
   const favouriteFoodItem = () => {
     // get the food facts id for updating
-    console.log('descriptionGI' + descriptionGI)
     const matchingFoodFact = foodData.find(
       (item) => item.foodName === descriptionGI
     )
-    console.log('matchingFoodFact:' + JSON.stringify(matchingFoodFact))
+    console.log(
+      'favouriteFoodItem, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
+    )
+    console.log(
+      'favouriteFoodItem, itemIsFavourite:' + JSON.stringify(itemIsFavourite)
+    )
+    console.log('favouriteFoodItem, favFoodList:' + JSON.stringify(favFoodList))
     type FavouriteFood = { foodFactsId: number; isFavourite: boolean }
     const favouriteFoods: FavouriteFood[] = []
 
@@ -139,8 +157,44 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
       isFavourite: !itemIsFavourite,
     })
     setItemIsFavourite(!itemIsFavourite)
-
     saveFavouriteFoods(favouriteFoods, userId)
+    if (itemIsFavourite) {
+      // it IS a favourite, so we're unfavouriting
+      // remove from the local fav food list
+      console.log(
+        'REMOVING favourite, matchingFoodFact:' +
+          JSON.stringify(matchingFoodFact)
+      )
+
+      const newFavFoods = favFoodList.filter(({ foodName }) => {
+        return foodName !== matchingFoodFact?.foodName
+      })
+      setFavFoodList(newFavFoods)
+      const updatedFoodData = searchFoodList.map((item) =>
+        item.foodName === descriptionGI
+          ? { ...item, isFavourite: !item.isFavourite }
+          : item
+      )
+      setSearchFoodList(updatedFoodData)
+    } else {
+      // add the local favourite
+      console.log(
+        'ADDING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
+      )
+      if (matchingFoodFact) {
+        setFavFoodList((prevFavFoodList) => [
+          ...prevFavFoodList,
+          { ...matchingFoodFact, isFavourite: true },
+        ])
+
+        const updatedFoodData = searchFoodList.map((item) =>
+          item.foodName === descriptionGI
+            ? { ...item, isFavourite: true }
+            : item
+        )
+        setSearchFoodList(updatedFoodData)
+      }
+    }
   }
 
   return (
@@ -150,7 +204,7 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
         <TouchableOpacity onPress={favouriteFoodItem}>
           <FontAwesome5
             name="heart"
-            size={35}
+            size={29}
             color={theme.iconFill}
             solid={itemIsFavourite ? true : false}
           />
@@ -183,7 +237,7 @@ const getStyles = (theme) =>
       textAlign: 'right',
       borderRightColor: theme.tableLineColor,
       borderRightWidth: 1,
-      fontSize: 28,
+      fontSize: 26,
       fontWeight: '300',
       color: theme.buttonText,
     },
@@ -191,10 +245,12 @@ const getStyles = (theme) =>
       width: 48,
       height: 48,
       backgroundColor: theme.tableBackground,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     carbAmtTableText: {
       color: theme.buttonText,
-      fontSize: 30,
+      fontSize: 26,
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
