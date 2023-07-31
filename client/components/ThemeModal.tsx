@@ -23,6 +23,9 @@ const ThemeModal = ({ modalVisible, setModalVisible }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalHeaderText}>Colour Schemes</Text>
+          </View>
           <TouchableOpacity
             onPress={() => {
               setTheme(themes.monochromatic)
@@ -43,7 +46,7 @@ const ThemeModal = ({ modalVisible, setModalVisible }) => {
           <TouchableOpacity
             style={{
               ...styles.openButton,
-              backgroundColor: '#2196F3',
+              backgroundColor: theme.buttonBackground,
             }}
             onPress={() => {
               setModalVisible(!modalVisible)
@@ -69,7 +72,7 @@ const getStyles = (theme) =>
     },
     modalView: {
       margin: 20,
-      backgroundColor: 'white',
+      backgroundColor: theme.tableBackground,
       borderRadius: 20,
       padding: 35,
       alignItems: 'center',
@@ -83,18 +86,25 @@ const getStyles = (theme) =>
       elevation: 5,
     },
     openButton: {
-      backgroundColor: '#F194FF',
+      backgroundColor: theme.buttonBackground,
       borderRadius: 20,
       padding: 10,
       elevation: 2,
     },
     textStyle: {
-      color: 'white',
+      color: theme.buttonText,
       fontWeight: 'bold',
       textAlign: 'center',
     },
     modalText: {
       marginBottom: 15,
+      color: theme.buttonText,
       textAlign: 'center',
+    },
+    modalHeaderText: {
+      color: theme.buttonText,
+    },
+    modalHeader: {
+      backgroundColor: theme.viewBackground,
     },
   })

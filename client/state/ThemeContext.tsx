@@ -280,21 +280,33 @@ export const themes: ThemeStyles = {
   },
 }
 
-type ThemeContextProps = { theme: Theme; setTheme: (Theme) => void }
+type ThemeContextProps = {
+  theme: Theme
+  setTheme: (Theme) => void
+  setNextTheme: () => void
+}
 
-// export const ThemeContext = createContext<ThemeContextProps | undefined>(
-//   undefined
-// )
 export const ThemeContext = createContext<ThemeContextProps>({
   theme: themes.splitComplementary2,
   setTheme: (theme) => console.warn('no theme provider'),
+  setNextTheme: () => console.warn('no theme provider'),
 })
 
 export const ThemeProvider: React.FC = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(themes.splitComplementary2) // monochromatic and splitComplementary are good
+  const themesArray = Object.values(themes)
+  const initialThemeIndex = themesArray.indexOf(themes.splitComplementary2)
+  const [themeIndex, setThemeIndex] = useState(initialThemeIndex)
+  const [theme, setTheme] = useState<Theme>(themesArray[themeIndex])
+
+  const setNextTheme = () => {
+    let nextIndex = themeIndex + 1
+    if (nextIndex >= themesArray.length) nextIndex = 0
+    setThemeIndex(nextIndex)
+    setTheme(themesArray[nextIndex])
+  }
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, setNextTheme }}>
       {children}
     </ThemeContext.Provider>
   )

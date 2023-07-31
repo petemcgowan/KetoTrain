@@ -14,13 +14,13 @@ import KetoTrackerScreen from './KetoTrackerScreen'
 import KetoLimitScreen from './KetoLimitScreen'
 import LearnDeck from './LearnDeck'
 import { ThemeContext, themes } from '../state/ThemeContext'
-import ThemeModal from '../components/ThemeModal'
+// import ThemeModal from '../components/ThemeModal'
 const Tab = createBottomTabNavigator()
 export const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
 const BottomTabNavigator = () => {
   const [modalVisible, setModalVisible] = useState(false)
-  const { setTheme } = useContext(ThemeContext)
+  const { setTheme, setNextTheme } = useContext(ThemeContext)
 
   const { totalCarbs, trackerItems } = useContext(TrackerContext)
   const context = useContext(ThemeContext)
@@ -45,21 +45,6 @@ const BottomTabNavigator = () => {
                 style={styles.icon}
               />
             ),
-            headerRight: () => (
-              <View>
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
-                  <FontAwesome5
-                    name="palette"
-                    size={29}
-                    color={theme.iconFill}
-                  />
-                </TouchableOpacity>
-                <ThemeModal
-                  modalVisible={modalVisible}
-                  setModalVisible={setModalVisible}
-                />
-              </View>
-            ),
             headerTitleStyle: {
               color: theme.tabHeaderText,
               fontSize: 38,
@@ -68,10 +53,25 @@ const BottomTabNavigator = () => {
             headerStyle: {
               backgroundColor: theme.tabHeaderBackground,
             },
+            headerRight: () => (
+              <View style={styles.colourSchemeButton}>
+                <TouchableOpacity onPress={() => setNextTheme()}>
+                  <FontAwesome5
+                    name="palette"
+                    size={29}
+                    color={theme.tabHeaderText}
+                  />
+                </TouchableOpacity>
+                {/* <ThemeModal
+                  modalVisible={modalVisible}
+                  setModalVisible={setModalVisible}
+                /> */}
+              </View>
+            ),
           }}
         />
         <Tab.Screen
-          name="Keto Tracker"
+          name="Tracker"
           component={KetoTrackerScreen}
           options={{
             tabBarIcon: ({ ref }) => (
@@ -99,10 +99,21 @@ const BottomTabNavigator = () => {
               color: '#BBBccc',
               fontSize: 17,
             },
+            headerRight: () => (
+              <View style={styles.colourSchemeButton}>
+                <TouchableOpacity onPress={() => setNextTheme()}>
+                  <FontAwesome5
+                    name="palette"
+                    size={29}
+                    color={theme.tabHeaderText}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
           }}
         />
         <Tab.Screen
-          name="Keto Limit"
+          name="Limit"
           component={KetoLimitScreen}
           options={{
             tabBarIcon: ({ ref }) => (
@@ -132,6 +143,17 @@ const BottomTabNavigator = () => {
               color: '#BBBccc',
               fontSize: 17,
             },
+            headerRight: () => (
+              <View style={styles.colourSchemeButton}>
+                <TouchableOpacity onPress={() => setNextTheme()}>
+                  <FontAwesome5
+                    name="palette"
+                    size={29}
+                    color={theme.tabHeaderText}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
           }}
         />
         <Tab.Screen
@@ -162,6 +184,17 @@ const BottomTabNavigator = () => {
             tabBarItemStyle: {
               backgroundColor: 'rgba(59, 73, 55, 1)',
             },
+            headerRight: () => (
+              <View style={styles.colourSchemeButton}>
+                <TouchableOpacity onPress={() => setNextTheme()}>
+                  <FontAwesome5
+                    name="palette"
+                    size={29}
+                    color={theme.tabHeaderText}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
           }}
         />
       </Tab.Navigator>
@@ -181,5 +214,9 @@ const getStyles = (theme) =>
     icon: {
       height: 55,
       width: 55,
+    },
+    colourSchemeButton: {
+      marginRight: 10,
+      marginBottom: 5,
     },
   })
