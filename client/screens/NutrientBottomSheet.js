@@ -42,7 +42,7 @@ export default function NutrientBottomSheet({
       <View style={styles.panel}>
         {currentItem && (
           <View style={styles.panelHeader}>
-            <Text style={styles.panelTitle}>Nutritional Information</Text>
+            <Text style={styles.panelTitle}>Nutritional Information for</Text>
             <Text style={styles.panelTitle}>{currentItem.description}</Text>
           </View>
         )}
@@ -91,9 +91,9 @@ export default function NutrientBottomSheet({
           </View>
         )}
         {currentItem && (
-          <View style={styles.panelFooter}>
+          <View style={styles.closeButtonContainer}>
             <TouchableOpacity
-              style={styles.button}
+              style={styles.closeButton}
               onPress={clickNutrientPanel}
             >
               <Text style={styles.buttonText}>CLOSE</Text>
@@ -127,31 +127,39 @@ const getStyles = (theme) =>
       marginBottom: 20,
     },
     panelTitle: {
-      fontSize: 20,
+      fontSize: 22,
       color: theme.buttonText,
       textAlign: 'center',
     },
     panelContent: {
       flex: 1,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    panelFooter: {
-      flexDirection: 'row',
+      flexDirection: 'column',
+      // flexWrap: 'wrap',
       justifyContent: 'center',
+      // justifyContent: 'space-between',
       alignItems: 'center',
-      paddingBottom: 10,
-      // width: width * 0.8,
     },
-    button: {
-      width: width * 0.75,
+    closeButtonContainer: {
+      width: width * 0.6,
+      height: height * 0.05,
+      // flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
       backgroundColor: theme.buttonBackground,
-      paddingBottom: 10,
+      // paddingBottom: 10,
+      marginBottom: 10,
+      // height: height * 0.05,
+      // width: width * 0.8,
+    },
+    closeButton: {
+      // width: width * 0.6,
+      // height: height * 0.05,
+      // alignSelf: 'center',
+      // justifyContent: 'center',
+      // paddingTop: 10,
+      // paddingBottom: 20,
+      // alignItems: 'center',
 
       // Shadow properties for iOS
       shadowColor: '#000',
@@ -163,6 +171,8 @@ const getStyles = (theme) =>
       elevation: 5,
     },
     buttonText: {
+      alignSelf: 'center',
+      justifyContent: 'center',
       fontSize: 18,
       color: theme.buttonText,
       textTransform: 'uppercase',

@@ -100,11 +100,10 @@ export async function getAllFoodFacts(userId) {
         where: { user_id: userId },
         required: false,
       },
-      // Customize the returned data using a map function
       attributes: {
         include: [
           [
-            // Use Sequelize.literal to check if favourite_foods_id is null or not
+            // Check if favourite_foods_id is null or not
             Sequelize.literal(`(
               CASE
                 WHEN "favouriteFoods"."favourite_foods_id" IS NOT NULL THEN true
@@ -115,6 +114,7 @@ export async function getAllFoodFacts(userId) {
           ],
         ],
       },
+      order: [['food_name', 'ASC']],
     })
 
     return allFoodFacts
