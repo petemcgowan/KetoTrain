@@ -1,7 +1,90 @@
 import TrackerContext from '../state/TrackerContext'
-import { useContext } from 'react'
+import { SetStateAction, useContext } from 'react'
 import { TrackerItemType } from '../types/TrackerItemType'
 import axios from 'axios'
+import { TrackerContextType } from '../state/TrackerContextType'
+import UserContext, { UserContextProps } from '../state/UserContext'
+import { FoodDataType } from '../types/FoodDataType'
+import { SearchListType } from '../types/SearchListType'
+
+export const favouriteFoodItem = (
+  descriptionGI: string,
+  itemIsFavourite: boolean,
+  setItemIsFavourite: {
+    (value: SetStateAction<boolean>): void
+    (itemIsFavourite: boolean): void
+  },
+  searchFoodList: SearchListType[],
+  setSearchFoodList: React.Dispatch<React.SetStateAction<SearchListType[]>>,
+  foodData: FoodDataType[],
+  favFoodList: FoodDataType[],
+  setFavFoodList: React.Dispatch<React.SetStateAction<FoodDataType[]>>,
+  userId: number | null,
+  trackerItems: TrackerItemType[],
+  setTrackerItems: React.Dispatch<React.SetStateAction<TrackerItemType[]>>
+) => {
+  // get the food facts id for updating
+
+  const matchingFoodFact = foodData.find(
+    (item) => item.foodName === descriptionGI
+  )
+  type FavouriteFood = { foodFactsId: number; isFavourite: boolean }
+  const favouriteFoods: FavouriteFood[] = []
+
+  favouriteFoods.push({
+    foodFactsId: Number(matchingFoodFact?.foodFactsId),
+    isFavourite: !itemIsFavourite,
+  })
+  setItemIsFavourite(!itemIsFavourite)
+  saveFavouriteFoods(favouriteFoods, userId)
+  if (itemIsFavourite) {
+    // it IS a favourite, so we're unfavouriting
+    // remove from the local fav food list
+    console.log(
+      'REMOVING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
+    )
+
+    const newFavFoods = favFoodList.filter(({ foodName }) => {
+      return foodName !== matchingFoodFact?.foodName
+    })
+    setFavFoodList(newFavFoods)
+    const updatedFoodData = searchFoodList.map((item) =>
+      item.foodName === descriptionGI
+        ? { ...item, isFavourite: !item.isFavourite }
+        : item
+    )
+    setSearchFoodList(updatedFoodData)
+    const updatedTrackerItems = trackerItems.map((item) =>
+      item.description === descriptionGI
+        ? { ...item, isFavourite: !item.isFavourite }
+        : item
+    )
+    setTrackerItems(updatedTrackerItems)
+  } else {
+    // add the local favourite
+    console.log(
+      'ADDING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
+    )
+    if (matchingFoodFact) {
+      setFavFoodList((prevFavFoodList) => [
+        ...prevFavFoodList,
+        { ...matchingFoodFact, isFavourite: true },
+      ])
+
+      const updatedFoodData = searchFoodList.map((item) =>
+        item.foodName === descriptionGI ? { ...item, isFavourite: true } : item
+      )
+      setSearchFoodList(updatedFoodData)
+
+      const updatedTrackerItems = trackerItems.map((item) =>
+        item.description === descriptionGI
+          ? { ...item, isFavourite: true }
+          : item
+      )
+      setTrackerItems(updatedTrackerItems)
+    }
+  }
+}
 
 export function formatDateToYYYYMMDD(date: Date): string {
   const year = date.getFullYear()

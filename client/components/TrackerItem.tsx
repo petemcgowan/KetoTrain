@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import {
   StyleSheet,
   Text,
@@ -12,7 +12,11 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { ThemeContext } from '../state/ThemeContext'
 
 import { TrackerItemProps } from '../types/ItemTypes'
-import { saveConsumptionLogs, formatDateToYYYYMMDD } from './GlycemicUtils'
+import {
+  saveConsumptionLogs,
+  formatDateToYYYYMMDD,
+  favouriteFoodItem,
+} from './GlycemicUtils'
 
 const { width } = Dimensions.get('screen')
 
@@ -22,6 +26,7 @@ const TrackerItem = ({
   setTrackerSelected,
   trackerSelected,
   clickNutrientPanel,
+  carbBackgroundColor,
 }: TrackerItemProps) => {
   const {
     trackerItems,
@@ -31,15 +36,35 @@ const TrackerItem = ({
     setTrackerItems,
     setTotalCarbs,
     totalCarbs,
+    searchFoodList,
+    setSearchFoodList,
+    foodData,
+    favFoodList,
+    setFavFoodList,
   } = useContext(TrackerContext)
+  const { userId } = useContext(UserContext)
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
   }
   const { theme } = context
   const styles = getStyles(theme)
+  const [itemIsFavourite, setItemIsFavourite] = useState(item.isFavourite)
 
-  const { userId } = useContext(UserContext)
+  const dynamicStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        trackerRowContainer: {
+          flexDirection: 'row',
+          width: width,
+          alignItems: 'center',
+          borderColor: theme.tableLineColor,
+          borderWidth: 1,
+          backgroundColor: carbBackgroundColor,
+        },
+      }),
+    [trackerItems] // carbBackgroundColor (not needed i assume)
+  )
 
   const pressTrackerItem = () => {
     const dateBasedIndex = itemsForSelectedDate.findIndex(
@@ -51,7 +76,22 @@ const TrackerItem = ({
   }
 
   const favouriteTrackerItem = () => {
-    console.log('favouriteTrackerItem')
+    console.log(
+      'TrackerItem, favouriteTrackerItem, itemIsFavourite:' + itemIsFavourite
+    )
+    favouriteFoodItem(
+      item.description,
+      itemIsFavourite,
+      setItemIsFavourite,
+      searchFoodList,
+      setSearchFoodList,
+      foodData,
+      favFoodList,
+      setFavFoodList,
+      userId,
+      trackerItems,
+      setTrackerItems
+    )
   }
 
   const deleteTrackerItem = () => {
@@ -90,39 +130,33 @@ const TrackerItem = ({
   }
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        width: width,
-        alignItems: 'center',
-      }}
-    >
-      <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>
-        <View style={{ width: width * 0.1 }}>
-          <FontAwesome5 name="info-circle" size={35} color={theme.iconFill} />
-        </View>
-      </TouchableOpacity>
+    <View style={dynamicStyles.trackerRowContainer}>
+      <View style={styles.foodDescriptionContainer}>
+        <TouchableOpacity onPress={pressTrackerItem}>
+          <Text style={styles.foodDescriptionText}>{item.description}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.nutTrackerIcon}>
+        <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>
+          <FontAwesome5 name="info-circle" size={29} color={theme.iconFill} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.favTrackerIcon}>
+        <TouchableOpacity onPress={favouriteTrackerItem}>
+          <FontAwesome5
+            name="heart"
+            size={29}
+            color={theme.iconFill}
+            solid={itemIsFavourite ? true : false}
+          />
+        </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity
-        onPress={pressTrackerItem}
-        style={{ width: width * 0.7 }}
-      >
-        <Text style={styles.description}>{item.description}</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={favouriteTrackerItem}
-        style={{ width: width * 0.1 }}
-      >
-        <FontAwesome5 name="heart" size={35} color={theme.iconFill} />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={deleteTrackerItem}
-        style={{ width: width * 0.1 }}
-      >
-        <FontAwesome5 name="trash" size={35} color={theme.iconFill} />
-      </TouchableOpacity>
+      <View style={styles.deleteTrackerIcon}>
+        <TouchableOpacity onPress={deleteTrackerItem}>
+          <FontAwesome5 name="trash" size={29} color={theme.iconFill} />
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
@@ -131,10 +165,35 @@ export default TrackerItem
 
 const getStyles = (theme) =>
   StyleSheet.create({
-    description: {
+    foodDescriptionContainer: {
+      width: width * 0.7,
+    },
+    foodDescriptionText: {
       color: theme.buttonText,
       alignItems: 'center',
       fontSize: 26,
       fontWeight: '300',
+      marginLeft: 3,
+    },
+    nutTrackerIcon: {
+      width: width * 0.1,
+      borderLeftColor: theme.tableLineColor,
+      borderLeftWidth: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    favTrackerIcon: {
+      width: width * 0.1,
+      borderLeftColor: theme.tableLineColor,
+      borderLeftWidth: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    deleteTrackerIcon: {
+      borderLeftColor: theme.tableLineColor,
+      borderLeftWidth: 1,
+      width: width * 0.1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   })

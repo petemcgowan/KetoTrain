@@ -122,7 +122,14 @@ export default function LoadingScreen() {
               : theme.tableBackground,
           carbohydrates: Math.round(item.carbohydrates),
         }))
-
+        console.log(
+          'Loading Screen, theme.middlingBackground:' +
+            theme.middlingBackground +
+            ', theme.tableBackground:' +
+            theme.tableBackground +
+            ', theme.badBackground:' +
+            theme.badBackground
+        )
         setFoodData(processedFoodData)
 
         const searchFoodList = processedFoodData.map((item) => ({
@@ -138,19 +145,15 @@ export default function LoadingScreen() {
         setSearchFoodList(searchFoodList)
 
         // console.log(
-        //   'findDuplicates processedFoodData:' +
-        //     JSON.stringify(findDuplicates(processedFoodData))
+        //   'findDuplicates searchFoodList:' +
+        //     JSON.stringify(findDuplicates(searchFoodList))
         // )
-        console.log(
-          'findDuplicates searchFoodList:' +
-            JSON.stringify(findDuplicates(searchFoodList))
-        )
 
         const favFoodList = processedFoodData.filter((item) => item.isFavourite)
         setFavFoodList(favFoodList)
-        console.log(
-          'Loading Screen, favFoodList:' + JSON.stringify(favFoodList)
-        )
+        // console.log(
+        //   'Loading Screen, favFoodList:' + JSON.stringify(favFoodList)
+        // )
 
         // Create favourites view array
 
@@ -165,9 +168,30 @@ export default function LoadingScreen() {
           userDashboardDataResponse.data.data.getUserDashboardData
             .consumptionLogWithFoodFacts
 
-        if (Array.isArray(consumptionLogWithFoodFacts)) {
+        // add isFavourite values to the tracker items
+        const updatedConsumptionLogWithFoodFacts =
+          consumptionLogWithFoodFacts.map((consumptionItem) => {
+            const correspondingSearchItem = searchFoodList.find(
+              (searchItem) => searchItem.foodName === consumptionItem.food_name
+            )
+
+            if (correspondingSearchItem) {
+              return {
+                ...consumptionItem,
+                isFavourite: correspondingSearchItem.isFavourite,
+              }
+            }
+
+            return {
+              ...consumptionItem,
+              isFavourite: false,
+            }
+          })
+
+        // set Tracker items (for tracker screen)
+        if (Array.isArray(updatedConsumptionLogWithFoodFacts)) {
           setTrackerItems(
-            consumptionLogWithFoodFacts.map((item) => {
+            updatedConsumptionLogWithFoodFacts.map((item) => {
               return {
                 id: item.consumption_log_id.toString(),
                 foodFactsId: item.food_facts_id.toString(),
@@ -181,12 +205,13 @@ export default function LoadingScreen() {
                 sodiumAmt: item.sodium,
                 carbBackgroundColor:
                   item.carbohydrates > 22
-                    ? '#1A0546'
+                    ? theme.badBackground
                     : item.carbohydrates > 11
-                    ? '#5C6500'
-                    : '#350244',
-                portionAmount: 0, // Placeholder value as portionAmount is not available in the response
+                    ? theme.middlingBackground
+                    : theme.tableBackground,
+                portionAmount: 0,
                 consumptionDate: new Date(parseInt(item.consumption_date, 10)),
+                isFavourite: item.isFavourite,
               }
             })
           )
