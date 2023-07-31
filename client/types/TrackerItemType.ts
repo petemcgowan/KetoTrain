@@ -12,4 +12,5 @@ export type TrackerItemType = {
   carbBackgroundColor: string
   portionAmount: number
   consumptionDate: Date
+  isFavourite: boolean
 }

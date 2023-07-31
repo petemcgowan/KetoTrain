@@ -20,6 +20,7 @@ import {
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { ThemeContext } from '../state/ThemeContext'
 import { SearchListType } from '../types/SearchListType'
+import { favouriteFoodItem } from './GlycemicUtils'
 // import { FoodDataType } from '../types/FoodDataType'
 
 const { width } = Dimensions.get('screen')
@@ -65,12 +66,13 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
   const dynamicStyles = useMemo(
     () =>
       StyleSheet.create({
-        listItemContainerStyle: {
+        foodRowContainer: {
           borderColor: theme.tableLineColor,
           borderWidth: 1,
           flexDirection: 'row',
           backgroundColor: carbBackgroundColor,
           alignItems: 'center',
+          // width: width * 0.7,
         },
       }),
     [carbBackgroundColor, favFoodList]
@@ -99,6 +101,7 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
         carbBackgroundColor: carbBackgroundColor,
         portionAmount: 1,
         consumptionDate: selectedDate,
+        isFavourite: matchingFoodFact.isFavourite,
       }
 
       if (trackerItem != null) {
@@ -137,85 +140,99 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
     // )
   }, [favFoodList])
 
-  const favouriteFoodItem = () => {
-    // get the food facts id for updating
-    const matchingFoodFact = foodData.find(
-      (item) => item.foodName === descriptionGI
-    )
-    console.log(
-      'favouriteFoodItem, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
-    )
-    console.log(
-      'favouriteFoodItem, itemIsFavourite:' + JSON.stringify(itemIsFavourite)
-    )
-    console.log('favouriteFoodItem, favFoodList:' + JSON.stringify(favFoodList))
-    type FavouriteFood = { foodFactsId: number; isFavourite: boolean }
-    const favouriteFoods: FavouriteFood[] = []
+  // const favouriteFoodItem = () => {
+  //   // get the food facts id for updating
+  //   const matchingFoodFact = foodData.find(
+  //     (item) => item.foodName === descriptionGI
+  //   )
+  //   type FavouriteFood = { foodFactsId: number; isFavourite: boolean }
+  //   const favouriteFoods: FavouriteFood[] = []
 
-    favouriteFoods.push({
-      foodFactsId: Number(matchingFoodFact?.foodFactsId),
-      isFavourite: !itemIsFavourite,
-    })
-    setItemIsFavourite(!itemIsFavourite)
-    saveFavouriteFoods(favouriteFoods, userId)
-    if (itemIsFavourite) {
-      // it IS a favourite, so we're unfavouriting
-      // remove from the local fav food list
-      console.log(
-        'REMOVING favourite, matchingFoodFact:' +
-          JSON.stringify(matchingFoodFact)
-      )
+  //   favouriteFoods.push({
+  //     foodFactsId: Number(matchingFoodFact?.foodFactsId),
+  //     isFavourite: !itemIsFavourite,
+  //   })
+  //   setItemIsFavourite(!itemIsFavourite)
+  //   saveFavouriteFoods(favouriteFoods, userId)
+  //   if (itemIsFavourite) {
+  //     // it IS a favourite, so we're unfavouriting
+  //     // remove from the local fav food list
+  //     console.log(
+  //       'REMOVING favourite, matchingFoodFact:' +
+  //         JSON.stringify(matchingFoodFact)
+  //     )
 
-      const newFavFoods = favFoodList.filter(({ foodName }) => {
-        return foodName !== matchingFoodFact?.foodName
-      })
-      setFavFoodList(newFavFoods)
-      const updatedFoodData = searchFoodList.map((item) =>
-        item.foodName === descriptionGI
-          ? { ...item, isFavourite: !item.isFavourite }
-          : item
-      )
-      setSearchFoodList(updatedFoodData)
-    } else {
-      // add the local favourite
-      console.log(
-        'ADDING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
-      )
-      if (matchingFoodFact) {
-        setFavFoodList((prevFavFoodList) => [
-          ...prevFavFoodList,
-          { ...matchingFoodFact, isFavourite: true },
-        ])
+  //     const newFavFoods = favFoodList.filter(({ foodName }) => {
+  //       return foodName !== matchingFoodFact?.foodName
+  //     })
+  //     setFavFoodList(newFavFoods)
+  //     const updatedFoodData = searchFoodList.map((item) =>
+  //       item.foodName === descriptionGI
+  //         ? { ...item, isFavourite: !item.isFavourite }
+  //         : item
+  //     )
+  //     setSearchFoodList(updatedFoodData)
+  //   } else {
+  //     // add the local favourite
+  //     console.log(
+  //       'ADDING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
+  //     )
+  //     if (matchingFoodFact) {
+  //       setFavFoodList((prevFavFoodList) => [
+  //         ...prevFavFoodList,
+  //         { ...matchingFoodFact, isFavourite: true },
+  //       ])
 
-        const updatedFoodData = searchFoodList.map((item) =>
-          item.foodName === descriptionGI
-            ? { ...item, isFavourite: true }
-            : item
-        )
-        setSearchFoodList(updatedFoodData)
-      }
-    }
-  }
+  //       const updatedFoodData = searchFoodList.map((item) =>
+  //         item.foodName === descriptionGI
+  //           ? { ...item, isFavourite: true }
+  //           : item
+  //       )
+  //       setSearchFoodList(updatedFoodData)
+  //     }
+  //   }
+  // }
 
   return (
     <TouchableOpacity onPress={addTrackerItem}>
-      <View style={dynamicStyles.listItemContainerStyle}>
-        <Text style={styles.tableText}>{descriptionGI}</Text>
-        <TouchableOpacity onPress={favouriteFoodItem}>
-          <FontAwesome5
-            name="heart"
-            size={29}
-            color={theme.iconFill}
-            solid={itemIsFavourite ? true : false}
-          />
-        </TouchableOpacity>
+      <View style={dynamicStyles.foodRowContainer}>
+        <View style={styles.foodContainer}>
+          <Text style={styles.foodText}>{descriptionGI}</Text>
+        </View>
         <View
           style={[
-            styles.carbAmtTableCell,
+            styles.carbAmtContainer,
             { backgroundColor: carbBackgroundColor },
           ]}
         >
-          <Text style={styles.carbAmtTableText}>{carbAmt}</Text>
+          <Text style={styles.carbAmtText}>{carbAmt}</Text>
+        </View>
+        <View style={styles.favIconContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              favouriteFoodItem(
+                descriptionGI,
+                itemIsFavourite,
+                setItemIsFavourite,
+                searchFoodList,
+                setSearchFoodList,
+                foodData,
+                favFoodList,
+                setFavFoodList,
+                userId,
+                trackerItems,
+                setTrackerItems
+              )
+            }}
+          >
+            <FontAwesome5
+              name="heart"
+              size={29}
+              color={theme.iconFill}
+              style={styles.favIcon}
+              solid={itemIsFavourite ? true : false}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
@@ -232,28 +249,41 @@ export default memo(GlycemicItem, arePropsEqual)
 
 const getStyles = (theme) =>
   StyleSheet.create({
-    tableText: {
-      width: width * 0.7,
-      textAlign: 'right',
-      borderRightColor: theme.tableLineColor,
-      borderRightWidth: 1,
-      fontSize: 26,
-      fontWeight: '300',
-      color: theme.buttonText,
+    foodContainer: {
+      width: width * 0.74,
     },
-    carbAmtTableCell: {
-      width: 48,
-      height: 48,
-      backgroundColor: theme.tableBackground,
+    carbAmtContainer: {
+      width: width * 0.13,
+      borderLeftColor: theme.tableLineColor,
+      borderLeftWidth: 1,
       justifyContent: 'center',
       alignItems: 'center',
     },
-    carbAmtTableText: {
+    favIconContainer: {
+      borderLeftColor: theme.tableLineColor,
+      borderLeftWidth: 1,
+      width: width * 0.13,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    favIcon: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    foodText: {
+      // textAlign: 'right',
+      fontSize: 26,
+      fontWeight: '300',
+      // marginRight: 4,
+      marginLeft: 3,
       color: theme.buttonText,
+    },
+    carbAmtText: {
+      color: 'white',
       fontSize: 26,
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',
-      fontWeight: '200',
+      fontWeight: '300',
     },
   })

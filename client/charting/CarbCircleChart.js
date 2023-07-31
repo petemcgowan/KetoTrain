@@ -36,12 +36,10 @@ export default function CarbCircleChart({ focused }) {
         <CarbDonut
           key={1}
           percentage={totalCarbs}
-          percentage1={totalCarbs}
-          percentage2={totalCarbs}
           color={colorOfCarbChart}
           max={100}
-          max1={100}
-          max2={100}
+          // max1={100}
+          // max2={100}
           focused={focused}
         />
       </View>
