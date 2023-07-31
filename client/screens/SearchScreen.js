@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import GlycemicList from '../components/GlycemicList'
 import TrackerContext from '../state/TrackerContext'
@@ -35,7 +36,11 @@ const SearchScreen = ({ route }) => {
 
           <View style={styles.dateHeader}>
             <TouchableOpacity style={styles.dateButton} onPress={handlePrevDay}>
-              <Text style={styles.dateButtonText}>&lt;</Text>
+              <FontAwesome5
+                name="chevron-left"
+                size={24}
+                color={theme.buttonText}
+              />
             </TouchableOpacity>
             <View style={styles.dateDisplayContainer}>
               <Text style={styles.dateDisplayText}>
@@ -43,7 +48,11 @@ const SearchScreen = ({ route }) => {
               </Text>
             </View>
             <TouchableOpacity style={styles.dateButton} onPress={handleNextDay}>
-              <Text style={styles.dateButtonText}>&gt;</Text>
+              <FontAwesome5
+                name="chevron-right"
+                size={24}
+                color={theme.buttonText}
+              />
             </TouchableOpacity>
           </View>
           <GlycemicList searchPhrase={searchPhrase} setClicked={setClicked} />

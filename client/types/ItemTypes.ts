@@ -6,6 +6,7 @@ interface TrackerItemProps {
   setTrackerSelected: (trackerSelected: number) => void
   trackerSelected: number
   clickNutrientPanel: () => void
+  carbBackgroundColor: string
 }
 
 export type { TrackerItemProps }

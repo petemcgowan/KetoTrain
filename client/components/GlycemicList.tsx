@@ -3,6 +3,7 @@ import {
   StyleSheet,
   TextInput,
   View,
+  Dimensions,
   FlatList,
   SafeAreaView,
   Text,
@@ -15,18 +16,15 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { ThemeContext } from '../state/ThemeContext'
 
+const { width } = Dimensions.get('screen')
+
 interface GlycemicListProps {
   searchPhrase: string
   setClicked: (clicked: boolean) => void
-  itemId: number
 }
 
 // the filter
-const GlycemicList = ({
-  searchPhrase,
-  setClicked,
-  itemId,
-}: GlycemicListProps) => {
+const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
   const { searchFoodList, favFoodList } = useContext(TrackerContext)
   const context = useContext(ThemeContext)
   if (!context) {
@@ -36,11 +34,14 @@ const GlycemicList = ({
   const styles = getStyles(theme)
   const [searchPhraseNew, setSearchPhraseNew] = useState('')
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
-  console.log('theme.navigationBackground:' + theme.navigationBackground)
-  console.log('theme.tableBackground:' + theme.tableBackground)
+  // searchFoodList.find
+
   useEffect(() => {
-    console.log('theme:' + JSON.stringify(theme))
-  }, [theme])
+    // console.log('GlycemicList, useEffect, theme:' + JSON.stringify(theme))
+    // console.log(
+    //   'GlycemicList, useEffect, favFoodList:' + JSON.stringify(favFoodList)
+    // )
+  }, [theme, favFoodList, searchFoodList])
 
   const renderItem = ({ item }) => {
     const shouldRender =
@@ -50,6 +51,7 @@ const GlycemicList = ({
           .includes(searchPhraseNew.toUpperCase().trim().replace(/\s/g, ''))) &&
       (!showOnlyFavorites || (showOnlyFavorites && item.isFavourite))
 
+    // if (showOnlyFavorites) // for testing favourites
     return shouldRender ? (
       <GlycemicItem
         descriptionGI={item.foodName}
@@ -62,52 +64,54 @@ const GlycemicList = ({
 
   return (
     <SafeAreaView style={styles.searchAndList_container}>
-      <View>
+      <View style={styles.searchAndFavourite}>
         <View style={styles.searchContainer}>
           <TextInput
             placeholder="Search"
             style={styles.searchInput}
-            placeholderTextColor="#FFFFFF"
+            placeholderTextColor={theme.buttonText}
             value={searchPhraseNew}
             onChangeText={setSearchPhraseNew}
           />
+        </View>
+        <View style={styles.favButton}>
           <TouchableOpacity
             onPress={() => setShowOnlyFavorites(!showOnlyFavorites)}
           >
             <FontAwesome5
               name="heart"
-              size={24}
-              color={showOnlyFavorites ? 'lime' : '#FFFFFF'}
+              size={29}
+              color={showOnlyFavorites ? theme.iconFill : theme.buttonText}
               solid={showOnlyFavorites}
             />
           </TouchableOpacity>
         </View>
-        {favFoodList && showOnlyFavorites && (
-          <FlatList
-            data={favFoodList}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.publicFoodKey}
-          />
-        )}
-        {favFoodList && !showOnlyFavorites && (
-          <FlatList
-            data={searchFoodList}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.publicFoodKey}
-          />
-        )}
-        {(!favFoodList || favFoodList.length === 0) && (
-          <View style={styles.errorContainer}>
-            <FontAwesome5 name="frown" size={50} color="grey" />
-            <Text style={styles.errorText}>
-              Oh no! We couldn't load your favorite foods.
-            </Text>
-            <Text style={styles.errorText}>
-              Please check your internet connection and try again.
-            </Text>
-          </View>
-        )}
       </View>
+      {favFoodList && showOnlyFavorites && (
+        <FlatList
+          data={favFoodList}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.publicFoodKey}
+        />
+      )}
+      {favFoodList && !showOnlyFavorites && (
+        <FlatList
+          data={searchFoodList}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.publicFoodKey}
+        />
+      )}
+      {(!favFoodList || favFoodList.length === 0) && (
+        <View style={styles.errorContainer}>
+          <FontAwesome5 name="frown" size={50} color="grey" />
+          <Text style={styles.errorText}>
+            Oh no! We couldn't load your favorite foods.
+          </Text>
+          <Text style={styles.errorText}>
+            Please check your internet connection and try again.
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   )
 }
@@ -121,32 +125,34 @@ export default memo(GlycemicList, arePropsEqual)
 const getStyles = (theme) =>
   StyleSheet.create({
     searchAndList_container: {
-      height: '88%',
-      width: '100%',
-      justifyContent: 'center',
       backgroundColor: theme.viewBackground,
     },
     searchContainer: {
+      width: width * 0.85,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
       backgroundColor: theme.viewBackground,
-      // backgroundColor: '#000000',
-      paddingHorizontal: 10,
+      paddingLeft: 10,
       borderRadius: 10,
-      marginHorizontal: 10,
+      borderColor: theme.tableLineColor,
+      borderWidth: 2,
+      marginLeft: 10,
       marginVertical: 5,
+    },
+    searchAndFavourite: {
+      flexDirection: 'row',
+    },
+    favButton: {
+      flex: 1, // this puts fav icons in line with each other
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: width * 0.15,
     },
     searchInput: {
       paddingTop: 5,
-      fontSize: 22,
+      fontSize: 25,
       color: theme.buttonText,
-      // color: '#FFFFFF',
-      marginLeft: 10,
-      flex: 1,
-    },
-    checkbox: {
-      marginLeft: 10,
+      marginLeft: 2,
     },
     errorContainer: {
       flex: 1,

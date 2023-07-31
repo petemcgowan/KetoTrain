@@ -32,6 +32,7 @@ const KetoTrackerScreen = () => {
     setTotalCarbs,
     itemsForSelectedDate,
     setItemsForSelectedDate,
+    foodData,
   } = useContext(TrackerContext)
   const [trackerSelected, setTrackerSelected] = useState(0)
   const sheetRef = useRef<BottomSheet>(null)
@@ -45,15 +46,25 @@ const KetoTrackerScreen = () => {
   const { theme } = context
   const styles = getStyles(theme)
 
-  const renderTrackerItem = ({ item, index }: TrackerItemProps) => (
-    <TrackerItem
-      item={item}
-      index={index}
-      setTrackerSelected={setTrackerSelected}
-      trackerSelected={trackerSelected}
-      clickNutrientPanel={clickNutrientPanel}
-    />
-  )
+  const renderTrackerItem = ({ item, index }: TrackerItemProps) => {
+    console.log(
+      'KetoTrackerScreen, item.carbBackgroundColor:' + item.carbBackgroundColor
+    )
+    const matchingFoodFact = foodData.find(
+      (foodItem) => foodItem.foodName === item.description
+    )
+
+    return (
+      <TrackerItem
+        item={item}
+        index={index}
+        setTrackerSelected={setTrackerSelected}
+        trackerSelected={trackerSelected}
+        clickNutrientPanel={clickNutrientPanel}
+        carbBackgroundColor={item.carbBackgroundColor}
+      />
+    )
+  }
 
   const clickNutrientPanel = (item: TrackerItemType, index: number) => {
     console.log('clickNutrientPanel, index:' + index)
@@ -70,7 +81,7 @@ const KetoTrackerScreen = () => {
   }
 
   useEffect(() => {
-    console.log('KetoTrackerScreen, useEffect')
+    // console.log('KetoTrackerScreen, useEffect')
     const unsubscribeFocus = navigation.addListener('focus', () => {
       setFocused(true)
     })
