@@ -10,6 +10,7 @@ import TrackerContext from '../state/TrackerContext'
 import UserContext from '../state/UserContext'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { ThemeContext } from '../state/ThemeContext'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
 import { TrackerItemProps } from '../types/ItemTypes'
 import {
@@ -138,14 +139,18 @@ const TrackerItem = ({
       </View>
       <View style={styles.nutTrackerIcon}>
         <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>
-          <FontAwesome5 name="info-circle" size={29} color={theme.iconFill} />
+          <FontAwesome5
+            name="info-circle"
+            size={RFPercentage(3.9)}
+            color={theme.iconFill}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.favTrackerIcon}>
         <TouchableOpacity onPress={favouriteTrackerItem}>
           <FontAwesome5
             name="heart"
-            size={29}
+            size={RFPercentage(3.9)}
             color={theme.iconFill}
             solid={itemIsFavourite ? true : false}
           />
@@ -154,7 +159,11 @@ const TrackerItem = ({
 
       <View style={styles.deleteTrackerIcon}>
         <TouchableOpacity onPress={deleteTrackerItem}>
-          <FontAwesome5 name="trash" size={29} color={theme.iconFill} />
+          <FontAwesome5
+            name="trash"
+            size={RFPercentage(3.9)}
+            color={theme.iconFill}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -171,7 +180,7 @@ const getStyles = (theme) =>
     foodDescriptionText: {
       color: theme.buttonText,
       alignItems: 'center',
-      fontSize: 26,
+      fontSize: RFPercentage(3.3),
       fontWeight: '300',
       marginLeft: 3,
     },

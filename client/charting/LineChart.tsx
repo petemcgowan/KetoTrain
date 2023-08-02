@@ -5,6 +5,7 @@ import { getBarColor, getLast7Dates } from './ChartUtils'
 import { GraphData } from './LineChartContainer'
 import { DataPoint } from './Data'
 import { scaleLinear } from 'd3'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
 type LineChartProps = {
   height: number
@@ -105,7 +106,7 @@ const LineChart: FC<LineChartProps> = ({
                   key={index}
                   x={x}
                   y={y}
-                  fontSize={12}
+                  fontSize={RFPercentage(1.7)}
                   fill="#ffffff"
                   stroke="#ffffff"
                   textAnchor="end"
@@ -129,7 +130,7 @@ const LineChart: FC<LineChartProps> = ({
                   key={index}
                   x={x}
                   y={y}
-                  fontSize={12}
+                  fontSize={RFPercentage(1.7)}
                   stroke={'#d7d7d7'}
                   fill={'#d7d7d7'}
                   textAnchor="middle"
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
   titleText: {
-    fontSize: 20,
+    fontSize: RFPercentage(2.6),
     fontWeight: 'bold',
     marginTop: 10,
     color: 'white',

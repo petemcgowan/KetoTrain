@@ -12,16 +12,11 @@ import TrackerContext from '../state/TrackerContext'
 import UserContext, { UserContextProps } from '../state/UserContext'
 import { TrackerItemType } from '../types/TrackerItemType'
 import { TrackerContextType } from '../state/TrackerContextType'
-import {
-  saveConsumptionLogs,
-  saveFavouriteFoods,
-  formatDateToYYYYMMDD,
-} from './GlycemicUtils'
+import { saveConsumptionLogs, formatDateToYYYYMMDD } from './GlycemicUtils'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { ThemeContext } from '../state/ThemeContext'
-import { SearchListType } from '../types/SearchListType'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 import { favouriteFoodItem } from './GlycemicUtils'
-// import { FoodDataType } from '../types/FoodDataType'
 
 const { width } = Dimensions.get('screen')
 
@@ -140,59 +135,6 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
     // )
   }, [favFoodList])
 
-  // const favouriteFoodItem = () => {
-  //   // get the food facts id for updating
-  //   const matchingFoodFact = foodData.find(
-  //     (item) => item.foodName === descriptionGI
-  //   )
-  //   type FavouriteFood = { foodFactsId: number; isFavourite: boolean }
-  //   const favouriteFoods: FavouriteFood[] = []
-
-  //   favouriteFoods.push({
-  //     foodFactsId: Number(matchingFoodFact?.foodFactsId),
-  //     isFavourite: !itemIsFavourite,
-  //   })
-  //   setItemIsFavourite(!itemIsFavourite)
-  //   saveFavouriteFoods(favouriteFoods, userId)
-  //   if (itemIsFavourite) {
-  //     // it IS a favourite, so we're unfavouriting
-  //     // remove from the local fav food list
-  //     console.log(
-  //       'REMOVING favourite, matchingFoodFact:' +
-  //         JSON.stringify(matchingFoodFact)
-  //     )
-
-  //     const newFavFoods = favFoodList.filter(({ foodName }) => {
-  //       return foodName !== matchingFoodFact?.foodName
-  //     })
-  //     setFavFoodList(newFavFoods)
-  //     const updatedFoodData = searchFoodList.map((item) =>
-  //       item.foodName === descriptionGI
-  //         ? { ...item, isFavourite: !item.isFavourite }
-  //         : item
-  //     )
-  //     setSearchFoodList(updatedFoodData)
-  //   } else {
-  //     // add the local favourite
-  //     console.log(
-  //       'ADDING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
-  //     )
-  //     if (matchingFoodFact) {
-  //       setFavFoodList((prevFavFoodList) => [
-  //         ...prevFavFoodList,
-  //         { ...matchingFoodFact, isFavourite: true },
-  //       ])
-
-  //       const updatedFoodData = searchFoodList.map((item) =>
-  //         item.foodName === descriptionGI
-  //           ? { ...item, isFavourite: true }
-  //           : item
-  //       )
-  //       setSearchFoodList(updatedFoodData)
-  //     }
-  //   }
-  // }
-
   return (
     <TouchableOpacity onPress={addTrackerItem}>
       <View style={dynamicStyles.foodRowContainer}>
@@ -227,7 +169,7 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
           >
             <FontAwesome5
               name="heart"
-              size={29}
+              size={RFPercentage(3.9)}
               color={theme.iconFill}
               style={styles.favIcon}
               solid={itemIsFavourite ? true : false}
@@ -271,16 +213,14 @@ const getStyles = (theme) =>
       alignItems: 'center',
     },
     foodText: {
-      // textAlign: 'right',
-      fontSize: 26,
+      fontSize: RFPercentage(3.3),
       fontWeight: '300',
-      // marginRight: 4,
       marginLeft: 3,
       color: theme.buttonText,
     },
     carbAmtText: {
       color: 'white',
-      fontSize: 26,
+      fontSize: RFPercentage(3.3),
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',

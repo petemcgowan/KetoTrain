@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
 } from 'react-native'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
 import BottomSheet from 'reanimated-bottom-sheet'
 import hands_logging_in from '../assets/images/login_hands_logging_in_2.png'
@@ -71,13 +72,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 10,
   },
-  panelContent: {
-    flexDirection: 'row',
-    height: height * 0.5,
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   buttonX: {
     position: 'absolute',
     right: 10,
@@ -90,16 +84,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   xButtonText: {
-    fontSize: 18,
+    fontSize: RFPercentage(2.5),
     color: 'white',
     textTransform: 'uppercase',
   },
   panelTitle: {
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    fontSize: 26,
+    fontSize: RFPercentage(3.7),
     fontWeight: '600',
-    // color: 'rgb(2, 158, 147)',
     color: 'white',
     textAlign: 'center',
   },
@@ -119,28 +110,5 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-  },
-  button: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgb(34, 34, 34)',
-    padding: 10,
-    marginHorizontal: 10,
-    marginBottom: 20,
-
-    // Shadow properties for iOS
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    // Elevation for Android
-    elevation: 5,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    textTransform: 'uppercase',
   },
 })

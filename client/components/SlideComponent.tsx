@@ -19,8 +19,6 @@ const SlideComponent = ({ title, description, image }) => {
       <View style={styles.textBox}>
         <Text style={styles.text}>{description}</Text>
       </View>
-      {/* <View style={styles.textBox}>
-      </View> */}
     </View>
   )
 }
@@ -36,7 +34,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   imageContainer: {
-    // flex: 0.5,
     width: width * 0.9,
     height: height * 0.4,
     alignSelf: 'center',
@@ -55,10 +52,9 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     textAlign: 'center',
-    fontSize: RFPercentage(2.3),
+    fontSize: RFPercentage(2.5),
     maxWidth: width - 40,
     justifyContent: 'center',
-    // alignItems: 'center',
   },
   title: {
     color: 'white',
@@ -66,8 +62,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     maxWidth: width - 40,
     fontSize: RFPercentage(3.1),
-    // width: width,
     justifyContent: 'center',
-    // alignItems: 'center',
   },
 })

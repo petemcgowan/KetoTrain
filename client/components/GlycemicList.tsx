@@ -13,7 +13,7 @@ import {
 import TrackerContext from '../state/TrackerContext'
 import GlycemicItem from './GlycemicItem'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-
+import { RFPercentage } from 'react-native-responsive-fontsize'
 import { ThemeContext } from '../state/ThemeContext'
 
 const { width } = Dimensions.get('screen')
@@ -34,14 +34,8 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
   const styles = getStyles(theme)
   const [searchPhraseNew, setSearchPhraseNew] = useState('')
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
-  // searchFoodList.find
 
-  useEffect(() => {
-    // console.log('GlycemicList, useEffect, theme:' + JSON.stringify(theme))
-    // console.log(
-    //   'GlycemicList, useEffect, favFoodList:' + JSON.stringify(favFoodList)
-    // )
-  }, [theme, favFoodList, searchFoodList])
+  useEffect(() => {}, [theme, favFoodList, searchFoodList])
 
   const renderItem = ({ item }) => {
     const shouldRender =
@@ -80,7 +74,7 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
           >
             <FontAwesome5
               name="heart"
-              size={29}
+              size={RFPercentage(3.9)}
               color={showOnlyFavorites ? theme.iconFill : theme.buttonText}
               solid={showOnlyFavorites}
             />
@@ -103,7 +97,7 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
       )}
       {(!favFoodList || favFoodList.length === 0) && (
         <View style={styles.errorContainer}>
-          <FontAwesome5 name="frown" size={50} color="grey" />
+          <FontAwesome5 name="frown" size={RFPercentage(4.9)} color="grey" />
           <Text style={styles.errorText}>
             Oh no! We couldn't load your favorite foods.
           </Text>
@@ -143,14 +137,14 @@ const getStyles = (theme) =>
       flexDirection: 'row',
     },
     favButton: {
-      flex: 1, // this puts fav icons in line with each other
+      flex: 1, // puts fav icons in line with each other
       alignItems: 'center',
       justifyContent: 'center',
       width: width * 0.15,
     },
     searchInput: {
       paddingTop: 5,
-      fontSize: 25,
+      fontSize: RFPercentage(3.3),
       color: theme.buttonText,
       marginLeft: 2,
     },
@@ -161,7 +155,7 @@ const getStyles = (theme) =>
       padding: 20,
     },
     errorText: {
-      fontSize: 18,
+      fontSize: RFPercentage(2.8),
       color: 'grey',
       textAlign: 'center',
       marginTop: 10,

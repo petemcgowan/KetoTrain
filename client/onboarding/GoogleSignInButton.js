@@ -1,6 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, Text, Image, StyleSheet, View } from 'react-native'
 import googleLetterIcon from '../assets/images/btn_google_light_normal_ios.png'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
 const GoogleSignInButton = ({ onPress, disabled }) => (
   <TouchableOpacity
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#ffffff',
     marginLeft: 10,
+    fontSize: RFPercentage(2.5),
   },
   icon: {
     width: 20,
