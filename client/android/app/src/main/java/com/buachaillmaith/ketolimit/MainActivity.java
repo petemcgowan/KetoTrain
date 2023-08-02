@@ -1,4 +1,4 @@
-package com.ketolimit;
+package com.buachaillmaith.ketolimit;
 
 import android.os.Bundle; // react native splash screen
 import com.facebook.react.ReactActivity;

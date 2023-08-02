@@ -1,4 +1,4 @@
-package com.ketolimit.newarchitecture.modules;
+package com.buachaillmaith.ketolimit.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

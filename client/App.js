@@ -8,14 +8,6 @@ import SplashScreen from 'react-native-splash-screen'
 import OnboardingDeck from './onboarding/OnboardingDeck'
 import LoadingScreen from './onboarding/LoadingScreen'
 
-// const MyTheme = {
-//   ...DefaultTheme,
-//   colors: {
-//     ...DefaultTheme.colors,
-//     background: 'black',
-//     notification: 'blue',
-//   },
-// }
 const Stack = createStackNavigator()
 
 export default function App() {
