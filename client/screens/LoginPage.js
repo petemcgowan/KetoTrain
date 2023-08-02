@@ -50,10 +50,12 @@ const LoginPage = ({ navigation }) => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      //     webClientId:
-      // '534592509466-emk8vddvuarhkrqhdv1qlp5rg5ddtagi.apps.googleusercontent.com',
+      webClientId:
+        '534592509466-tfde9rsgmmeahtknghht7rbjt14e0m0c.apps.googleusercontent.com',
+      // androidClientId:
+      //   '534592509466-r0b52u6k67qqluglvd7eo6sptlsf1eqr.apps.googleusercontent.com',
       androidClientId:
-        '534592509466-r0b52u6k67qqluglvd7eo6sptlsf1eqr.apps.googleusercontent.com',
+        '534592509466-mla9cae97f60gjl773k5h79r5m1m51n5.apps.googleusercontent.com',
       iosClientId:
         '534592509466-emk8vddvuarhkrqhdv1qlp5rg5ddtagi.apps.googleusercontent.com',
       // offlineAccess: true,
@@ -68,34 +70,6 @@ const LoginPage = ({ navigation }) => {
         onPress={handleGoogleLogin}
         disabled={isSigninInProgress}
       />
-      {/* <Button title="Login with Google" onPress={handleGoogleLogin} /> */}
-      {/* <Button
-        title={'Sign in with Google'}
-        onPress={() => {
-          GoogleSignin.configure({
-            webClientId:
-        '534592509466-emk8vddvuarhkrqhdv1qlp5rg5ddtagi.apps.googleusercontent.com',
-            androidClientId: '534592509466-r0b52u6k67qqluglvd7eo6sptlsf1eqr.apps.googleusercontent.com',
-            iosClientId: '534592509466-emk8vddvuarhkrqhdv1qlp5rg5ddtagi.apps.googleusercontent.com',
-          })
-          GoogleSignin.hasPlayServices()
-            .then((hasPlayService) => {
-              if (hasPlayService) {
-                GoogleSignin.signIn()
-                  .then((userInfo) => {
-                    console.log(JSON.stringify(userInfo))
-                  })
-                  .catch((e) => {
-                    console.log('ERROR IS: ' + JSON.stringify(e))
-                  })
-              }
-            })
-            .catch((e) => {
-              console.log('ERROR IS: ' + JSON.stringify(e))
-            })
-        }}
-      /> */}
-      {/* <Button title="Login with Facebook" onPress={handleFacebookLogin} /> */}
     </View>
   )
 }

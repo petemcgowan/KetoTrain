@@ -7,6 +7,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Svg from 'react-native-svg'
 import Animated from 'react-native-reanimated'
 import TrackerContext from '../state/TrackerContext'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
 import Lottie from 'lottie-react-native'
 import SearchScreen from './SearchScreen'
@@ -14,7 +15,6 @@ import KetoTrackerScreen from './KetoTrackerScreen'
 import KetoLimitScreen from './KetoLimitScreen'
 import LearnDeck from './LearnDeck'
 import { ThemeContext, themes } from '../state/ThemeContext'
-// import ThemeModal from '../components/ThemeModal'
 const Tab = createBottomTabNavigator()
 export const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
@@ -47,7 +47,7 @@ const BottomTabNavigator = () => {
             ),
             headerTitleStyle: {
               color: theme.tabHeaderText,
-              fontSize: 38,
+              fontSize: RFPercentage(4.8),
               fontWeight: '300',
             },
             headerStyle: {
@@ -58,14 +58,10 @@ const BottomTabNavigator = () => {
                 <TouchableOpacity onPress={() => setNextTheme()}>
                   <FontAwesome5
                     name="palette"
-                    size={29}
+                    size={RFPercentage(3.7)}
                     color={theme.tabHeaderText}
                   />
                 </TouchableOpacity>
-                {/* <ThemeModal
-                  modalVisible={modalVisible}
-                  setModalVisible={setModalVisible}
-                /> */}
               </View>
             ),
           }}
@@ -85,7 +81,7 @@ const BottomTabNavigator = () => {
             tabBarBadge: trackerItems.length,
             headerTitleStyle: {
               color: theme.tabHeaderText,
-              fontSize: 38,
+              fontSize: RFPercentage(4.8),
               fontWeight: '300',
             },
             headerStyle: {
@@ -97,14 +93,14 @@ const BottomTabNavigator = () => {
             tabBarBadgeStyle: {
               backgroundColor: '#453749',
               color: '#BBBccc',
-              fontSize: 17,
+              fontSize: RFPercentage(1.8),
             },
             headerRight: () => (
               <View style={styles.colourSchemeButton}>
                 <TouchableOpacity onPress={() => setNextTheme()}>
                   <FontAwesome5
                     name="palette"
-                    size={29}
+                    size={RFPercentage(3.7)}
                     color={theme.tabHeaderText}
                   />
                 </TouchableOpacity>
@@ -131,7 +127,7 @@ const BottomTabNavigator = () => {
             },
             headerTitleStyle: {
               color: theme.tabHeaderText,
-              fontSize: 38,
+              fontSize: RFPercentage(4.8),
               fontWeight: '300',
             },
             tabBarItemStyle: {
@@ -141,14 +137,14 @@ const BottomTabNavigator = () => {
             tabBarBadgeStyle: {
               backgroundColor: '#2196F3',
               color: '#BBBccc',
-              fontSize: 17,
+              fontSize: RFPercentage(1.8),
             },
             headerRight: () => (
               <View style={styles.colourSchemeButton}>
                 <TouchableOpacity onPress={() => setNextTheme()}>
                   <FontAwesome5
                     name="palette"
-                    size={29}
+                    size={RFPercentage(3.7)}
                     color={theme.tabHeaderText}
                   />
                 </TouchableOpacity>
@@ -175,7 +171,7 @@ const BottomTabNavigator = () => {
             },
             headerTitleStyle: {
               color: theme.tabHeaderText,
-              fontSize: 38,
+              fontSize: RFPercentage(4.8),
               fontWeight: '300',
             },
             headerStyle: {
@@ -189,7 +185,7 @@ const BottomTabNavigator = () => {
                 <TouchableOpacity onPress={() => setNextTheme()}>
                   <FontAwesome5
                     name="palette"
-                    size={29}
+                    size={RFPercentage(3.7)}
                     color={theme.tabHeaderText}
                   />
                 </TouchableOpacity>

@@ -9,14 +9,12 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 import SlideComponent from '../components/SlideComponent'
 import BottomSheet from 'reanimated-bottom-sheet'
 import LoginBottomSheet from './LoginBottomSheet'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import UserContext, { UserContextProps } from '../state/UserContext'
-// const { height } = Dimensions.get('window')
-
-// const slides = [Onboarding1, Onboarding2, Onboarding3]
 
 const slides = [
   {
@@ -24,7 +22,6 @@ const slides = [
     title: 'Stay Informed and Motivated',
     description:
       'Our app empowers you with knowledge about ketosis and the ketogenic diet. Track your progress, set goals, and gain insights that keep you motivated on your journey towards improved health.',
-    // image: require('../assets/images/stay_informed_and_motivated_2.png'),
     image: require('../assets/images/stay_informed_and_motivated.png'),
     color: 'rgb(38, 27, 21)',
   },
@@ -33,7 +30,6 @@ const slides = [
     title: 'Extensive Food Database',
     description:
       'With access to an extensive list of over 2000 foods, finding and tracking the carbohydrate content of what you eat is effortless. Make informed choices and easily manage your daily intake.',
-    // image: require('../assets/images/extensive_food_database_3.png'),
     image: require('../assets/images/extensive_food_database_4.png'),
     color: 'rgb(9, 21, 39)',
   },
@@ -57,7 +53,6 @@ const slides = [
     title: 'Achieve Ketosis Naturally',
     description:
       'Track your carbohydrate intake and stay within your limits to achieve ketosis. In ketosis, your body switches to burning fat as its primary fuel source, promoting natural weight loss and a boost in energy levels.',
-    // image: require('../assets/images/achieve_ketosis_naturally_2.png'),
     image: require('../assets/images/achieve_ketosis_naturally_3.png'),
     color: 'rgb(38, 27, 21)',
   },
@@ -90,7 +85,7 @@ const OnboardingDeck = () => {
       if (slide > slides.length - 1) {
         console.log('Slides end reached')
       } else {
-        setBackgroundColor(slides[slide].color) // Set the background color when the slide changes
+        setBackgroundColor(slides[slide].color)
         console.log('slides[slide].color:' + slides[slide].color)
       }
     }
@@ -104,7 +99,6 @@ const OnboardingDeck = () => {
       const userInfo = await GoogleSignin.signIn().catch((error) => {
         console.log('Error during Google Sign In:', error)
       })
-      // Here you will get user information, you can send it to your backend server for verification
       console.log('userInfo:' + JSON.stringify(userInfo))
       setEmailAddress(userInfo.email)
       navigation.navigate('LoadingScreen')
@@ -254,7 +248,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  bottomSheetContainer: {},
   pagination: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -262,18 +255,18 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   dot: {
-    fontSize: 50,
+    fontSize: RFPercentage(6.8),
     color: '#888',
     margin: 5,
   },
   activeDot: {
-    fontSize: 50,
+    fontSize: RFPercentage(6.8),
     color: '#FFF',
     margin: 5,
   },
   buttonText: {
     color: '#FFF',
-    fontSize: 18,
+    fontSize: RFPercentage(2.7),
     textAlign: 'center',
   },
   link: {
@@ -281,7 +274,7 @@ const styles = StyleSheet.create({
   },
   linkText: {
     color: 'rgb(44, 207, 157)',
-    fontSize: 18,
+    fontSize: RFPercentage(2.6),
     textDecorationLine: 'underline',
   },
 })

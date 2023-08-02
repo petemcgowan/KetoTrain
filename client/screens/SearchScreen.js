@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
 import GlycemicList from '../components/GlycemicList'
 import TrackerContext from '../state/TrackerContext'
@@ -38,7 +39,7 @@ const SearchScreen = ({ route }) => {
             <TouchableOpacity style={styles.dateButton} onPress={handlePrevDay}>
               <FontAwesome5
                 name="chevron-left"
-                size={24}
+                size={RFPercentage(3.2)}
                 color={theme.buttonText}
               />
             </TouchableOpacity>
@@ -50,7 +51,7 @@ const SearchScreen = ({ route }) => {
             <TouchableOpacity style={styles.dateButton} onPress={handleNextDay}>
               <FontAwesome5
                 name="chevron-right"
-                size={24}
+                size={RFPercentage(3.2)}
                 color={theme.buttonText}
               />
             </TouchableOpacity>
@@ -73,7 +74,6 @@ const getStyles = (theme) =>
   StyleSheet.create({
     searchPageContainer: {
       alignItems: 'center',
-      // color: '#FFF',
       backgroundColor: theme.viewBackground,
     },
     dateHeader: {
@@ -90,17 +90,12 @@ const getStyles = (theme) =>
       paddingHorizontal: 18,
       borderRadius: 20,
     },
-    dateButtonText: {
-      color: theme.buttonText,
-      fontSize: 24,
-      fontWeight: 'bold',
-    },
     dateDisplayContainer: {
       flex: 1,
       alignItems: 'center',
     },
     dateDisplayText: {
       color: theme.buttonText,
-      fontSize: 24,
+      fontSize: RFPercentage(3.3),
     },
   })

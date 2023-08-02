@@ -8,6 +8,8 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 import { useNavigation } from '@react-navigation/native'
 import TrackerContext from '../state/TrackerContext'
 import TrackerItem from '../components/TrackerItem'
@@ -111,7 +113,11 @@ const KetoTrackerScreen = () => {
     <SafeAreaView style={styles.trackerContainer}>
       <View style={styles.dateHeader}>
         <TouchableOpacity style={styles.dateButton} onPress={handlePrevDay}>
-          <Text style={styles.dateButtonText}>&lt;</Text>
+          <FontAwesome5
+            name="chevron-left"
+            size={RFPercentage(3.2)}
+            color={theme.buttonText}
+          />
         </TouchableOpacity>
         <View style={styles.dateDisplayContainer}>
           <Text style={styles.dateDisplayText}>
@@ -119,7 +125,11 @@ const KetoTrackerScreen = () => {
           </Text>
         </View>
         <TouchableOpacity style={styles.dateButton} onPress={handleNextDay}>
-          <Text style={styles.dateButtonText}>&gt;</Text>
+          <FontAwesome5
+            name="chevron-right"
+            size={RFPercentage(3.2)}
+            color={theme.buttonText}
+          />
         </TouchableOpacity>
       </View>
       <FlatList
@@ -163,7 +173,7 @@ const getStyles = (theme) =>
     },
     dateButtonText: {
       color: theme.buttonText,
-      fontSize: 24,
+      fontSize: RFPercentage(3.3),
       fontWeight: 'bold',
     },
     dateDisplayContainer: {
@@ -172,6 +182,6 @@ const getStyles = (theme) =>
     },
     dateDisplayText: {
       color: theme.buttonText,
-      fontSize: 24,
+      fontSize: RFPercentage(3.3),
     },
   })
