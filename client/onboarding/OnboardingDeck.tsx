@@ -65,13 +65,6 @@ const OnboardingDeck = () => {
   const [isSigninInProgress, setSigninInProgress] = useState(false)
   const navigation = useNavigation()
   const [backgroundColor, setBackgroundColor] = useState('#000')
-  // const slideColors = [
-  //   'rgb(38, 27, 21)', // 1
-  //   'rgb(25, 26, 29)', // 2
-  //   'rgb(9, 21, 39)', // 3
-  //   'rgb(38, 27, 21)', // 4
-  //   'rgb(25, 26, 29)', // 5
-  // ]
   const { setEmailAddress } = useContext(UserContext) as UserContextProps
 
   const onScroll = (event: any) => {

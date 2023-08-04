@@ -1,0 +1,23 @@
+version: '3'
+services:
+  keto-api-server:
+    image: keto-api-server
+    build: ./server/
+    ports:
+      - '4001:4001' # for graphQL
+    networks:
+      - common-network
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGHOST: postgres #name of the service
+    volumes:
+      - ./server:/usr/src/app # <- Mounts the code from local directory to container.
+      - node_modules:/usr/src/app/node_modules
+ #   command: tail -f /dev/null    #debugging temp
+networks:
+  common-network:
+    external: true
+volumes:
+  node_modules:
