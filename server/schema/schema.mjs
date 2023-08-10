@@ -1,6 +1,6 @@
 import { buildSchema } from 'graphql'
 
-export const peteSchema = buildSchema(`
+export const schema = buildSchema(`
 
   type UserInfo {
     user_id: ID!

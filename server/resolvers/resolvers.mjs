@@ -11,10 +11,10 @@ import {
   getUserInfo,
 } from './resolverFunctions.mjs'
 
-export const peteResolvers = {
+export const resolvers = {
   test: () => {
-    console.log('Pete resolver invoked')
-    return 'Pete Test successful'
+    console.log('Keto resolver invoked')
+    return 'Keto Test successful'
   },
   allFoodFacts: async (args, context, info) => {
     console.log('allFoodFacts resolver, userId' + args.userId)
