@@ -131,9 +131,10 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
 
   useEffect(() => {
     // console.log(
-    //   'useEffect(GlycemicItem), favFoodList:' + JSON.stringify(favFoodList)
+    //   'useEffect(GlycemicItem), carbBackgroundColor:' +
+    //     JSON.stringify(carbBackgroundColor)
     // )
-  }, [favFoodList])
+  }, [favFoodList, carbBackgroundColor])
 
   return (
     <TouchableOpacity onPress={addTrackerItem}>
@@ -213,14 +214,14 @@ const getStyles = (theme) =>
       alignItems: 'center',
     },
     foodText: {
-      fontSize: RFPercentage(3.3),
+      fontSize: RFPercentage(3.5),
       fontWeight: '300',
       marginLeft: 3,
       color: theme.buttonText,
     },
     carbAmtText: {
       color: 'white',
-      fontSize: RFPercentage(3.3),
+      fontSize: RFPercentage(3.5),
       textAlign: 'center',
       justifyContent: 'center',
       alignItems: 'center',

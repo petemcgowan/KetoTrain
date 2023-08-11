@@ -1,18 +1,9 @@
 import React, { useContext } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  Dimensions,
-} from 'react-native'
+import { StyleSheet, Text, View, Image, ScrollView } from 'react-native'
 import WeeklyLineChartContainer from '../charting/WeeklyLineChartContainer'
 import TrackerContext from '../state/TrackerContext'
 
 function LearnScreen() {
-  const { width } = Dimensions.get('window')
-  const height = 256
   const { trackerItems } = useContext(TrackerContext)
 
   return (

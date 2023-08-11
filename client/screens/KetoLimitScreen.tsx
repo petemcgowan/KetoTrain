@@ -1,8 +1,19 @@
 import React, { useContext } from 'react'
-import { StyleSheet, View, SafeAreaView, Text, Dimensions } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Text,
+  Dimensions,
+  ScrollView,
+} from 'react-native'
 import DonutFactory from '../charting/DonutFactory'
 import LineChartContainer from '../charting/LineChartContainer'
 import { ThemeContext } from '../state/ThemeContext'
+import EnergyChart from '../charting/EnergyChart'
+import TrackerContext from '../state/TrackerContext'
+import MacroPieChart from '../charting/ConsumptionChart'
+import MacroAreaChart from '../charting/MacroAreaChart'
 
 const { width, height } = Dimensions.get('window')
 
@@ -28,6 +39,8 @@ const chartConfigs = [
 
 const KetoLimitScreen = () => {
   const context = useContext(ThemeContext)
+  const { trackerItems } = useContext(TrackerContext)
+
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
   }
@@ -36,14 +49,17 @@ const KetoLimitScreen = () => {
   // /*style={{ backgroundColor: 'green', width: width, height: height }}*/
 
   return (
-    <View style={styles.tabContainer}>
+    <ScrollView style={styles.tabContainer}>
       <SafeAreaView style={styles.chartContainer}>
         <View style={styles.ketoLimitContainer}>
           {/* <DonutFactory /> */}
+          <MacroPieChart trackerItems={trackerItems} />
+          <EnergyChart trackerItems={trackerItems} />
+          <MacroAreaChart trackerItems={trackerItems} />
           <LineChartContainer />
         </View>
       </SafeAreaView>
-    </View>
+    </ScrollView>
   )
 }
 

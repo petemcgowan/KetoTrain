@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState, useEffect } from 'react'
 import {
   StyleSheet,
   Text,
@@ -66,6 +66,13 @@ const TrackerItem = ({
       }),
     [trackerItems] // carbBackgroundColor (not needed i assume)
   )
+
+  useEffect(() => {
+    console.log(
+      'useEffect(TrackerItem), carbBackgroundColor:' +
+        JSON.stringify(carbBackgroundColor)
+    )
+  }, [carbBackgroundColor])
 
   const pressTrackerItem = () => {
     const dateBasedIndex = itemsForSelectedDate.findIndex(
@@ -180,7 +187,7 @@ const getStyles = (theme) =>
     foodDescriptionText: {
       color: theme.buttonText,
       alignItems: 'center',
-      fontSize: RFPercentage(3.3),
+      fontSize: RFPercentage(3.5),
       fontWeight: '300',
       marginLeft: 3,
     },
