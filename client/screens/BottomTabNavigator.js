@@ -22,7 +22,13 @@ const BottomTabNavigator = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const { setTheme, setNextTheme } = useContext(ThemeContext)
 
-  const { totalCarbs, trackerItems } = useContext(TrackerContext)
+  const {
+    totalCarbs,
+    trackerItems,
+    setTrackerItems,
+    searchFoodList,
+    setSearchFoodList,
+  } = useContext(TrackerContext)
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
@@ -55,7 +61,16 @@ const BottomTabNavigator = () => {
             },
             headerRight: () => (
               <View style={styles.colourSchemeButton}>
-                <TouchableOpacity onPress={() => setNextTheme()}>
+                <TouchableOpacity
+                  onPress={() =>
+                    setNextTheme(
+                      trackerItems,
+                      setTrackerItems,
+                      searchFoodList,
+                      setSearchFoodList
+                    )
+                  }
+                >
                   <FontAwesome5
                     name="palette"
                     size={RFPercentage(3.7)}
@@ -97,7 +112,16 @@ const BottomTabNavigator = () => {
             },
             headerRight: () => (
               <View style={styles.colourSchemeButton}>
-                <TouchableOpacity onPress={() => setNextTheme()}>
+                <TouchableOpacity
+                  onPress={() =>
+                    setNextTheme(
+                      trackerItems,
+                      setTrackerItems,
+                      searchFoodList,
+                      setSearchFoodList
+                    )
+                  }
+                >
                   <FontAwesome5
                     name="palette"
                     size={RFPercentage(3.7)}
@@ -141,7 +165,16 @@ const BottomTabNavigator = () => {
             },
             headerRight: () => (
               <View style={styles.colourSchemeButton}>
-                <TouchableOpacity onPress={() => setNextTheme()}>
+                <TouchableOpacity
+                  onPress={() =>
+                    setNextTheme(
+                      trackerItems,
+                      setTrackerItems,
+                      searchFoodList,
+                      setSearchFoodList
+                    )
+                  }
+                >
                   <FontAwesome5
                     name="palette"
                     size={RFPercentage(3.7)}
@@ -182,7 +215,16 @@ const BottomTabNavigator = () => {
             },
             headerRight: () => (
               <View style={styles.colourSchemeButton}>
-                <TouchableOpacity onPress={() => setNextTheme()}>
+                <TouchableOpacity
+                  onPress={() =>
+                    setNextTheme(
+                      trackerItems,
+                      setTrackerItems,
+                      searchFoodList,
+                      setSearchFoodList
+                    )
+                  }
+                >
                   <FontAwesome5
                     name="palette"
                     size={RFPercentage(3.7)}

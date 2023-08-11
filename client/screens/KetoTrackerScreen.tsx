@@ -52,9 +52,9 @@ const KetoTrackerScreen = () => {
     console.log(
       'KetoTrackerScreen, item.carbBackgroundColor:' + item.carbBackgroundColor
     )
-    const matchingFoodFact = foodData.find(
-      (foodItem) => foodItem.foodName === item.description
-    )
+    // const matchingFoodFact = foodData.find(
+    //   (foodItem) => foodItem.foodName === item.description
+    // )
 
     return (
       <TrackerItem
