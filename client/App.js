@@ -7,6 +7,7 @@ import BottomTabNavigator from './screens/BottomTabNavigator'
 import SplashScreen from 'react-native-splash-screen'
 import OnboardingDeck from './onboarding/OnboardingDeck'
 import LoadingScreen from './onboarding/LoadingScreen'
+import { ThemeProvider } from './state/ThemeContext'
 
 const Stack = createStackNavigator()
 
@@ -77,18 +78,20 @@ export default function App() {
   }, [])
 
   return (
-    <TrackerProvider value={value}>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="OnboardingDeck"
-          screenOptions={{ headerShown: false }}
-        >
-          {/* <Stack.Screen name="Login" component={LoginPage} /> */}
-          <Stack.Screen name="OnboardingDeck" component={OnboardingDeck} />
-          <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-          <Stack.Screen name="MainApp" component={BottomTabNavigator} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </TrackerProvider>
+    <ThemeProvider>
+      <TrackerProvider value={value}>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="OnboardingDeck"
+            screenOptions={{ headerShown: false }}
+          >
+            {/* <Stack.Screen name="Login" component={LoginPage} /> */}
+            <Stack.Screen name="OnboardingDeck" component={OnboardingDeck} />
+            <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
+            <Stack.Screen name="MainApp" component={BottomTabNavigator} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </TrackerProvider>
+    </ThemeProvider>
   )
 }

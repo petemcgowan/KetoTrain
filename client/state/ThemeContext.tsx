@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState, useContext } from 'react'
+import TrackerContext from '../state/TrackerContext'
 
 type Theme = {
   viewBackground: string
@@ -295,14 +296,68 @@ export const ThemeContext = createContext<ThemeContextProps>({
 export const ThemeProvider: React.FC = ({ children }) => {
   const themesArray = Object.values(themes)
   const initialThemeIndex = themesArray.indexOf(themes.splitComplementary2)
+  // sets the index of the theme we're using app-wide
   const [themeIndex, setThemeIndex] = useState(initialThemeIndex)
   const [theme, setTheme] = useState<Theme>(themesArray[themeIndex])
+  // const { searchFoodList, setSearchFoodList, trackerItems, setTrackerItems } =
+  //   useContext(TrackerContext)
 
-  const setNextTheme = () => {
+  const setNextTheme = (
+    trackerItems,
+    setTrackerItems,
+    searchFoodList,
+    setSearchFoodList
+  ) => {
+    console.log('Inside setNextTheme - trackerItems:', trackerItems)
+    // console.log('Inside setNextTheme - searchFoodList:', searchFoodList);
     let nextIndex = themeIndex + 1
     if (nextIndex >= themesArray.length) nextIndex = 0
     setThemeIndex(nextIndex)
     setTheme(themesArray[nextIndex])
+    const currentTheme = themesArray[nextIndex]
+    // currentTheme.tableBackground
+
+    // set the carbBackgroundColor for trackerItems
+    console.log('trackerItems:' + JSON.stringify(trackerItems))
+    const newTrackerItems = [...trackerItems]
+    console.log('newTrackerItems:' + JSON.stringify(newTrackerItems))
+    const updatedItems = newTrackerItems.map((item) => {
+      const newColor =
+        item.carbAmt > 22
+          ? currentTheme.badBackground
+          : item.carbAmt > 11
+          ? currentTheme.middlingBackground
+          : currentTheme.tableBackground
+
+      return {
+        ...item,
+        carbBackgroundColor: newColor,
+      }
+    })
+    console.log('updatedItems:' + JSON.stringify(updatedItems))
+
+    setTrackerItems(updatedItems)
+
+    // set the carbBackgroundColor for searchFoodList
+    // console.log('searchFoodList:' + JSON.stringify(searchFoodList))
+    const newFoodList = [...searchFoodList]
+    console.log('newFoodList:' + JSON.stringify(newFoodList))
+    const updatedFoodItems = newFoodList.map((item) => {
+      const newColor =
+        item.carbohydrates > 22
+          ? currentTheme.badBackground
+          : item.carbohydrates > 11
+          ? currentTheme.middlingBackground
+          : currentTheme.tableBackground
+
+      return {
+        ...item,
+        carbBackgroundColor: newColor,
+      }
+    })
+    console.log('updatedFoodItems:' + JSON.stringify(updatedFoodItems))
+
+    setSearchFoodList(updatedFoodItems)
   }
 
   return (
