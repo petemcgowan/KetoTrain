@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   VictoryChart,
   VictoryStack,
@@ -6,28 +6,14 @@ import {
   VictoryTheme,
 } from 'victory-native'
 
-type TrackerItemType = {
-  id: string
-  foodFactsId: number
-  description: string
-  carbAmt: number
-  fiberAmt: number
-  proteinAmt: number
-  fatAmt: number
-  energyAmt: number
-  sugarsAmt: number
-  sodiumAmt: number
-  carbBackgroundColor: string
-  portionAmount: number
-  consumptionDate: Date
-  isFavourite: boolean
-}
+import { TrackerItemType } from '../types/TrackerItemType'
 
 type Props = {
   trackerItems: TrackerItemType[]
 }
 
 const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
+  console.log('MacroAreaChart is rendering')
   const today = new Date()
   const oneWeekAgo = new Date(today)
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
@@ -62,44 +48,6 @@ const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
   })
 
   const data = Object.values(dataMap)
-
-  // const filteredItems = trackerItems.filter(
-  //   (item) => new Date(item.consumptionDate) >= oneWeekAgo
-  // )
-  // console.log('filteredItems:' + JSON.stringify(filteredItems))
-  // const groupedByDate: { [key: string]: TrackerItemType[] } = {}
-
-  // filteredItems.forEach((item) => {
-  //   const date = item.consumptionDate.toISOString().split('T')[0]
-  //   if (!groupedByDate[date]) {
-  //     groupedByDate[date] = []
-  //   }
-  //   groupedByDate[date].push(item)
-  // })
-
-  // const data = Object.entries(groupedByDate).map(([date, items]) => {
-  //   const totals = items.reduce(
-  //     (acc, item) => {
-  //       acc.protein += item.proteinAmt
-  //       acc.carb += item.carbAmt
-  //       acc.fat += item.fatAmt
-  //       console.log('acc:' + JSON.stringify(acc))
-
-  //       return acc
-  //     },
-  //     {
-  //       protein: 0,
-  //       carb: 0,
-  //       fat: 0,
-  //     }
-  //   )
-  //   console.log('totals:' + JSON.stringify(totals))
-  //   return {
-  //     date,
-  //     ...totals,
-  //   }
-  // })
-  console.log('data:' + JSON.stringify(data))
 
   return (
     <VictoryChart theme={VictoryTheme.material}>
