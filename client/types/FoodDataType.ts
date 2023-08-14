@@ -17,3 +17,4 @@ export type FoodDataType = {
   saturatedFat: number
   isFavourite: boolean
 }
+export type FoodListState = FoodDataType[]

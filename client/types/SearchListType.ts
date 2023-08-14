@@ -5,3 +5,4 @@ export type SearchListType = {
   carbBackgroundColor: string
   isFavourite: boolean
 }
+export type SearchFoodListState = SearchListType[]

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TrackerContextType } from './TrackerContextType'
+import { TrackerContextType } from '../types/TrackerContextType'
 
 // Initial values are not really used, they serve as a "fallback" and for type inference
 const defaultValues: TrackerContextType = {
@@ -7,18 +7,6 @@ const defaultValues: TrackerContextType = {
   setTrackerItems: (value) => {},
   totalCarbs: 0,
   setTotalCarbs: (value) => {},
-  selectedDate: new Date(),
-  setSelectedDate: (value) => {},
-  itemsForSelectedDate: [],
-  setItemsForSelectedDate: (value) => {},
-  handlePrevDay: () => {},
-  handleNextDay: () => {},
-  foodData: [],
-  setFoodData: (value) => {},
-  searchFoodList: [],
-  setSearchFoodList: (value) => {},
-  favFoodList: [],
-  setFavFoodList: (value) => {},
 }
 
 const TrackerContext = React.createContext<TrackerContextType>(defaultValues)
