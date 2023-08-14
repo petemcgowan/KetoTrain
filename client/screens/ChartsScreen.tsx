@@ -7,8 +7,8 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native'
-import DonutFactory from '../charting/DonutFactory'
-import LineChartContainer from '../charting/LineChartContainer'
+// import DonutFactory from '../charting/DonutFactory'
+// import LineChartContainer from '../charting/LineChartContainer'
 import { ThemeContext } from '../state/ThemeContext'
 import EnergyChart from '../charting/EnergyChart'
 import TrackerContext from '../state/TrackerContext'
@@ -37,7 +37,7 @@ const chartConfigs = [
   },
 ]
 
-const KetoLimitScreen = () => {
+const ChartsScreen = () => {
   const context = useContext(ThemeContext)
   const { trackerItems } = useContext(TrackerContext)
 
@@ -53,23 +53,35 @@ const KetoLimitScreen = () => {
       <SafeAreaView style={styles.chartContainer}>
         <View style={styles.ketoLimitContainer}>
           {/* <DonutFactory /> */}
+          <Text style={styles.chartTitle}>
+            Nutrient consumption breakdown (last week)
+          </Text>
           <MacroPieChart trackerItems={trackerItems} />
+          <Text style={styles.chartTitle}>Calories consumed by day</Text>
           <EnergyChart trackerItems={trackerItems} />
+          <Text style={styles.chartTitle}>Nutrient breakdown by day</Text>
           <MacroAreaChart trackerItems={trackerItems} />
-          <LineChartContainer />
+          {/* <LineChartContainer /> */}
         </View>
       </SafeAreaView>
     </ScrollView>
   )
 }
 
-export default KetoLimitScreen
+export default ChartsScreen
 
 const getStyles = (theme) =>
   StyleSheet.create({
     tabContainer: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: theme.viewBackground,
+    },
+    chartTitle: {
+      fontSize: 18,
+      // fontWeight: 'bold',
+      color: theme.buttonText,
+      // marginBottom: 10,
+      textAlign: 'center',
     },
     ketoLimitContainer: {
       marginTop: 40,
