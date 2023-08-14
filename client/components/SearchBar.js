@@ -4,6 +4,8 @@ import { memo, useEffect, useCallback } from 'react'
 import { View, TextInput, Button, Keyboard, StyleSheet } from 'react-native'
 
 const SearchBar = memo(
+  console.log('SearchBar is rendering')
+
   ({ searchPhrase, setSearchPhrase, clicked, setClicked }) => {
     const handleFocus = useCallback(() => {
       console.log('handleFocus')
@@ -15,10 +17,6 @@ const SearchBar = memo(
       Keyboard.dismiss()
       setClicked(false)
     }, [setClicked])
-
-    useEffect(() => {
-      console.log('SearchBar useEffect')
-    }, [])
 
     return (
       <View style={styles.container}>
