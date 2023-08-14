@@ -98,8 +98,8 @@ const LineChart: FC<LineChartProps> = ({
             })}
             {/* Add Y axis labels */}
             {yAxisValues.map((value, index) => {
-              const x = leftPadding + 18 // Adjust this to move the labels further left
-              const y = yScale(value) // Use the yScale for positioning y-axis labels
+              const x = leftPadding + 18
+              const y = yScale(value) // for positioning y-axis labels
 
               return (
                 <SvgText
