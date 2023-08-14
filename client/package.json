@@ -35,6 +35,8 @@
     "@react-navigation/stack": "^6.3.17",
     "@types/react-native-vector-icons": "^6.4.13",
     "@typescript-eslint/parser": "^5.30.4",
+    "@reduxjs/toolkit": "^1.9.1",
+    "@react-native-async-storage/async-storage": "~1.17.3",
     "axios": "^1.4.0",
     "d3": "^7.3.0",
     "lottie-react-native": "^5.1.4",
@@ -52,9 +54,14 @@
     "react-native-vector-icons": "^9.2.0",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "typescript": "^4.1.2",
-    "victory-native": "^36.6.11"
+    "victory-native": "^36.6.11",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.0",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.4.2"
   },
   "devDependencies": {
+    "@babel/plugin-transform-export-namespace-from": "^7.22.5",
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
