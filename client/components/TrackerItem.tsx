@@ -18,6 +18,18 @@ import {
   formatDateToYYYYMMDD,
   favouriteFoodItem,
 } from './GlycemicUtils'
+import { TrackerContextType } from '../types/TrackerContextType'
+// import { SearchFoodContextType } from '../types/SearchFoodContextType'
+import TimeContext from '../state/TimeContext'
+import { TimeContextType } from '../types/TimeContextType'
+// import SearchFoodContext from '../state/SearchFoodContext'
+import FoodContext from '../state/FoodContext'
+import { FoodContextType } from '../types/FoodContextType'
+// import { FavFoodContextType } from '../types/FavFoodContextType'
+// import FavFoodContext from '../state/FavFoodContext'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateFavFoodList } from '../redux/action-creators'
+import { RootState } from '../redux/reducers'
 
 const { width } = Dimensions.get('screen')
 
@@ -29,20 +41,21 @@ const TrackerItem = ({
   clickNutrientPanel,
   carbBackgroundColor,
 }: TrackerItemProps) => {
-  const {
-    trackerItems,
-    itemsForSelectedDate,
-    selectedDate,
-    setItemsForSelectedDate,
-    setTrackerItems,
-    setTotalCarbs,
-    totalCarbs,
-    searchFoodList,
-    setSearchFoodList,
-    foodData,
-    favFoodList,
-    setFavFoodList,
-  } = useContext(TrackerContext)
+  console.log('TrackerItem is rendering')
+  const { trackerItems, setTrackerItems, setTotalCarbs, totalCarbs } =
+    useContext<TrackerContextType>(TrackerContext)
+  const dispatch = useDispatch()
+  const favFoodList = useSelector((state: RootState) => state.favFoodList)
+
+  const { itemsForSelectedDate, selectedDate, setItemsForSelectedDate } =
+    useContext<TimeContextType>(TimeContext)
+
+  // const { searchFoodList, setSearchFoodList } =
+  //   useContext<SearchFoodContextType>(SearchFoodContext)
+
+  const { foodData } = useContext<FoodContextType>(FoodContext)
+  // const { favFoodList, setFavFoodList } =
+  //   useContext<FavFoodContextType>(FavFoodContext)
   const { userId } = useContext(UserContext)
   const context = useContext(ThemeContext)
   if (!context) {
@@ -91,14 +104,13 @@ const TrackerItem = ({
       item.description,
       itemIsFavourite,
       setItemIsFavourite,
-      searchFoodList,
-      setSearchFoodList,
       foodData,
       favFoodList,
-      setFavFoodList,
+      updateFavFoodList,
       userId,
       trackerItems,
-      setTrackerItems
+      setTrackerItems,
+      dispatch
     )
   }
 
@@ -139,6 +151,26 @@ const TrackerItem = ({
 
   return (
     <View style={dynamicStyles.trackerRowContainer}>
+      <View style={styles.favTrackerIcon}>
+        <TouchableOpacity onPress={favouriteTrackerItem}>
+          <FontAwesome5
+            name="plus"
+            size={RFPercentage(3.9)}
+            color={theme.iconFill}
+            solid={itemIsFavourite ? true : false}
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.favTrackerIcon}>
+        <TouchableOpacity onPress={favouriteTrackerItem}>
+          <FontAwesome5
+            name="minus"
+            size={RFPercentage(3.9)}
+            color={theme.iconFill}
+            solid={itemIsFavourite ? true : false}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.foodDescriptionContainer}>
         <TouchableOpacity onPress={pressTrackerItem}>
           <Text style={styles.foodDescriptionText}>{item.description}</Text>
@@ -182,7 +214,7 @@ export default TrackerItem
 const getStyles = (theme) =>
   StyleSheet.create({
     foodDescriptionContainer: {
-      width: width * 0.7,
+      width: width * 0.5,
     },
     foodDescriptionText: {
       color: theme.buttonText,

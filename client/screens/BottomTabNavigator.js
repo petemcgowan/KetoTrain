@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { AnimatedTabBar } from '../tabbar/AnimatedTabBar'
@@ -9,32 +9,45 @@ import Animated from 'react-native-reanimated'
 import TrackerContext from '../state/TrackerContext'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
+import { actionCreators } from '../redux/index'
+import { useDispatch } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
 import Lottie from 'lottie-react-native'
 import SearchScreen from './SearchScreen'
 import KetoTrackerScreen from './KetoTrackerScreen'
-import KetoLimitScreen from './KetoLimitScreen'
+import ChartsScreen from './ChartsScreen'
 import LearnDeck from './LearnDeck'
 import { ThemeContext, themes } from '../state/ThemeContext'
+import { RootState } from '../redux/reducers/index'
+import { useSelector } from 'react-redux'
+import { setSearchFoodList } from '../redux/action-creators'
+
+// import SearchFoodContext from '../state/SearchFoodContext'
 const Tab = createBottomTabNavigator()
 export const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
 const BottomTabNavigator = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const { setTheme, setNextTheme } = useContext(ThemeContext)
+  const dispatch = useDispatch()
+  const { updateHasSeenIntro } = bindActionCreators(actionCreators, dispatch)
 
-  const {
-    totalCarbs,
-    trackerItems,
-    setTrackerItems,
-    searchFoodList,
-    setSearchFoodList,
-  } = useContext(TrackerContext)
+  const { totalCarbs, trackerItems, setTrackerItems } =
+    useContext(TrackerContext)
+  // const { searchFoodList, setSearchFoodList } = useContext(SearchFoodContext)
+
+  const searchFoodList = useSelector((state: RootState) => state.searchFoodList)
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
   }
   const { theme } = context
   const styles = getStyles(theme)
+
+  useEffect(() => {
+    updateHasSeenIntro(true)
+  }, [])
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -67,7 +80,8 @@ const BottomTabNavigator = () => {
                       trackerItems,
                       setTrackerItems,
                       searchFoodList,
-                      setSearchFoodList
+                      setSearchFoodList,
+                      dispatch
                     )
                   }
                 >
@@ -118,7 +132,8 @@ const BottomTabNavigator = () => {
                       trackerItems,
                       setTrackerItems,
                       searchFoodList,
-                      setSearchFoodList
+                      setSearchFoodList,
+                      dispatch
                     )
                   }
                 >
@@ -134,7 +149,7 @@ const BottomTabNavigator = () => {
         />
         <Tab.Screen
           name="Limit"
-          component={KetoLimitScreen}
+          component={ChartsScreen}
           options={{
             tabBarIcon: ({ ref }) => (
               <Lottie
@@ -171,7 +186,8 @@ const BottomTabNavigator = () => {
                       trackerItems,
                       setTrackerItems,
                       searchFoodList,
-                      setSearchFoodList
+                      setSearchFoodList,
+                      dispatch
                     )
                   }
                 >
@@ -221,7 +237,8 @@ const BottomTabNavigator = () => {
                       trackerItems,
                       setTrackerItems,
                       searchFoodList,
-                      setSearchFoodList
+                      setSearchFoodList,
+                      dispatch
                     )
                   }
                 >

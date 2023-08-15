@@ -8,10 +8,10 @@ import {
 } from 'react-native'
 
 import BottomSheet from 'reanimated-bottom-sheet'
-import NutritionItem from './NutritionItem'
-import TrackerContext from '../state/TrackerContext'
+import NutritionItem from '../components/NutritionItem'
 import TrackerItem from '../components/TrackerItem'
 import { ThemeContext } from '../state/ThemeContext'
+import TimeContext from '../state/TimeContext'
 
 const { width, height } = Dimensions.get('screen')
 
@@ -20,6 +20,7 @@ export default function NutrientBottomSheet({
   clickNutrientPanel,
   trackerSelected,
 }) {
+  console.log('NutrientBottomSheet is rendering')
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
@@ -30,12 +31,8 @@ export default function NutrientBottomSheet({
   const {
     itemsForSelectedDate,
     // itemsForSelectedDate,
-  } = useContext(TrackerContext)
+  } = useContext(TimeContext)
   const currentItem: TrackerItem = itemsForSelectedDate[trackerSelected]
-
-  useEffect(() => {
-    console.log('NutrientBottomSheet, useEffect')
-  }, [])
 
   const renderContent = () => {
     return (
