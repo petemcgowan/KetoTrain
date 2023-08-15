@@ -1,24 +1,64 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 
 import { TrackerProvider } from './state/TrackerContext'
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import BottomTabNavigator from './screens/BottomTabNavigator'
-import SplashScreen from 'react-native-splash-screen'
-import OnboardingDeck from './onboarding/OnboardingDeck'
-import LoadingScreen from './onboarding/LoadingScreen'
-import { ThemeProvider } from './state/ThemeContext'
+import { TimeProvider } from './state/TimeContext'
+// import { FavFoodProvider } from './state/FavFoodContext'
+// import { SearchFoodProvider } from './state/SearchFoodContext'
+import { FoodProvider } from './state/FoodContext'
+import { LogBox, Text } from 'react-native'
 
-const Stack = createStackNavigator()
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import { store, persistor } from './redux/store'
+
+import SplashScreen from 'react-native-splash-screen'
+import { ThemeProvider } from './state/ThemeContext'
+import CentralNavigation from './components/CentralNavigation'
 
 export default function App() {
+  console.log('App is rendering')
   const [trackerItems, setTrackerItems] = useState([])
   const [totalCarbs, setTotalCarbs] = useState(0)
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [itemsForSelectedDate, setItemsForSelectedDate] = useState([])
   const [foodData, setFoodData] = useState()
-  const [searchFoodList, setSearchFoodList] = useState()
-  const [favFoodList, setFavFoodList] = useState()
+  // const [searchFoodList, setSearchFoodList] = useState()
+  // const [favFoodList, setFavFoodList] = useState()
+  // const hasSeenIntro = useSelector((state: State) => state.hasSeenIntro)
+
+  const trackerProviderValue = {
+    trackerItems,
+    setTrackerItems,
+    totalCarbs,
+    setTotalCarbs,
+  }
+
+  LogBox.ignoreLogs(['Excessive number of pending callbacks'])
+  LogBox.ignoreLogs(['Require cycle:'])
+
+  // const favFoodProviderValue = useMemo(
+  //   () => ({
+  //     favFoodList,
+  //     setFavFoodList,
+  //   }),
+  //   [favFoodList]
+  // )
+
+  // const searchFoodProviderValue = useMemo(
+  //   () => ({
+  //     searchFoodList,
+  //     setSearchFoodList,
+  //   }),
+  //   [searchFoodList]
+  // )
+
+  const foodProviderValue = useMemo(
+    () => ({
+      foodData,
+      setFoodData,
+    }),
+    [foodData]
+  )
 
   const getTotalCarbsForSpecificDay = () => {
     let carbsForDayAmt = 0
@@ -39,6 +79,7 @@ export default function App() {
   }
 
   const handleNextDay = () => {
+    console.log('handleNextDay has been called')
     setSelectedDate(
       (prevDate) => new Date(prevDate.setDate(prevDate.getDate() + 1))
     )
@@ -46,29 +87,20 @@ export default function App() {
   }
 
   const handlePrevDay = () => {
+    console.log('handlePrevDay has been called')
     setSelectedDate(
       (prevDate) => new Date(prevDate.setDate(prevDate.getDate() - 1))
     )
     getTotalCarbsForSpecificDay()
   }
 
-  const value = {
-    trackerItems,
-    setTrackerItems,
-    totalCarbs,
-    setTotalCarbs,
+  const timeProviderValue = {
     selectedDate,
     setSelectedDate,
     itemsForSelectedDate,
     setItemsForSelectedDate,
     handlePrevDay,
     handleNextDay,
-    foodData,
-    setFoodData,
-    searchFoodList,
-    setSearchFoodList,
-    favFoodList,
-    setFavFoodList,
   }
 
   useEffect(() => {
@@ -78,20 +110,18 @@ export default function App() {
   }, [])
 
   return (
-    <ThemeProvider>
-      <TrackerProvider value={value}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="OnboardingDeck"
-            screenOptions={{ headerShown: false }}
-          >
-            {/* <Stack.Screen name="Login" component={LoginPage} /> */}
-            <Stack.Screen name="OnboardingDeck" component={OnboardingDeck} />
-            <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-            <Stack.Screen name="MainApp" component={BottomTabNavigator} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </TrackerProvider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+        <ThemeProvider>
+          <TrackerProvider value={trackerProviderValue}>
+            <TimeProvider value={timeProviderValue}>
+              <FoodProvider value={foodProviderValue}>
+                <CentralNavigation />
+              </FoodProvider>
+            </TimeProvider>
+          </TrackerProvider>
+        </ThemeProvider>
+      </PersistGate>
+    </Provider>
   )
 }

@@ -65,6 +65,9 @@ export const schema = buildSchema(`
     consumption_date: String
     litre_amount: Float
   }
+  type FavFoodsData {
+    favFoodFacts: [FoodFacts]
+  }
   type UserDashboardData {
     userInfo: UserInfo
     foodFacts: [FoodFacts]
@@ -90,6 +93,9 @@ export const schema = buildSchema(`
     emailAddress: String!
     consumptionDate: String!
   }
+  input FavFoodsInput {
+    userId: Int!
+  }
   input ConsumptionLogInput {
     foodFactsId: Int!
     consumptionDate: String!
@@ -106,6 +112,7 @@ export const schema = buildSchema(`
   type Query {
     test: String
     allFoodFacts(userId: Int!): [FoodFacts]
+    getFavFoods(favFoodsInput: FavFoodsInput!): FavFoodsData
     getUserDashboardData(userDashboardInput: UserDashboardInput!): UserDashboardData
     consumptionLogWithFoodFacts(consumptioninput: ConsumptionLogFoodFactsInput!): [ConsumptionLogWithFoodFacts]
   }
