@@ -36,6 +36,8 @@ export default function CarbDonut({
   textColor,
   focused,
 }: DonutProps) {
+  console.log('CarbDonut is rendering')
+
   const animated = useRef(new Animated.Value(0)).current
   const circleRef = useRef()
   const inputRef = useRef()
