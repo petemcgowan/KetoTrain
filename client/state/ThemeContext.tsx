@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext } from 'react'
 import TrackerContext from '../state/TrackerContext'
+import { useDispatch } from 'react-redux'
 
 type Theme = {
   viewBackground: string
@@ -295,7 +296,7 @@ export const ThemeContext = createContext<ThemeContextProps>({
 
 export const ThemeProvider: React.FC = ({ children }) => {
   const themesArray = Object.values(themes)
-  const initialThemeIndex = themesArray.indexOf(themes.splitComplementary2)
+  const initialThemeIndex = themesArray.indexOf(themes.monochromatic)
   // sets the index of the theme we're using app-wide
   const [themeIndex, setThemeIndex] = useState(initialThemeIndex)
   const [theme, setTheme] = useState<Theme>(themesArray[themeIndex])
@@ -306,9 +307,10 @@ export const ThemeProvider: React.FC = ({ children }) => {
     trackerItems,
     setTrackerItems,
     searchFoodList,
-    setSearchFoodList
+    setSearchFoodList,
+    dispatch
   ) => {
-    console.log('Inside setNextTheme - trackerItems:', trackerItems)
+    // console.log('Inside setNextTheme - trackerItems:', trackerItems)
     // console.log('Inside setNextTheme - searchFoodList:', searchFoodList);
     let nextIndex = themeIndex + 1
     if (nextIndex >= themesArray.length) nextIndex = 0
@@ -318,9 +320,9 @@ export const ThemeProvider: React.FC = ({ children }) => {
     // currentTheme.tableBackground
 
     // set the carbBackgroundColor for trackerItems
-    console.log('trackerItems:' + JSON.stringify(trackerItems))
+    // console.log('trackerItems:' + JSON.stringify(trackerItems))
     const newTrackerItems = [...trackerItems]
-    console.log('newTrackerItems:' + JSON.stringify(newTrackerItems))
+    // console.log('newTrackerItems:' + JSON.stringify(newTrackerItems))
     const updatedItems = newTrackerItems.map((item) => {
       const newColor =
         item.carbAmt > 22
@@ -334,14 +336,13 @@ export const ThemeProvider: React.FC = ({ children }) => {
         carbBackgroundColor: newColor,
       }
     })
-    console.log('updatedItems:' + JSON.stringify(updatedItems))
+    // console.log('updatedItems:' + JSON.stringify(updatedItems))
 
     setTrackerItems(updatedItems)
 
     // set the carbBackgroundColor for searchFoodList
     // console.log('searchFoodList:' + JSON.stringify(searchFoodList))
     const newFoodList = [...searchFoodList]
-    console.log('newFoodList:' + JSON.stringify(newFoodList))
     const updatedFoodItems = newFoodList.map((item) => {
       const newColor =
         item.carbohydrates > 22
@@ -355,9 +356,8 @@ export const ThemeProvider: React.FC = ({ children }) => {
         carbBackgroundColor: newColor,
       }
     })
-    console.log('updatedFoodItems:' + JSON.stringify(updatedFoodItems))
-
-    setSearchFoodList(updatedFoodItems)
+    // setSearchFoodList(updatedFoodItems)
+    dispatch(setSearchFoodList(updatedFoodItems))
   }
 
   return (

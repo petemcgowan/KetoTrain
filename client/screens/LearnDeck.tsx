@@ -138,7 +138,9 @@ const LearnDeck = () => {
     }
   }
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    console.log('useEffect, LearnDeck')
+  }, [])
 
   return (
     <SafeAreaView
