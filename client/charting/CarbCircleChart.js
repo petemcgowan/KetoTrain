@@ -6,6 +6,7 @@ import TrackerContext from '../state/TrackerContext'
 import { ThemeContext } from '../state/ThemeContext'
 
 export default function CarbCircleChart({ focused }) {
+  console.log('CarbCircleChart is rendering')
   const { totalCarbs } = useContext(TrackerContext)
   const context = useContext(ThemeContext)
   if (!context) {
