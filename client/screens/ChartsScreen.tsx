@@ -17,30 +17,9 @@ import MacroAreaChart from '../charting/MacroAreaChart'
 
 const { width, height } = Dimensions.get('window')
 
-// for reference only, this is the old chart config
-const chartConfigs = [
-  {
-    backgroundColor: 'black',
-    backgroundGradientFrom: '#1E2923',
-    backgroundGradientTo: '#1b3fa0',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    style: {
-      borderRadius: 16,
-    },
-    propsForBackgroundLines: {
-      strokeDasharray: '', // solid background lines with no dashes
-      strokeLinecap: 'round',
-    },
-  },
-]
-
 const ChartsScreen = () => {
-  const context = useContext(ThemeContext)
   const { trackerItems } = useContext(TrackerContext)
-
+  const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
   }
@@ -93,5 +72,12 @@ const getStyles = (theme) =>
       backgroundColor: theme.viewBackground,
       color: theme.buttonText,
       fontFamily: 'Karla-Light',
+    },
+    whiteSeparator: {
+      height: 160,
+      backgroundColor: 'white',
+      marginVertical: 20,
+      width: '90%',
+      alignSelf: 'center',
     },
   })

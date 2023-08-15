@@ -90,6 +90,28 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
   }
 }
 
+export async function getAllFoodFactsFavs(userId) {
+  try {
+    const allFoodFactsFavs = await FoodFacts.findAll({
+      raw: true,
+      include: {
+        model: FavouriteFoods,
+        as: 'favouriteFoods',
+        where: { user_id: userId },
+        required: true,
+      },
+      attributes: {
+        include: [[Sequelize.literal(`true`), 'isFavourite']],
+      },
+      order: [['food_name', 'ASC']],
+    })
+
+    return allFoodFactsFavs
+  } catch (error) {
+    console.error('getAllFoodFactsFavs, error:' + error)
+  }
+}
+
 export async function getAllFoodFacts(userId) {
   try {
     const allFoodFacts = await FoodFacts.findAll({
@@ -199,11 +221,66 @@ export async function getAllConsumptionLog() {
   }
 }
 
+async function doesLogExistForDay(userId, consumptionDate) {
+  const existingLog = await ConsumptionLogs.findOne({
+    where: {
+      user_id: userId,
+      consumption_date: consumptionDate,
+    },
+  })
+  return existingLog !== null
+}
+
+export async function logFavFoodFactsForPastWeek(
+  userId,
+  defaultInsertion = false,
+  foodFacts
+) {
+  try {
+    const addedItems = []
+
+    // Iterate through the past 7 days including today
+    for (let i = 0; i < 7; i++) {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      const consumptionDate = date.toISOString().slice(0, 10)
+
+      if (!(await doesLogExistForDay(userId, consumptionDate))) {
+        const favFoodFacts = foodFacts.filter((fact) => fact.isFavourite)
+
+        for (const fact of favFoodFacts) {
+          addedItems.push({
+            foodFactsId: fact.food_facts_id,
+            consumptionDate: consumptionDate,
+            userId: userId,
+            defaultFl: defaultInsertion,
+          })
+        }
+      }
+    }
+
+    // Call replaceConsumptionLogs to add new records
+    if (addedItems.length > 0) {
+      return await replaceConsumptionLogs(
+        addedItems,
+        null,
+        false,
+        true,
+        defaultInsertion
+      )
+    }
+  } catch (error) {
+    console.error('Error logging favorite food facts for past week:', error)
+    throw error
+  }
+}
+
 export async function replaceConsumptionLogs(
   addedItems,
-  dayToUpdate,
-  toBeDeleted,
-  toBeInserted
+  dayToUpdate = null, // default value set to null
+  toBeDeleted = false,
+  toBeInserted = true,
+  defaultInsertion = false
 ) {
   let t
   try {
@@ -237,9 +314,9 @@ export async function replaceConsumptionLogs(
     let newConsumptionAddedItems = []
     if (toBeInserted) {
       const snakeCasedAddedItems = addedItems.map(toSnakeCase)
-      console.log(
-        'snakeCasedAddedItems:' + JSON.stringify(snakeCasedAddedItems)
-      )
+      if (defaultInsertion) {
+        snakeCasedAddedItems.forEach((item) => (item.default_fl = true))
+      }
       newConsumptionAddedItems = await ConsumptionLogs.bulkCreate(
         snakeCasedAddedItems,
         {

@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from 'react'
+import React, { useContext, useReducer, useCallback } from 'react'
 import { View, LayoutChangeEvent, StyleSheet } from 'react-native'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -17,6 +17,7 @@ export const AnimatedTabBar = ({
   navigation,
   descriptors,
 }: BottomTabBarProps) => {
+  console.log('AnimatedTabBar is rendering')
   const { bottom } = useSafeAreaInsets()
   const context = useContext(ThemeContext)
   if (!context) {
@@ -33,9 +34,9 @@ export const AnimatedTabBar = ({
 
   const [layout, dispatch] = useReducer(reducer, [])
 
-  const handleLayout = (event: LayoutChangeEvent, index: number) => {
-    dispatch({ x: event.nativeEvent.layout.x, index })
-  }
+  const handleLayout = useCallback((event, idx) => {
+    dispatch({ x: event.nativeEvent.layout.x, index: idx })
+  }, [])
 
   // animations ------------------------------------------------------
   const xOffset = useDerivedValue(() => {
