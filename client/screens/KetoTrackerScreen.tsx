@@ -18,24 +18,31 @@ import NutrientBottomSheet from './NutrientBottomSheet'
 import BottomSheet from 'reanimated-bottom-sheet'
 import { TrackerItemType } from '../types/TrackerItemType'
 import { ThemeContext } from '../state/ThemeContext'
+import { TrackerContextType } from '../types/TrackerContextType'
+import { TimeContextType } from '../types/TimeContextType'
+import TimeContext from '../state/TimeContext'
+import { FoodDataType } from '../types/FoodDataType'
+import FavFoodModal from './FavFoodModal'
 
 type TrackerItemProps = {
   item: TrackerItemType
 }
 
 const KetoTrackerScreen = () => {
+  console.log('KetoTrackerScreen is rendering')
+  const { trackerItems, totalCarbs, setTotalCarbs, setTrackerItems } =
+    useContext<TrackerContextType>(TrackerContext)
+  const [modalVisible, setModalVisible] = useState(false)
+
   const {
-    trackerItems,
-    totalCarbs,
-    selectedDate,
-    handlePrevDay,
-    handleNextDay,
-    setSelectedDate,
-    setTotalCarbs,
     itemsForSelectedDate,
+    selectedDate,
+    setSelectedDate,
     setItemsForSelectedDate,
-    foodData,
-  } = useContext(TrackerContext)
+    // handlePrevDay,
+    // handleNextDay,
+  } = useContext<TimeContextType>(TimeContext)
+
   const [trackerSelected, setTrackerSelected] = useState(0)
   const sheetRef = useRef<BottomSheet>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
@@ -48,14 +55,27 @@ const KetoTrackerScreen = () => {
   const { theme } = context
   const styles = getStyles(theme)
 
-  const renderTrackerItem = ({ item, index }: TrackerItemProps) => {
-    console.log(
-      'KetoTrackerScreen, item.carbBackgroundColor:' + item.carbBackgroundColor
-    )
-    // const matchingFoodFact = foodData.find(
-    //   (foodItem) => foodItem.foodName === item.description
-    // )
+  const handleSave = (selectedFoods: FoodDataType[]) => {
+    const newTrackerItems = selectedFoods.map((food) => ({
+      id: Date.now().toString(),
+      foodFactsId: food.foodFactsId,
+      description: food.foodName,
+      carbAmt: food.carbohydrates,
+      fiberAmt: food.totalDietaryFibre,
+      proteinAmt: food.protein,
+      fatAmt: food.fatTotal,
+      energyAmt: food.energy,
+      sugarsAmt: food.totalSugars,
+      sodiumAmt: food.sodium,
+      carbBackgroundColor: 'blue', // Assign as needed
+      portionAmount: 1,
+      consumptionDate: new Date(),
+      isFavourite: food.isFavourite,
+    }))
+    setTrackerItems([...trackerItems, ...newTrackerItems])
+  }
 
+  const renderTrackerItem = ({ item, index }: TrackerItemProps) => {
     return (
       <TrackerItem
         item={item}
@@ -66,6 +86,40 @@ const KetoTrackerScreen = () => {
         carbBackgroundColor={item.carbBackgroundColor}
       />
     )
+  }
+
+  const getTotalCarbsForSpecificDayTrack = () => {
+    let carbsForDayAmt = 0
+
+    trackerItems.map((item) => {
+      const itemDate = new Date(item.consumptionDate)
+
+      if (
+        itemDate.getFullYear() === selectedDate.getFullYear() &&
+        itemDate.getMonth() === selectedDate.getMonth() &&
+        itemDate.getDate() === selectedDate.getDate()
+      ) {
+        carbsForDayAmt = carbsForDayAmt + item.carbAmt
+      }
+    })
+    setTotalCarbs(carbsForDayAmt)
+    return carbsForDayAmt
+  }
+
+  const handleNextDayTrack = () => {
+    console.log('handleNextDayTrack has been called')
+    setSelectedDate(
+      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() + 1))
+    )
+    getTotalCarbsForSpecificDayTrack()
+  }
+
+  const handlePrevDayTrack = () => {
+    console.log('handlePrevDayTrack has been called')
+    setSelectedDate(
+      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() - 1))
+    )
+    getTotalCarbsForSpecificDayTrack()
   }
 
   const clickNutrientPanel = (item: TrackerItemType, index: number) => {
@@ -83,7 +137,7 @@ const KetoTrackerScreen = () => {
   }
 
   useEffect(() => {
-    // console.log('KetoTrackerScreen, useEffect')
+    console.log('KetoTrackerScreen, useEffect')
     const unsubscribeFocus = navigation.addListener('focus', () => {
       setFocused(true)
     })
@@ -112,7 +166,10 @@ const KetoTrackerScreen = () => {
   return (
     <SafeAreaView style={styles.trackerContainer}>
       <View style={styles.dateHeader}>
-        <TouchableOpacity style={styles.dateButton} onPress={handlePrevDay}>
+        <TouchableOpacity
+          style={styles.dateButton}
+          onPress={handlePrevDayTrack}
+        >
           <FontAwesome5
             name="chevron-left"
             size={RFPercentage(3.2)}
@@ -124,7 +181,10 @@ const KetoTrackerScreen = () => {
             {selectedDate.toDateString()}
           </Text>
         </View>
-        <TouchableOpacity style={styles.dateButton} onPress={handleNextDay}>
+        <TouchableOpacity
+          style={styles.dateButton}
+          onPress={handleNextDayTrack}
+        >
           <FontAwesome5
             name="chevron-right"
             size={RFPercentage(3.2)}
@@ -136,6 +196,18 @@ const KetoTrackerScreen = () => {
         data={itemsForSelectedDate}
         renderItem={renderTrackerItem}
         keyExtractor={(item) => item.id}
+      />
+      <Button
+        title="Add Food"
+        onPress={() => {
+          setModalVisible(true)
+          console.log('trackerItems:' + JSON.stringify(trackerItems))
+        }}
+      />
+      <FavFoodModal
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSave={handleSave}
       />
       <CarbCircleChart focused={focused} />
       <View style={{ flex: 1 }}>

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, memo } from 'react'
+import React, { useContext, useState, useEffect, memo, useRef } from 'react'
 import {
   StyleSheet,
   TextInput,
@@ -9,12 +9,17 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native'
-
-import TrackerContext from '../state/TrackerContext'
-import GlycemicItem from './GlycemicItem'
+import FavFoodList from './FavFoodList'
+import SearchFoodList from './SearchFoodList'
+// import TrackerContext from '../state/TrackerContext'
+// import GlycemicItem from './GlycemicItem'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { ThemeContext } from '../state/ThemeContext'
+// import { getFavouriteFoods } from './GlycemicUtils'
+import UserContext from '../state/UserContext'
+// import FavFoodContext from '../state/FavFoodContext'
+// import { setFavouriteFoodsDB } from '../../server/resolvers/resolverFunctions.mjs'
 
 const { width } = Dimensions.get('screen')
 
@@ -23,9 +28,7 @@ interface GlycemicListProps {
   setClicked: (clicked: boolean) => void
 }
 
-// the filter
 const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
-  const { searchFoodList, favFoodList } = useContext(TrackerContext)
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
@@ -34,26 +37,24 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
   const styles = getStyles(theme)
   const [searchPhraseNew, setSearchPhraseNew] = useState('')
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
+  const { userId } = useContext(UserContext)
+  // const { favFoodList, setFavFoodList } = useContext(FavFoodContext)
 
-  useEffect(() => {}, [theme, favFoodList, searchFoodList])
+  useEffect(() => {
+    console.log('GlycemicList, useEffect called')
+  }, [])
 
-  const renderItem = ({ item }) => {
-    const shouldRender =
-      (searchPhraseNew === '' ||
-        item.foodName
-          .toUpperCase()
-          .includes(searchPhraseNew.toUpperCase().trim().replace(/\s/g, ''))) &&
-      (!showOnlyFavorites || (showOnlyFavorites && item.isFavourite))
+  const favouriteAction = async () => {
+    console.log('favouriteAction called')
+    // if (!showOnlyFavorites) {
+    //   // we're looking to display favourites
+    //   console.log('favFoodList before:' + JSON.stringify(favFoodList))
+    //   const favFoods = await getFavouriteFoods(userId, theme)
+    //   console.log('favFoods after:' + JSON.stringify(favFoods))
 
-    // if (showOnlyFavorites) // for testing favourites
-    return shouldRender ? (
-      <GlycemicItem
-        descriptionGI={item.foodName}
-        carbAmt={item.carbohydrates}
-        isFavourite={item.isFavourite}
-        carbBackgroundColor={item.carbBackgroundColor}
-      />
-    ) : null
+    //   setFavFoodList(favFoods)
+    // }
+    setShowOnlyFavorites(!showOnlyFavorites)
   }
 
   return (
@@ -62,16 +63,21 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
         <View style={styles.searchContainer}>
           <TextInput
             placeholder="Search"
-            style={styles.searchInput}
+            // style={styles.searchInput}
+            style={[
+              styles.searchInput,
+              !searchPhraseNew ? styles.italic : null,
+            ]}
             placeholderTextColor={theme.buttonText}
             value={searchPhraseNew}
-            onChangeText={setSearchPhraseNew}
+            selectionColor={'white'}
+            onChangeText={(text) => {
+              setSearchPhraseNew(text)
+            }}
           />
         </View>
         <View style={styles.favButton}>
-          <TouchableOpacity
-            onPress={() => setShowOnlyFavorites(!showOnlyFavorites)}
-          >
+          <TouchableOpacity onPress={favouriteAction}>
             <FontAwesome5
               name="heart"
               size={RFPercentage(3.9)}
@@ -81,30 +87,9 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
           </TouchableOpacity>
         </View>
       </View>
-      {favFoodList && showOnlyFavorites && (
-        <FlatList
-          data={favFoodList}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.publicFoodKey}
-        />
-      )}
-      {favFoodList && !showOnlyFavorites && (
-        <FlatList
-          data={searchFoodList}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.publicFoodKey}
-        />
-      )}
-      {(!favFoodList || favFoodList.length === 0) && (
-        <View style={styles.errorContainer}>
-          <FontAwesome5 name="frown" size={RFPercentage(4.9)} color="grey" />
-          <Text style={styles.errorText}>
-            Oh no! We couldn't load your favorite foods.
-          </Text>
-          <Text style={styles.errorText}>
-            Please check your internet connection and try again.
-          </Text>
-        </View>
+      {showOnlyFavorites && <FavFoodList searchPhraseNew={searchPhraseNew} />}
+      {!showOnlyFavorites && (
+        <SearchFoodList searchPhraseNew={searchPhraseNew} />
       )}
     </SafeAreaView>
   )
@@ -115,11 +100,15 @@ function arePropsEqual(prevProps, nextProps) {
 }
 
 export default memo(GlycemicList, arePropsEqual)
+// export default GlycemicList
 
 const getStyles = (theme) =>
   StyleSheet.create({
     searchAndList_container: {
       backgroundColor: theme.viewBackground,
+    },
+    italic: {
+      fontStyle: 'italic',
     },
     searchContainer: {
       width: width * 0.85,
@@ -144,7 +133,7 @@ const getStyles = (theme) =>
     },
     searchInput: {
       paddingTop: 5,
-      fontSize: RFPercentage(3.3),
+      fontSize: RFPercentage(3.5),
       color: theme.buttonText,
       marginLeft: 2,
     },

@@ -9,46 +9,58 @@ import {
 } from 'react-native'
 
 import TrackerContext from '../state/TrackerContext'
+import TimeContext from '../state/TimeContext'
 import UserContext, { UserContextProps } from '../state/UserContext'
 import { TrackerItemType } from '../types/TrackerItemType'
-import { TrackerContextType } from '../state/TrackerContextType'
+import { TrackerContextType } from '../types/TrackerContextType'
 import { saveConsumptionLogs, formatDateToYYYYMMDD } from './GlycemicUtils'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { ThemeContext } from '../state/ThemeContext'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { favouriteFoodItem } from './GlycemicUtils'
+// import SearchFoodContext from '../state/SearchFoodContext'
+// import { SearchFoodContextType } from '../types/SearchFoodContextType'
+import { TimeContextType } from '../types/TimeContextType'
+import { FoodContextType } from '../types/FoodContextType'
+import FoodContext from '../state/FoodContext'
+// import FavFoodContext from '../state/FavFoodContext'
+// import { FavFoodContextType } from '../types/FavFoodContextType'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../redux/reducers'
+import { updateFavFoodList } from '../redux/action-creators'
 
 const { width } = Dimensions.get('screen')
 
 interface GlycemicItemProps {
   descriptionGI: string
   carbAmt: number
-  isFavourite: boolean
+  // isFavourite: boolean
   carbBackgroundColor: string
 }
 
 const GlycemicItem: React.FC<GlycemicItemProps> = ({
   descriptionGI,
   carbAmt,
-  isFavourite,
+  // isFavourite,
   carbBackgroundColor,
 }) => {
-  const [itemIsFavourite, setItemIsFavourite] = useState(isFavourite)
+  const { trackerItems, setTrackerItems, setTotalCarbs } =
+    useContext<TrackerContextType>(TrackerContext)
 
-  const {
-    trackerItems,
-    setTrackerItems,
-    itemsForSelectedDate,
-    selectedDate,
-    setItemsForSelectedDate,
-    setTotalCarbs,
-    searchFoodList,
-    setSearchFoodList,
-    foodData,
-    setFoodData,
-    favFoodList,
-    setFavFoodList,
-  } = useContext<TrackerContextType>(TrackerContext)
+  const { itemsForSelectedDate, selectedDate, setItemsForSelectedDate } =
+    useContext<TimeContextType>(TimeContext)
+  const dispatch = useDispatch()
+
+  const { foodData, setFoodData } = useContext<FoodContextType>(FoodContext)
+  // const { favFoodList, setFavFoodList } =
+  //   useContext<FavFoodContextType>(FavFoodContext)
+  const favFoodList = useSelector((state: RootState) => state.favFoodList) || []
+  // console.log('GlycemicItem, favFoodList:' + JSON.stringify(favFoodList))
+  const itemIsAlreadyFavourite = favFoodList.some(
+    (item) => item.foodName === descriptionGI
+  )
+  const [itemIsFavourite, setItemIsFavourite] = useState(itemIsAlreadyFavourite)
+  // const [itemIsFavourite, setItemIsFavourite] = useState(false)
 
   const { userId } = useContext<UserContextProps>(UserContext)
   const context = useContext(ThemeContext)
@@ -130,55 +142,55 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
   }
 
   useEffect(() => {
-    // console.log(
-    //   'useEffect(GlycemicItem), carbBackgroundColor:' +
-    //     JSON.stringify(carbBackgroundColor)
-    // )
-  }, [favFoodList, carbBackgroundColor])
+    // console.log('useEffect(GlycemicItem) called')
+  }, [])
+  // }, [favFoodList, carbBackgroundColor])
 
   return (
-    <TouchableOpacity onPress={addTrackerItem}>
-      <View style={dynamicStyles.foodRowContainer}>
+    <View style={dynamicStyles.foodRowContainer}>
+      <TouchableOpacity onPress={addTrackerItem}>
         <View style={styles.foodContainer}>
           <Text style={styles.foodText}>{descriptionGI}</Text>
         </View>
-        <View
-          style={[
-            styles.carbAmtContainer,
-            { backgroundColor: carbBackgroundColor },
-          ]}
-        >
-          <Text style={styles.carbAmtText}>{carbAmt}</Text>
-        </View>
-        <View style={styles.favIconContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              favouriteFoodItem(
-                descriptionGI,
-                itemIsFavourite,
-                setItemIsFavourite,
-                searchFoodList,
-                setSearchFoodList,
-                foodData,
-                favFoodList,
-                setFavFoodList,
-                userId,
-                trackerItems,
-                setTrackerItems
-              )
-            }}
-          >
-            <FontAwesome5
-              name="heart"
-              size={RFPercentage(3.9)}
-              color={theme.iconFill}
-              style={styles.favIcon}
-              solid={itemIsFavourite ? true : false}
-            />
-          </TouchableOpacity>
-        </View>
+      </TouchableOpacity>
+      <View
+        style={[
+          styles.carbAmtContainer,
+          { backgroundColor: carbBackgroundColor },
+        ]}
+      >
+        <Text style={styles.carbAmtText}>{carbAmt}</Text>
       </View>
-    </TouchableOpacity>
+      <View style={styles.favIconContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            // console.log(
+            //   'BEFORE favouriteFoodItem call, favFoodList:' + favFoodList
+            // )
+            favouriteFoodItem(
+              descriptionGI,
+              itemIsFavourite,
+              setItemIsFavourite,
+              foodData,
+              favFoodList,
+              updateFavFoodList,
+              userId,
+              trackerItems,
+              setTrackerItems,
+              dispatch
+            )
+          }}
+        >
+          <FontAwesome5
+            name="heart"
+            size={RFPercentage(3.9)}
+            color={theme.iconFill}
+            style={styles.favIcon}
+            solid={itemIsFavourite ? true : false}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
   )
 }
 
