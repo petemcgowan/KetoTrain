@@ -11,7 +11,7 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import NutritionItem from '../components/NutritionItem'
 import TrackerItem from '../components/TrackerItem'
 import { ThemeContext } from '../state/ThemeContext'
-import TimeContext from '../state/TimeContext'
+// import TimeContext from '../state/TimeContext'
 
 const { width, height } = Dimensions.get('screen')
 
@@ -19,6 +19,7 @@ export default function NutrientBottomSheet({
   sheetRef,
   clickNutrientPanel,
   trackerSelected,
+  itemsForSelectedDate,
 }) {
   console.log('NutrientBottomSheet is rendering')
   const context = useContext(ThemeContext)
@@ -28,10 +29,10 @@ export default function NutrientBottomSheet({
   const { theme } = context
   const styles = getStyles(theme)
 
-  const {
-    itemsForSelectedDate,
-    // itemsForSelectedDate,
-  } = useContext(TimeContext)
+  // const {
+  //   itemsForSelectedDate,
+  //   // itemsForSelectedDate,
+  // } = useContext(TimeContext)
   const currentItem: TrackerItem = itemsForSelectedDate[trackerSelected]
 
   const renderContent = () => {
