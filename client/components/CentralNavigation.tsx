@@ -14,15 +14,13 @@ import { RootState } from '../redux/index'
 const Stack = createStackNavigator()
 
 export default function CentralNavigation() {
-  const hasSeenIntro = useSelector((state: RootState) => state.hasSeenIntro)
-  // const hasSeenIntro = false
+  // const hasSeenIntro = useSelector((state: RootState) => state.hasSeenIntro)
+  const hasSeenIntro = false
   const dispatch = useDispatch()
   const { updateHasSeenIntro } = bindActionCreators(actionCreators, dispatch)
 
-  React.useEffect(() => {
-    // Has seen intro, now turn off onboarding
-    updateHasSeenIntro(true)
-  })
+  // React.useEffect(() => {
+  // })
 
   return (
     <NavigationContainer>

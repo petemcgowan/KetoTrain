@@ -21,7 +21,7 @@ import LearnDeck from './LearnDeck'
 import { ThemeContext, themes } from '../state/ThemeContext'
 import { RootState } from '../redux/reducers/index'
 import { useSelector } from 'react-redux'
-import { setSearchFoodList } from '../redux/action-creators'
+import { updateSearchFoodList } from '../redux/action-creators'
 
 // import SearchFoodContext from '../state/SearchFoodContext'
 const Tab = createBottomTabNavigator()
@@ -46,6 +46,7 @@ const BottomTabNavigator = () => {
   const styles = getStyles(theme)
 
   useEffect(() => {
+    // Has seen intro, now turn off onboarding
     updateHasSeenIntro(true)
   }, [])
 
@@ -53,50 +54,7 @@ const BottomTabNavigator = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Tab.Navigator tabBar={(props) => <AnimatedTabBar {...props} />}>
         <Tab.Screen
-          name="Search"
-          component={SearchScreen}
-          options={{
-            tabBarIcon: ({ ref }) => (
-              <Lottie
-                ref={ref}
-                loop={false}
-                source={require('../assets/lottie/125888-avocado-fruit-exercise-animation.json')}
-                style={styles.icon}
-              />
-            ),
-            headerTitleStyle: {
-              color: theme.tabHeaderText,
-              fontSize: RFPercentage(4.8),
-              fontWeight: '300',
-            },
-            headerStyle: {
-              backgroundColor: theme.tabHeaderBackground,
-            },
-            headerRight: () => (
-              <View style={styles.colourSchemeButton}>
-                <TouchableOpacity
-                  onPress={() =>
-                    setNextTheme(
-                      trackerItems,
-                      setTrackerItems,
-                      searchFoodList,
-                      setSearchFoodList,
-                      dispatch
-                    )
-                  }
-                >
-                  <FontAwesome5
-                    name="palette"
-                    size={RFPercentage(3.7)}
-                    color={theme.tabHeaderText}
-                  />
-                </TouchableOpacity>
-              </View>
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Tracker"
+          name="Track"
           component={KetoTrackerScreen}
           options={{
             tabBarIcon: ({ ref }) => (
@@ -132,7 +90,7 @@ const BottomTabNavigator = () => {
                       trackerItems,
                       setTrackerItems,
                       searchFoodList,
-                      setSearchFoodList,
+                      updateSearchFoodList,
                       dispatch
                     )
                   }
@@ -148,7 +106,50 @@ const BottomTabNavigator = () => {
           }}
         />
         <Tab.Screen
-          name="Limit"
+          name="Search"
+          component={SearchScreen}
+          options={{
+            tabBarIcon: ({ ref }) => (
+              <Lottie
+                ref={ref}
+                loop={false}
+                source={require('../assets/lottie/125888-avocado-fruit-exercise-animation.json')}
+                style={styles.icon}
+              />
+            ),
+            headerTitleStyle: {
+              color: theme.tabHeaderText,
+              fontSize: RFPercentage(4.8),
+              fontWeight: '300',
+            },
+            headerStyle: {
+              backgroundColor: theme.tabHeaderBackground,
+            },
+            headerRight: () => (
+              <View style={styles.colourSchemeButton}>
+                <TouchableOpacity
+                  onPress={() =>
+                    setNextTheme(
+                      trackerItems,
+                      setTrackerItems,
+                      searchFoodList,
+                      updateSearchFoodList,
+                      dispatch
+                    )
+                  }
+                >
+                  <FontAwesome5
+                    name="palette"
+                    size={RFPercentage(3.7)}
+                    color={theme.tabHeaderText}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Progress"
           component={ChartsScreen}
           options={{
             tabBarIcon: ({ ref }) => (
@@ -186,7 +187,7 @@ const BottomTabNavigator = () => {
                       trackerItems,
                       setTrackerItems,
                       searchFoodList,
-                      setSearchFoodList,
+                      updateSearchFoodList,
                       dispatch
                     )
                   }
@@ -237,7 +238,7 @@ const BottomTabNavigator = () => {
                       trackerItems,
                       setTrackerItems,
                       searchFoodList,
-                      setSearchFoodList,
+                      updateSearchFoodList,
                       dispatch
                     )
                   }

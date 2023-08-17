@@ -10,14 +10,12 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
 import GlycemicList from '../components/GlycemicList'
-import TimeContext from '../state/TimeContext'
 import { ThemeContext } from '../state/ThemeContext'
 
 const SearchScreen = ({ route }) => {
   console.log('SearchScreen is rendering')
   const [searchPhrase, setSearchPhrase] = useState('')
   const [clicked, setClicked] = useState(false)
-  const { selectedDate, handlePrevDay, handleNextDay } = useContext(TimeContext)
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
@@ -28,9 +26,7 @@ const SearchScreen = ({ route }) => {
   return (
     <View>
       <SafeAreaView style={styles.searchPageContainer}>
-        {!clicked}
-
-        <View style={styles.dateHeader}>
+        {/* <View style={styles.dateHeader}>
           <TouchableOpacity style={styles.dateButton} onPress={handlePrevDay}>
             <FontAwesome5
               name="chevron-left"
@@ -50,7 +46,7 @@ const SearchScreen = ({ route }) => {
               color={theme.buttonText}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
         <GlycemicList searchPhrase={searchPhrase} setClicked={setClicked} />
       </SafeAreaView>
     </View>
