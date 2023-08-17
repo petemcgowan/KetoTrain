@@ -41,6 +41,8 @@ export const schema = buildSchema(`
     total_dietary_fibre: Float
     total_sugars: Float
     user_id: Int
+    default_fl: Boolean
+    portion_count: Int
   }
   type ConsumptionLogs {
     consumption_log_id: Int
@@ -69,7 +71,7 @@ export const schema = buildSchema(`
     favFoodFacts: [FoodFacts]
   }
   type UserDashboardData {
-    userInfo: UserInfo
+    user: UserInfo
     foodFacts: [FoodFacts]
     waterConsumptions: [WaterConsumptions]
     weightLogs: [WeightLogs]
@@ -100,6 +102,8 @@ export const schema = buildSchema(`
     foodFactsId: Int!
     consumptionDate: String!
     userId: Int!
+    defaultFl: Boolean!
+    portionCount: Int!
   }
   input ConsumptionLogFoodFactsInput {
     userId: Int!
@@ -122,5 +126,6 @@ export const schema = buildSchema(`
     setFavouriteFoods(favouriteFoods: [FavouriteFoodsInput]!, userId: Int!): FavouriteFoods
     setGLWaterConsumption(waterConsumptions: [WaterConsumptionsInput!]!): [WaterConsumptions]!
     setGLWeightLogs(weightLogs: [WeightLogsInput!]!): [WeightLogs]!
+    updatePortionAmount(userId: Int!, consumptionDate: String!, foodFactsId: Int!, portionAmount: Int!): Boolean
     }
 `)

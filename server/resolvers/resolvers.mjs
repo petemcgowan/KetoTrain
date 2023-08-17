@@ -7,7 +7,9 @@ import {
   getAllFoodFactsFavs,
   replaceConsumptionLogs,
   setFavouriteFoodsDB,
-  logFavFoodFactsForPastWeek,
+  createLogsForPastWeek,
+  updatePortionAmount,
+  setupFavouriteFoods,
   // getWaterConsumptions,
   // getWeightLogs,
   getUserInfo,
@@ -53,11 +55,8 @@ export const resolvers = {
           JSON.stringify(args)
       )
       // get the user's info (or create it)
-      const userInfo = await getUserInfo(emailAddress)
-      console.log('RESOLVER: userInfo.user_id:' + userInfo.user_id)
-
-      // Retrieve food facts
-      const foodFacts = await getAllFoodFacts(userInfo.user_id)
+      const { user, wasUserCreated } = await getUserInfo(emailAddress)
+      console.log('RESOLVER: userInfo.user_id:' + user.user_id)
 
       // Retrieve water logs
       // const waterConsumptions = await getWaterConsumptions(userInfo.user_id)
@@ -69,49 +68,50 @@ export const resolvers = {
 
       // Retrieve food facts with fav flag  (see later, use array instead)
       // const favFoodFacts = await getAllFoodFactsFavs(userId)
+      if (wasUserCreated) {
+        // Set up favourite foods for the user in the DB
+        const favouriteFoods = [
+          { foodFactsId: 1864 },
+          { foodFactsId: 1880 },
+          { foodFactsId: 1478 },
+          { foodFactsId: 909 },
+          { foodFactsId: 980 },
+          { foodFactsId: 526 },
+        ]
 
-      const loginConsumptionLogs = logFavFoodFactsForPastWeek(
-        userInfo.user_id,
-        consumptionDate,
-        foodFacts
-      )
-      console.log(
-        'loginConsumptionLogs:' + JSON.stringify(loginConsumptionLogs)
-      )
-      // Create a record in consumption log for every favFoodFacts array element
-      // that doesn't have a record existing in consumptionLogs based on consumptionDate
-      // and fac_foods_id
+        const newFavouriteFoods = await setupFavouriteFoods(
+          favouriteFoods,
+          user.user_id
+        )
+      }
 
-      //Of course I guess there isn't a need for the DB call favFoodFacts already has it!
+      // Retrieve food facts
+      const foodFacts = await getAllFoodFacts(user.user_id)
 
-      //TODO Find SQL needed to insert aka column names of what consumption logs is doing
-      // Update, could you call replaceConsumptionLogs function below? (the resolver function).
-      // This is saveConsumptionLogs in the client ( which is called in both deleteTrackerItem,
-      // TrackerItem and addTrackerItem, GlycemicItem)
-
-      // Serialize the favourites records here to consumptionLogs
-      // const todayFavRecords = await createNewDBfunction!
+      if (wasUserCreated) {
+        const loginConsumptionLogs = await createLogsForPastWeek(
+          user.user_id,
+          consumptionDate,
+          foodFacts,
+          wasUserCreated
+        )
+        console.log(
+          'Created consumption records for new user (loginConsumptionLogs):' +
+            JSON.stringify(loginConsumptionLogs)
+        )
+      }
 
       const consumptionLogWithFoodFacts = await getConsumptionLogWithFoodFacts(
         consumptionDate,
-        userInfo.user_id
+        user.user_id
       )
-      console.log(
-        'consumptionLogWithFoodFacts:' +
-          JSON.stringify(consumptionLogWithFoodFacts)
-      )
-
-      // Merge todaysFavRecords with consumptionLogWithFoodFacts
-
-      // ***********************************************
 
       // Construct and return the data
       return {
-        userInfo,
+        user,
         foodFacts,
         waterConsumptions,
         weightLogs,
-        // favFoodFacts,
         consumptionLogWithFoodFacts,
       }
     } catch (error) {
@@ -166,5 +166,28 @@ export const resolvers = {
     const weightLogs = { args }
     console.log('weightLogs:', weightLogs)
     return setWeightLogs(args.weightLogs)
+  },
+  updatePortionAmount: async (args, context, info) => {
+    try {
+      console.log(
+        'updatePortionAmount, userId:' +
+          args.userId +
+          ', args.portionAmount:' +
+          args.portionAmount +
+          ', args.foodFactsId:' +
+          args.foodFactsId
+      )
+
+      await updatePortionAmount(
+        args.userId,
+        args.consumptionDate,
+        args.foodFactsId,
+        args.portionAmount
+      )
+      return true
+    } catch (e) {
+      console.error(e)
+      return false
+    }
   },
 }

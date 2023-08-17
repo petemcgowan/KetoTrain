@@ -14,13 +14,18 @@ export async function getUserInfo(emailAddress) {
   try {
     // Retrieve user details
     let user = await Users.findOne({ where: { email_address: emailAddress } })
+    let wasUserCreated = false
 
     // If user does not exist, create a new user
     if (!user) {
       user = await Users.create({ email_address: emailAddress })
+      wasUserCreated = true
     }
 
-    return user
+    return {
+      user,
+      wasUserCreated,
+    }
   } catch (error) {
     console.error('getUserInfo, error:' + error)
     throw error
@@ -29,12 +34,12 @@ export async function getUserInfo(emailAddress) {
 
 export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
   try {
-    console.log(
-      'getConsumptionLogWithFoodFacts, consumptionDate:' +
-        consumptionDate +
-        ', userId:' +
-        userId
-    )
+    // console.log(
+    //   'getConsumptionLogWithFoodFacts, consumptionDate:' +
+    //     consumptionDate +
+    //     ', userId:' +
+    //     userId
+    // )
 
     const consumptionLogs = await ConsumptionLogs.findAll({
       where: {
@@ -62,8 +67,15 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
         'consumption_date',
         'food_facts_id',
         'user_id',
+        'default_fl',
+        'portion_count',
       ],
     })
+
+    // console.log(
+    //   'getConsumptionLogWithFoodFacts, consumptionLogs:' +
+    //     JSON.stringify(consumptionLogs)
+    // )
 
     const result = consumptionLogs.map((log) => {
       return {
@@ -79,9 +91,15 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
         sodium: log.food_fact.sodium,
         total_dietary_fibre: log.food_fact.total_dietary_fibre,
         total_sugars: log.food_fact.total_sugars,
-        user_id: log.food_fact.user_id,
+        user_id: log.user_id,
+        default_fl: log.default_fl,
+        portion_count: log.portion_count,
       }
     })
+
+    // console.log(
+    //   'getConsumptionLogWithFoodFacts, result:' + JSON.stringify(result)
+    // )
 
     return result
   } catch (error) {
@@ -231,10 +249,11 @@ async function doesLogExistForDay(userId, consumptionDate) {
   return existingLog !== null
 }
 
-export async function logFavFoodFactsForPastWeek(
+export async function createLogsForPastWeek(
   userId,
   defaultInsertion = false,
-  foodFacts
+  foodFacts,
+  wasUserCreated
 ) {
   try {
     const addedItems = []
@@ -246,11 +265,12 @@ export async function logFavFoodFactsForPastWeek(
       const consumptionDate = date.toISOString().slice(0, 10)
 
       if (!(await doesLogExistForDay(userId, consumptionDate))) {
-        const favFoodFacts = foodFacts.filter((fact) => fact.isFavourite)
+        // const favFoodFacts = foodFacts.filter((fact) => fact.isFavourite)
+        const predeterminedDefaults = [507, 638, 1873, 824, 1468, 746]
 
-        for (const fact of favFoodFacts) {
+        for (const fact of predeterminedDefaults) {
           addedItems.push({
-            foodFactsId: fact.food_facts_id,
+            foodFactsId: fact,
             consumptionDate: consumptionDate,
             userId: userId,
             defaultFl: defaultInsertion,
@@ -275,20 +295,38 @@ export async function logFavFoodFactsForPastWeek(
   }
 }
 
+export const updatePortionAmount = async (
+  userId,
+  consumptionDate,
+  foodFactsId,
+  portionAmount
+) => {
+  return ConsumptionLogs.update(
+    { portion_count: portionAmount },
+    {
+      where: {
+        user_id: userId,
+        consumption_date: consumptionDate,
+        food_facts_id: foodFactsId,
+      },
+    }
+  )
+}
+
 export async function replaceConsumptionLogs(
   addedItems,
-  dayToUpdate = null, // default value set to null
+  dayToUpdate = null,
   toBeDeleted = false,
   toBeInserted = true,
   defaultInsertion = false
 ) {
   let t
   try {
-    console.log(
-      'replaceConsumptionLogs called, addedItems: ',
-      JSON.stringify(addedItems)
-    )
-    console.log('replaceConsumptionLogs called, toBeDeleted: ', toBeDeleted)
+    // console.log(
+    //   'replaceConsumptionLogs called, addedItems: ',
+    //   JSON.stringify(addedItems)
+    // )
+    // console.log('replaceConsumptionLogs called, toBeDeleted: ', toBeDeleted)
 
     t = await ConsumptionLogs.sequelize.transaction()
 
@@ -345,6 +383,31 @@ export async function setAllFoodFacts(newFoodFacts) {
   }
 }
 
+export async function setupFavouriteFoods(favouriteFoods, userId) {
+  try {
+    const favouriteFoodsData = favouriteFoods.map((item) => ({
+      food_facts_id: item.foodFactsId,
+      user_id: userId,
+    }))
+
+    const createdFavouriteFoods = await FavouriteFoods.bulkCreate(
+      favouriteFoodsData,
+      {
+        returning: true,
+      }
+    )
+
+    return createdFavouriteFoods.map((record) => ({
+      favourite_foods_id: record.favourite_foods_id,
+      food_facts_id: record.food_facts_id,
+      user_id: record.user_id,
+    }))
+  } catch (error) {
+    console.error('Error while setting up favorite foods:', error)
+    throw error
+  }
+}
+
 export async function setFavouriteFoodsDB(favouriteFoods, userId) {
   try {
     const transaction = await sequelize.transaction()
@@ -359,6 +422,7 @@ export async function setFavouriteFoodsDB(favouriteFoods, userId) {
         },
         transaction,
       })
+
       console.log(
         'favouriteFoods[0].is_favourite:' + favouriteFoods[0].isFavourite
       )
@@ -375,10 +439,6 @@ export async function setFavouriteFoodsDB(favouriteFoods, userId) {
         createdFavouriteFood = await FavouriteFoods.create(newFavouriteFood, {
           transaction,
         })
-        // const createdFavouriteFood = await FavouriteFoods.create(
-        //   newFavouriteFoods,
-        //   { transaction }
-        // )
       }
       await transaction.commit()
 
