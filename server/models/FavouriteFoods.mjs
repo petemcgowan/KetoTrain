@@ -26,14 +26,6 @@ export const FavouriteFoods = sequelize.define(
       },
       allowNull: false,
     },
-    // created_at: {
-    //   type: DataTypes.DATE,
-    //   defaultValue: Sequelize.NOW,
-    // },
-    // updated_at: {
-    //   type: DataTypes.DATE,
-    //   defaultValue: Sequelize.NOW,
-    // },
   },
   {
     timestamps: false,

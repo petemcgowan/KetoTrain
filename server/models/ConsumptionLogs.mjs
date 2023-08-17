@@ -24,14 +24,12 @@ export const ConsumptionLogs = sequelize.define(
     user_id: {
       type: DataTypes.STRING,
     },
-    // created_at: {
-    //   type: DataTypes.DATE,
-    //   defaultValue: Sequelize.NOW,
-    // },
-    // updated_at: {
-    //   type: DataTypes.DATE,
-    //   defaultValue: Sequelize.NOW,
-    // },
+    default_fl: {
+      type: DataTypes.BOOLEAN,
+    },
+    portion_count: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     timestamps: false,

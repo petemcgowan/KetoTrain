@@ -6,13 +6,24 @@ import TrackerContext from '../state/TrackerContext'
 import UserContext from '../state/UserContext'
 import axios from 'axios'
 import { ThemeContext } from '../state/ThemeContext'
+import FoodContext from '../state/FoodContext'
+// import SearchFoodContext from '../state/SearchFoodContext'
+// import FavFoodContext from '../state/FavFoodContext'
+import { useDispatch } from 'react-redux'
+// import { SearchFoodListAction } from '../redux/actions/index'
+import { initSearchFoodList, initFavFoodList } from '../redux/action-creators'
+import { PURGE } from 'redux-persist'
+import { store } from '../redux/store'
 
 const { height, width } = Dimensions.get('screen')
 
 export default function LoadingScreen() {
   const navigation = useNavigation()
-  const { setTrackerItems, setFoodData, setSearchFoodList, setFavFoodList } =
+  const { setTrackerItems, trackerItems, setTotalCarbs } =
     useContext(TrackerContext)
+  const { setFoodData } = useContext(FoodContext)
+  // const { setSearchFoodList } = useContext(SearchFoodContext)
+  // const { setFavFoodList } = useContext(FavFoodContext)
   const { emailAddress, consumptionDate, setUserId } = useContext(UserContext)
   const context = useContext(ThemeContext)
   if (!context) {
@@ -20,6 +31,7 @@ export default function LoadingScreen() {
   }
   const { theme } = context
   const styles = getStyles(theme)
+  const dispatch = useDispatch()
 
   const findDuplicates = (data) => {
     const publicFoodKeys = data.map((item) => item.publicFoodKey)
@@ -39,10 +51,19 @@ export default function LoadingScreen() {
     }
     console.log(`Consumption date is ${consumptionDate}`)
 
+    // ************
+    // Temporary kill the Redux store dispatch
+    store.dispatch({
+      type: PURGE,
+      key: 'root',
+      result: () => null,
+    })
+
     const getUserDashboardData = async () => {
       try {
         const userDashboardDataResponse = await axios({
-          url: 'http://localhost:4001/pete-graphql',
+          url: 'http://localhost:4001/keto-graphql',
+          // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
           method: 'post',
           data: {
             query: `
@@ -53,7 +74,7 @@ export default function LoadingScreen() {
                     consumptionDate: "${consumptionDate}"
                   }
                 ) {
-                  userInfo {
+                  user {
                     userId: user_id
                     userName: user_name
                     lastLoginDate: last_login_date
@@ -77,18 +98,6 @@ export default function LoadingScreen() {
                     totalSugars: total_sugars
                     isFavourite
                   }
-                  waterConsumptions {
-                    water_consumptions_id
-                    user_id
-                    consumption_date
-                    litre_amount
-                  }
-                  weightLogs {
-                    weight_logs_id
-                    user_id
-                    weigh_in_timestamp
-                    kg_amount
-                  }
                   consumptionLogWithFoodFacts {
                     consumption_log_id
                     consumption_date
@@ -102,12 +111,28 @@ export default function LoadingScreen() {
                     sodium
                     total_dietary_fibre
                     total_sugars
+                    default_fl
+                    portion_count
                   }
                 }
               }
             `,
           },
         })
+        // before consumptionLogFoodFacts
+        // waterConsumptions {
+        //   water_consumptions_id
+        //   user_id
+        //   consumption_date
+        //   litre_amount
+        // }
+        // weightLogs {
+        //   weight_logs_id
+        //   user_id
+        //   weigh_in_timestamp
+        //   kg_amount
+        // }
+
         // augment the return  with calculated values
         const foodFacts =
           userDashboardDataResponse.data.data.getUserDashboardData.foodFacts
@@ -122,14 +147,14 @@ export default function LoadingScreen() {
               : theme.tableBackground,
           carbohydrates: Math.round(item.carbohydrates),
         }))
-        console.log(
-          'Loading Screen, theme.middlingBackground:' +
-            theme.middlingBackground +
-            ', theme.tableBackground:' +
-            theme.tableBackground +
-            ', theme.badBackground:' +
-            theme.badBackground
-        )
+        // console.log(
+        //   'Loading Screen, theme.middlingBackground:' +
+        //     theme.middlingBackground +
+        //     ', theme.tableBackground:' +
+        //     theme.tableBackground +
+        //     ', theme.badBackground:' +
+        //     theme.badBackground
+        // )
         setFoodData(processedFoodData)
 
         const searchFoodList = processedFoodData.map((item) => ({
@@ -140,26 +165,37 @@ export default function LoadingScreen() {
           carbBackgroundColor: item.carbBackgroundColor,
           carbohydrates: item.carbohydrates,
         }))
-        // console.log('searchFoodList:' + JSON.stringify(searchFoodList))
 
-        setSearchFoodList(searchFoodList)
+        // setSearchFoodList(searchFoodList)
+        dispatch(initSearchFoodList(searchFoodList))
 
-        // console.log(
-        //   'findDuplicates searchFoodList:' +
-        //     JSON.stringify(findDuplicates(searchFoodList))
-        // )
-
+        // setFavFoodList(favFoodList)
         const favFoodList = processedFoodData.filter((item) => item.isFavourite)
-        setFavFoodList(favFoodList)
-        // console.log(
-        //   'Loading Screen, favFoodList:' + JSON.stringify(favFoodList)
-        // )
-
+        dispatch(initFavFoodList(favFoodList))
         // Create favourites view array
+        console.log(
+          'userDashboardDataResponse.data.data.user:' +
+            JSON.stringify(userDashboardDataResponse.data.data.user)
+        )
+        // console.log(
+        //   'userDashboardDataResponse.data.data.getUserDashboardData.consumptionLogWithFoodFacts:' +
+        //     JSON.stringify(
+        //       userDashboardDataResponse.data.data.getUserDashboardData
+        //         .consumptionLogWithFoodFacts
+        //     )
+        // )
+        console.log(
+          'userDashboardDataResponse.data.data.getUserDashboardData.user.user_id:' +
+            userDashboardDataResponse.data.data.getUserDashboardData.user.userId
+        )
+        console.log(
+          'userDashboardDataResponse.data.data.getUserDashboardData.user:' +
+            userDashboardDataResponse.data.data.getUserDashboardData.user
+        )
 
         setUserId(
           parseInt(
-            userDashboardDataResponse.data.data.getUserDashboardData.userInfo
+            userDashboardDataResponse.data.data.getUserDashboardData.user
               .userId,
             10
           )
@@ -188,8 +224,17 @@ export default function LoadingScreen() {
             }
           })
 
+        // const newFavouriteFoods =
+        //   userDashboardDataResponse.data.data.getUserDashboardData
+        //     .newFavouriteFoods
+        // console.log('newFavouriteFoods:' + JSON.stringify(newFavouriteFoods))
+
         // set Tracker items (for tracker screen)
         if (Array.isArray(updatedConsumptionLogWithFoodFacts)) {
+          // console.log(
+          //   'updatedConsumptionLogWithFoodFacts:' +
+          //     JSON.stringify(updatedConsumptionLogWithFoodFacts)
+          // )
           setTrackerItems(
             updatedConsumptionLogWithFoodFacts.map((item) => {
               return {
@@ -209,12 +254,26 @@ export default function LoadingScreen() {
                     : item.carbohydrates > 11
                     ? theme.middlingBackground
                     : theme.tableBackground,
-                portionAmount: 0,
+                portionCount: item.portion_count,
+                defaultFl: item.default_fl,
                 consumptionDate: new Date(parseInt(item.consumption_date, 10)),
                 isFavourite: item.isFavourite,
               }
             })
           )
+
+          let totalCarbs = 0
+          trackerItems.forEach((trackerItem) => {
+            console.log(
+              '***LoadingScreen, trackerItem.carbAmt:' +
+                trackerItem.carbAmt +
+                ', totalCarbs:' +
+                totalCarbs
+            )
+            totalCarbs += trackerItem.carbAmt * trackerItem.portionCount
+          })
+
+          setTotalCarbs(totalCarbs)
         }
       } catch (error) {
         console.error('Error fetching food facts:', error)
@@ -225,7 +284,7 @@ export default function LoadingScreen() {
     const timeoutId = setTimeout(() => {
       console.log('about to navigate to MainApp')
       navigation.navigate('MainApp')
-    }, 1600) // wait
+    }, 1200) // wait
     // navigation.navigate('MainApp')
     return () => clearTimeout(timeoutId) // cleanup on component unmount
   }, [navigation])
