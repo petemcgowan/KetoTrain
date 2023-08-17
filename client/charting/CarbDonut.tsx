@@ -36,14 +36,13 @@ export default function CarbDonut({
   textColor,
   focused,
 }: DonutProps) {
-  console.log('CarbDonut is rendering')
-
   const animated = useRef(new Animated.Value(0)).current
   const circleRef = useRef()
   const inputRef = useRef()
   const circumference = 2 * Math.PI * radius
   const halfCircle = radius + strokeWidth
   const { totalCarbs } = useContext(TrackerContext)
+  console.log('CarbDonut is rendering, totalCarbs' + totalCarbs)
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')

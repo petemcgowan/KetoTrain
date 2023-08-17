@@ -12,6 +12,6 @@ export interface ItemProps {
   giBackgroundColor: string
   glBackgroundColor: string
   carbBackgroundColor: string
-  portionAmount: number
+  portionCount: number
   consumptionDate: string
 }

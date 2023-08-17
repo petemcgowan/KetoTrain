@@ -7,6 +7,11 @@ interface TrackerItemProps {
   trackerSelected: number
   clickNutrientPanel: () => void
   carbBackgroundColor: string
+  selectedDate: Date
+  itemsForSelectedDate: TrackerItemType[]
+  setItemsForSelectedDate: React.Dispatch<
+    React.SetStateAction<TrackerItemType[]>
+  >
 }
 
 export type { TrackerItemProps }

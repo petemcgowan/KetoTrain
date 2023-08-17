@@ -10,7 +10,7 @@ interface PortionLayoutProps {
   boxWidth: number;
   boxHeight: number;
   textFontSize: number;
-  portionAmount: number;
+  portionCount: number;
   itemKey: string;
 }
 
@@ -22,7 +22,7 @@ const PortionLayout = ({
   boxWidth,
   boxHeight,
   textFontSize,
-  portionAmount,
+  portionCount,
   itemKey,
 }: PortionLayoutProps) => {
   const [portion1BGColor, setPortion1BGColor] = useState(
@@ -61,11 +61,11 @@ const PortionLayout = ({
     )
 
     if (portion1BGColor === 'black') {
-      trackerClicked.portionAmount++
-      setPortion1BGColor(trackerClicked.portionAmount > 0 ? '#7A069B' : 'black')
+      trackerClicked.portionCount++
+      setPortion1BGColor(trackerClicked.portionCount > 0 ? '#7A069B' : 'black')
     } else {
       setPortion1BGColor('black')
-      trackerClicked.portionAmount--
+      trackerClicked.portionCount--
     }
     console.log(
       'pressPortion1, trackerClicked:' + JSON.stringify(trackerClicked)
@@ -78,10 +78,10 @@ const PortionLayout = ({
       ({ description }) => description === itemKey
     )
     if (portion2BGColor === 'black') {
-      trackerClicked.portionAmount++
-      setPortion2BGColor(trackerClicked.portionAmount > 1 ? '#620B7B' : 'black')
+      trackerClicked.portionCount++
+      setPortion2BGColor(trackerClicked.portionCount > 1 ? '#620B7B' : 'black')
     } else {
-      trackerClicked.portionAmount--
+      trackerClicked.portionCount--
       setPortion2BGColor('black')
     }
     console.log(
@@ -95,10 +95,10 @@ const PortionLayout = ({
       ({ description }) => description === itemKey
     )
     if (portion3BGColor === 'black') {
-      trackerClicked.portionAmount++
-      setPortion3BGColor(trackerClicked.portionAmount > 2 ? '#370246' : 'black')
+      trackerClicked.portionCount++
+      setPortion3BGColor(trackerClicked.portionCount > 2 ? '#370246' : 'black')
     } else {
-      trackerClicked.portionAmount--
+      trackerClicked.portionCount--
       setPortion3BGColor('black')
     }
     console.log(
@@ -112,10 +112,10 @@ const PortionLayout = ({
       ({ description }) => description === itemKey
     )
     if (portion4BGColor === 'black') {
-      trackerClicked.portionAmount++
-      setPortion4BGColor(trackerClicked.portionAmount > 3 ? '#200129' : 'black')
+      trackerClicked.portionCount++
+      setPortion4BGColor(trackerClicked.portionCount > 3 ? '#200129' : 'black')
     } else {
-      trackerClicked.portionAmount--
+      trackerClicked.portionCount--
       setPortion4BGColor('black')
     }
     console.log(
