@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 
 import TrackerContext from '../state/TrackerContext'
-import TimeContext from '../state/TimeContext'
+// import TimeContext from '../state/TimeContext'
 import UserContext, { UserContextProps } from '../state/UserContext'
 import { TrackerItemType } from '../types/TrackerItemType'
 import { TrackerContextType } from '../types/TrackerContextType'
@@ -20,7 +20,7 @@ import { RFPercentage } from 'react-native-responsive-fontsize'
 import { favouriteFoodItem } from './GlycemicUtils'
 // import SearchFoodContext from '../state/SearchFoodContext'
 // import { SearchFoodContextType } from '../types/SearchFoodContextType'
-import { TimeContextType } from '../types/TimeContextType'
+// import { TimeContextType } from '../types/TimeContextType'
 import { FoodContextType } from '../types/FoodContextType'
 import FoodContext from '../state/FoodContext'
 // import FavFoodContext from '../state/FavFoodContext'
@@ -47,15 +47,14 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
   const { trackerItems, setTrackerItems, setTotalCarbs } =
     useContext<TrackerContextType>(TrackerContext)
 
-  const { itemsForSelectedDate, selectedDate, setItemsForSelectedDate } =
-    useContext<TimeContextType>(TimeContext)
+  // const { itemsForSelectedDate, selectedDate, setItemsForSelectedDate } =
+  //   useContext<TimeContextType>(TimeContext)
   const dispatch = useDispatch()
 
   const { foodData, setFoodData } = useContext<FoodContextType>(FoodContext)
   // const { favFoodList, setFavFoodList } =
   //   useContext<FavFoodContextType>(FavFoodContext)
   const favFoodList = useSelector((state: RootState) => state.favFoodList) || []
-  // console.log('GlycemicItem, favFoodList:' + JSON.stringify(favFoodList))
   const itemIsAlreadyFavourite = favFoodList.some(
     (item) => item.foodName === descriptionGI
   )
@@ -85,61 +84,61 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
     [carbBackgroundColor, favFoodList]
   )
 
-  const addTrackerItem = () => {
-    // get the food facts item for setting up tracker
-    const matchingFoodFact = foodData.find(
-      (item) => item.foodName === descriptionGI
-    )
-    console.log('matchingFoodFact:' + JSON.stringify(matchingFoodFact))
-    let trackerItem: TrackerItemType
+  // const addTrackerItem = () => {
+  //   // get the food facts item for setting up tracker
+  //   const matchingFoodFact = foodData.find(
+  //     (item) => item.foodName === descriptionGI
+  //   )
+  //   console.log('matchingFoodFact:' + JSON.stringify(matchingFoodFact))
+  //   let trackerItem: TrackerItemType
 
-    if (matchingFoodFact) {
-      trackerItem = {
-        id: descriptionGI,
-        foodFactsId: matchingFoodFact.foodFactsId,
-        description: descriptionGI,
-        carbAmt: carbAmt,
-        fiberAmt: matchingFoodFact.totalDietaryFibre,
-        proteinAmt: matchingFoodFact.protein,
-        fatAmt: matchingFoodFact.fatTotal,
-        energyAmt: matchingFoodFact.energy,
-        sugarsAmt: matchingFoodFact.totalSugars,
-        sodiumAmt: matchingFoodFact.sodium,
-        carbBackgroundColor: carbBackgroundColor,
-        portionAmount: 1,
-        consumptionDate: selectedDate,
-        isFavourite: matchingFoodFact.isFavourite,
-      }
+  //   if (matchingFoodFact) {
+  //     trackerItem = {
+  //       id: descriptionGI,
+  //       foodFactsId: matchingFoodFact.foodFactsId,
+  //       description: descriptionGI,
+  //       carbAmt: carbAmt,
+  //       fiberAmt: matchingFoodFact.totalDietaryFibre,
+  //       proteinAmt: matchingFoodFact.protein,
+  //       fatAmt: matchingFoodFact.fatTotal,
+  //       energyAmt: matchingFoodFact.energy,
+  //       sugarsAmt: matchingFoodFact.totalSugars,
+  //       sodiumAmt: matchingFoodFact.sodium,
+  //       carbBackgroundColor: carbBackgroundColor,
+  //       portionCount: 1,
+  //       consumptionDate: selectedDate,
+  //       isFavourite: matchingFoodFact.isFavourite,
+  //     }
 
-      if (trackerItem != null) {
-        setTrackerItems([...trackerItems, trackerItem])
-        setItemsForSelectedDate([...itemsForSelectedDate, trackerItem])
-        let totalCarbs = 0
+  //     if (trackerItem != null) {
+  //       setTrackerItems([...trackerItems, trackerItem])
+  //       setItemsForSelectedDate([...itemsForSelectedDate, trackerItem])
+  //       let totalCarbs = 0
 
-        itemsForSelectedDate.map((trackerItem: TrackerItemType) => {
-          totalCarbs += trackerItem.carbAmt
-        })
+  //       itemsForSelectedDate.map((trackerItem: TrackerItemType) => {
+  //         totalCarbs += trackerItem.carbAmt * trackerItem.portionCount
+  //       })
 
-        setTotalCarbs(totalCarbs)
+  //       setTotalCarbs(totalCarbs)
 
-        type AddItem = {
-          foodFactsId: number
-          consumptionDate: string
-          userId: number | null
-        }
-        const addedItems: AddItem[] = []
+  //       type AddItem = {
+  //         foodFactsId: number
+  //         consumptionDate: string
+  //         userId: number | null
+  //       }
+  //       const addedItems: AddItem[] = []
 
-        addedItems.push({
-          foodFactsId: trackerItem.foodFactsId,
-          consumptionDate: formatDateToYYYYMMDD(trackerItem.consumptionDate),
-          userId: userId,
-        })
-        const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
+  //       addedItems.push({
+  //         foodFactsId: trackerItem.foodFactsId,
+  //         consumptionDate: formatDateToYYYYMMDD(trackerItem.consumptionDate),
+  //         userId: userId,
+  //       })
+  //       const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
 
-        saveConsumptionLogs(trackerItem, addedItems, dayToUpdate, false, true)
-      }
-    }
-  }
+  //       saveConsumptionLogs(trackerItem, addedItems, dayToUpdate, false, true)
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     // console.log('useEffect(GlycemicItem) called')
@@ -148,11 +147,11 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
 
   return (
     <View style={dynamicStyles.foodRowContainer}>
-      <TouchableOpacity onPress={addTrackerItem}>
-        <View style={styles.foodContainer}>
-          <Text style={styles.foodText}>{descriptionGI}</Text>
-        </View>
-      </TouchableOpacity>
+      {/* <TouchableOpacity onPress={addTrackerItem}> */}
+      <View style={styles.foodContainer}>
+        <Text style={styles.foodText}>{descriptionGI}</Text>
+      </View>
+      {/* </TouchableOpacity> */}
       <View
         style={[
           styles.carbAmtContainer,

@@ -11,17 +11,18 @@ import UserContext from '../state/UserContext'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { ThemeContext } from '../state/ThemeContext'
 import { RFPercentage } from 'react-native-responsive-fontsize'
-
+import { updatePortionAmountApi } from './updatePortionAmount'
 import { TrackerItemProps } from '../types/ItemTypes'
 import {
   saveConsumptionLogs,
   formatDateToYYYYMMDD,
+  formatDateToISO,
   favouriteFoodItem,
 } from './GlycemicUtils'
 import { TrackerContextType } from '../types/TrackerContextType'
 // import { SearchFoodContextType } from '../types/SearchFoodContextType'
-import TimeContext from '../state/TimeContext'
-import { TimeContextType } from '../types/TimeContextType'
+// import TimeContext from '../state/TimeContext'
+// import { TimeContextType } from '../types/TimeContextType'
 // import SearchFoodContext from '../state/SearchFoodContext'
 import FoodContext from '../state/FoodContext'
 import { FoodContextType } from '../types/FoodContextType'
@@ -40,6 +41,9 @@ const TrackerItem = ({
   trackerSelected,
   clickNutrientPanel,
   carbBackgroundColor,
+  selectedDate,
+  itemsForSelectedDate,
+  setItemsForSelectedDate,
 }: TrackerItemProps) => {
   console.log('TrackerItem is rendering')
   const { trackerItems, setTrackerItems, setTotalCarbs, totalCarbs } =
@@ -47,8 +51,8 @@ const TrackerItem = ({
   const dispatch = useDispatch()
   const favFoodList = useSelector((state: RootState) => state.favFoodList)
 
-  const { itemsForSelectedDate, selectedDate, setItemsForSelectedDate } =
-    useContext<TimeContextType>(TimeContext)
+  // const { itemsForSelectedDate, selectedDate, setItemsForSelectedDate } =
+  //   useContext<TimeContextType>(TimeContext)
 
   // const { searchFoodList, setSearchFoodList } =
   //   useContext<SearchFoodContextType>(SearchFoodContext)
@@ -87,12 +91,63 @@ const TrackerItem = ({
     )
   }, [carbBackgroundColor])
 
-  const pressTrackerItem = () => {
-    const dateBasedIndex = itemsForSelectedDate.findIndex(
-      ({ description }) => description === item.description
+  // const pressTrackerItem = () => {
+  //   const dateBasedIndex = itemsForSelectedDate.findIndex(
+  //     ({ description }) => description === item.description
+  //   )
+  //   if (dateBasedIndex > -1) {
+  //     setTrackerSelected(dateBasedIndex)
+  //   }
+  // }
+
+  const incrementPortionCount = () => {
+    const newTrackerItems = [...trackerItems]
+    trackerItems.map((mapItem, index) => {
+      if (
+        item.description === mapItem.description &&
+        item.consumptionDate === mapItem.consumptionDate
+      ) {
+        console.log('item:' + JSON.stringify(item))
+        const newItem = { ...item, portionCount: item.portionCount++ }
+        return newItem
+      } else {
+        return mapItem
+      }
+    })
+    setTrackerItems(newTrackerItems)
+    updatePortionAmountApi(
+      userId,
+      formatDateToISO(item.consumptionDate),
+      item.foodFactsId,
+      item.portionCount
     )
-    if (dateBasedIndex > -1) {
-      setTrackerSelected(dateBasedIndex)
+    // console.log('trackerItems:' + JSON.stringify(trackerItems))
+  }
+
+  const decrementPortionCount = () => {
+    if (item.portionCount > 1) {
+      const newTrackerItems = [...trackerItems]
+      trackerItems.map((mapItem, index) => {
+        if (
+          item.description === mapItem.description &&
+          item.consumptionDate === mapItem.consumptionDate
+        ) {
+          console.log('item:' + JSON.stringify(item))
+          const newItem = { ...item, portionCount: item.portionCount-- }
+          return newItem
+        } else {
+          return mapItem
+        }
+      })
+
+      setTrackerItems(newTrackerItems)
+      // console.log('trackerItems:' + JSON.stringify(trackerItems))
+      updatePortionAmountApi(
+        userId,
+        formatDateToISO(item.consumptionDate),
+        item.foodFactsId,
+        item.portionCount
+      )
     }
   }
 
@@ -114,24 +169,61 @@ const TrackerItem = ({
     )
   }
 
+  const isSameDay = (date1: Date, date2: Date) => {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    )
+  }
+
   const deleteTrackerItem = () => {
-    const newTrackerItems = trackerItems.filter(({ description }) => {
-      return description !== item.description
+    // return (
+    //   itemDate.getFullYear() === selected.getFullYear() &&
+    //   itemDate.getMonth() === selected.getMonth() &&
+    //   itemDate.getDate() === selected.getDate()
+    // )
+
+    //give me all the trackeritems that aren't "today" && aren't this description
+    const newTrackerItems = trackerItems.filter((trackerItem) => {
+      return (
+        trackerItem.description !== item.description ||
+        !isSameDay(trackerItem.consumptionDate, selectedDate)
+      )
     })
+    // console.log('newTrackerItems:' + JSON.stringify(newTrackerItems))
     setTrackerItems(newTrackerItems)
 
     const newItemsForSelectedDate = itemsForSelectedDate.filter(
-      ({ description }) => {
-        return description !== item.description
+      (selectedItem) => {
+        return (
+          selectedItem.description !== item.description &&
+          !isSameDay(selectedItem.consumptionDate, selectedDate)
+        )
       }
+    )
+    console.log(
+      'newItemsForSelectedDate:' + JSON.stringify(newItemsForSelectedDate)
     )
     setItemsForSelectedDate(newItemsForSelectedDate)
 
-    setTrackerSelected(0)
+    // const newTrackerItems = trackerItems.filter(({ description }) => {
+    //     return description !== item.description
+    //   })
+    //   setTrackerItems(newTrackerItems)
+
+    //   const newItemsForSelectedDate = itemsForSelectedDate.filter(
+    //     ({ description }) => {
+    //       return description !== item.description
+    //     }
+    //   )
+    //   setItemsForSelectedDate(newItemsForSelectedDate)
+
+    // setTrackerSelected(0)
 
     let totalCarbs = 0
-    newItemsForSelectedDate.forEach((trackerItem) => {
-      totalCarbs += trackerItem.carbAmt
+    itemsForSelectedDate.forEach((trackerItem) => {
+      totalCarbs += trackerItem.carbAmt * trackerItem.portionCount
     })
 
     setTotalCarbs(totalCarbs)
@@ -141,8 +233,11 @@ const TrackerItem = ({
         foodFactsId: Number(item.foodFactsId),
         consumptionDate: formatDateToYYYYMMDD(item.consumptionDate),
         userId: userId,
+        defaultFl: false,
+        portionCount: 0,
       },
     ]
+    console.log('selectedDate(TrackerItem):' + JSON.stringify(selectedDate))
     const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
 
     // save to the database (including the delete)
@@ -151,30 +246,33 @@ const TrackerItem = ({
 
   return (
     <View style={dynamicStyles.trackerRowContainer}>
-      <View style={styles.favTrackerIcon}>
-        <TouchableOpacity onPress={favouriteTrackerItem}>
+      <View style={styles.portionTrackerIcon}>
+        <TouchableOpacity onPress={incrementPortionCount}>
           <FontAwesome5
             name="plus"
-            size={RFPercentage(3.9)}
+            size={RFPercentage(3.3)}
             color={theme.iconFill}
             solid={itemIsFavourite ? true : false}
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.favTrackerIcon}>
-        <TouchableOpacity onPress={favouriteTrackerItem}>
+      <View style={styles.portionContainer}>
+        <Text style={styles.foodDescriptionText}>{item.portionCount}</Text>
+      </View>
+      <View style={styles.portionTrackerIcon}>
+        <TouchableOpacity onPress={decrementPortionCount}>
           <FontAwesome5
             name="minus"
-            size={RFPercentage(3.9)}
+            size={RFPercentage(3.3)}
             color={theme.iconFill}
             solid={itemIsFavourite ? true : false}
           />
         </TouchableOpacity>
       </View>
       <View style={styles.foodDescriptionContainer}>
-        <TouchableOpacity onPress={pressTrackerItem}>
-          <Text style={styles.foodDescriptionText}>{item.description}</Text>
-        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={pressTrackerItem}> */}
+        <Text style={styles.foodDescriptionText}>{item.description}</Text>
+        {/* </TouchableOpacity> */}
       </View>
       <View style={styles.nutTrackerIcon}>
         <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>
@@ -216,12 +314,22 @@ const getStyles = (theme) =>
     foodDescriptionContainer: {
       width: width * 0.5,
     },
+    portionContainer: {
+      width: width * 0.06,
+    },
     foodDescriptionText: {
       color: theme.buttonText,
       alignItems: 'center',
       fontSize: RFPercentage(3.5),
       fontWeight: '300',
       marginLeft: 3,
+    },
+    portionText: {
+      color: theme.buttonText,
+      alignItems: 'center',
+      fontSize: RFPercentage(3.5),
+      fontWeight: '300',
+      // marginLeft: 3,
     },
     nutTrackerIcon: {
       width: width * 0.1,
@@ -232,6 +340,13 @@ const getStyles = (theme) =>
     },
     favTrackerIcon: {
       width: width * 0.1,
+      borderLeftColor: theme.tableLineColor,
+      borderLeftWidth: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    portionTrackerIcon: {
+      width: width * 0.07,
       borderLeftColor: theme.tableLineColor,
       borderLeftWidth: 1,
       justifyContent: 'center',

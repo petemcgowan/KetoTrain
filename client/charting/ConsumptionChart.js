@@ -26,9 +26,9 @@ const MacroPieChart: React.FC<Props> = ({ trackerItems }) => {
 
   const totals = filteredItems.reduce(
     (acc, item) => {
-      acc.protein += item.proteinAmt
-      acc.carb += item.carbAmt
-      acc.fat += item.fatAmt
+      acc.protein += item.proteinAmt * item.portionCount
+      acc.carb += item.carbAmt * item.portionCount
+      acc.fat += item.fatAmt * item.portionCount
       return acc
     },
     {
