@@ -6,8 +6,6 @@ const defaultValues = {
   setSelectedDate: (value) => {},
   itemsForSelectedDate: [],
   setItemsForSelectedDate: (value) => {},
-  handlePrevDay: () => {},
-  handleNextDay: () => {},
 }
 
 const TimeContext = React.createContext<TimeContextType>(defaultValues)

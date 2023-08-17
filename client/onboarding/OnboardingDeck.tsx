@@ -93,7 +93,7 @@ const OnboardingDeck = () => {
         console.log('Error during Google Sign In:', error)
       })
       console.log('userInfo:' + JSON.stringify(userInfo))
-      setEmailAddress(userInfo.email)
+      setEmailAddress(userInfo.user.email)
       navigation.navigate('LoadingScreen')
       setSigninInProgress(false)
     } catch (error) {

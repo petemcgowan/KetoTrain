@@ -10,7 +10,7 @@ export type TrackerItemType = {
   sugarsAmt: number
   sodiumAmt: number
   carbBackgroundColor: string
-  portionAmount: number
+  portionCount: number
   consumptionDate: Date
   isFavourite: boolean
 }

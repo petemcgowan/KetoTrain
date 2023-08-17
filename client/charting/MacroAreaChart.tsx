@@ -59,9 +59,9 @@ const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
   trackerItems.forEach((item) => {
     const dateString = item.consumptionDate.toISOString().split('T')[0]
     if (dataMap[dateString]) {
-      dataMap[dateString].protein += item.proteinAmt
-      dataMap[dateString].carb += item.carbAmt
-      dataMap[dateString].fat += item.fatAmt
+      dataMap[dateString].protein += item.proteinAmt * item.portionCount
+      dataMap[dateString].carb += item.carbAmt * item.portionCount
+      dataMap[dateString].fat += item.fatAmt * item.portionCount
     }
   })
 
