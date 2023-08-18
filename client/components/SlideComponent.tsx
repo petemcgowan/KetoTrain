@@ -20,26 +20,36 @@ const SlideComponent = ({
   image,
   referenceLink,
   referenceSource,
+  onBeginScroll,
+  onEndScroll,
 }) => {
   const dominantColor = 'rgb(38, 27, 21)' // Dominant colour of image
 
   return (
-    <ScrollView contentContainerStyle={styles.slideContainer}>
+    // <ScrollView
+    //   contentContainerStyle={styles.slideContainer}
+    //   // onTouchStart={onBeginScroll}
+    //   // onTouchEnd={onEndScroll}
+    //   // scrollEnabled={false}
+    // >
+    <View style={styles.slideContainer}>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={image} />
       </View>
-      <View style={styles.textBox}>
-        <Text style={styles.title}>{title}</Text>
+      <View style={styles.titleBox}>
+        <Text style={styles.titleText}>{title}</Text>
       </View>
       <View style={styles.textBox}>
         <Text style={styles.text}>{description}</Text>
       </View>
       {referenceLink && (
-        <TouchableOpacity onPress={() => Linking.openURL(referenceLink)}>
-          <Text style={styles.linkText}>{referenceSource}</Text>
-        </TouchableOpacity>
+        <View style={styles.referenceView}>
+          <TouchableOpacity onPress={() => Linking.openURL(referenceLink)}>
+            <Text style={styles.linkText}>{referenceSource}</Text>
+          </TouchableOpacity>
+        </View>
       )}
-    </ScrollView>
+    </View>
   )
 }
 
@@ -48,14 +58,13 @@ export default SlideComponent
 const styles = StyleSheet.create({
   slideContainer: {
     width: width,
-    // flex: 1,
+    flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    paddingBottom: 20,
+    // paddingBottom: 20,
   },
   contentContainer: {
     justifyContent: 'center',
-    // ... other styles ...
   },
   imageContainer: {
     width: width * 0.9,
@@ -67,6 +76,14 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+  },
+  titleBox: {
+    // flex: 0.08, // of slideContainer
+  },
+  referenceView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    // marginBottom: 50,
   },
   textBox: {
     paddingHorizontal: 20,
@@ -80,13 +97,14 @@ const styles = StyleSheet.create({
     maxWidth: width - 40,
     justifyContent: 'center',
   },
-  title: {
+  titleText: {
     color: 'white',
     textAlign: 'center',
     fontWeight: '600',
-    maxWidth: width - 40,
+    // maxWidth: width - 40,
     fontSize: RFPercentage(3.1),
     justifyContent: 'center',
+    marginBottom: 10,
   },
   linkText: {
     color: 'blue',
