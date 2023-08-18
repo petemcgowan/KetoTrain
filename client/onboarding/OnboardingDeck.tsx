@@ -16,12 +16,14 @@ import LoginBottomSheet from './LoginBottomSheet'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import UserContext, { UserContextProps } from '../state/UserContext'
 
+const { width, height } = Dimensions.get('window')
+
 const slides = [
   {
     component: SlideComponent,
-    title: 'Stay Informed and Motivated',
+    title: 'Stay Informed & Motivated',
     description:
-      'Our app empowers you with knowledge about ketosis and the ketogenic diet. \n\nTrack your progress, set goals, and gain insights that keep you motivated on your journey towards improved health.',
+      'This app empowers you with knowledge about ketosis and the ketogenic diet. \n\nTrack your progress, set goals, and gain insights that keep you motivated on your journey towards improved health.',
     image: require('../assets/images/stay_informed_and_motivated.png'),
     color: 'rgb(38, 27, 21)',
   },
@@ -37,7 +39,7 @@ const slides = [
     component: SlideComponent,
     title: 'Health Benefits Abound',
     description:
-      'Staying in ketosis is linked to numerous health benefits. \n\nAside from weight loss, it may improve heart health, combat brain disorders, and help in managing diabetes. Stay on top of your carb intake to reap these rewards!',
+      'Staying in ketosis is linked to numerous health benefits. \n\nIt may improve heart health, combat brain disorders, and help managing diabetes. Control your carb intake to reap these rewards!',
     image: require('../assets/images/health_benefits_abound.png'),
     color: 'rgb(25, 26, 29)',
   },
@@ -158,12 +160,14 @@ const OnboardingDeck = () => {
         </ScrollView>
         <View style={styles.pagination}>
           {slides.map((_, index) => (
-            <Text
-              key={index}
-              style={index === activeSlide ? styles.activeDot : styles.dot}
-            >
-              •
-            </Text>
+            <View style={styles.dotContainer} key={index}>
+              <Text
+                key={index}
+                style={index === activeSlide ? styles.activeDot : styles.dot}
+              >
+                •
+              </Text>
+            </View>
           ))}
         </View>
       </View>
@@ -223,8 +227,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  pagination: {
+    flex: 0.06,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   button: {
-    width: 300,
+    width: width * 0.65,
     height: 50,
     backgroundColor: 'rgb(44, 207, 157)',
     padding: 10,
@@ -241,26 +252,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  pagination: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+  dotContainer: {
     alignItems: 'center',
-    // marginTop: 30,
+    justifyContent: 'center',
   },
   dot: {
-    fontSize: RFPercentage(6.8),
+    fontSize: RFPercentage(6.2),
+    lineHeight: RFPercentage(6.2), // special handling for special
     color: '#888',
-    margin: 5,
+    marginHorizontal: 11,
   },
   activeDot: {
     fontSize: RFPercentage(6.8),
+    lineHeight: RFPercentage(6.8), // special handling for special character
+    textAlignVertical: 'center',
     color: '#FFF',
-    margin: 5,
+    marginHorizontal: 11,
   },
   buttonText: {
     color: '#FFF',
     fontSize: RFPercentage(2.7),
-    textAlign: 'center',
+    // textAlign: 'center',
   },
   link: {
     marginBottom: 10,

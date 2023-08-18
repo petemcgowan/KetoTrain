@@ -62,7 +62,7 @@ export default function LoadingScreen() {
     const getUserDashboardData = async () => {
       try {
         const userDashboardDataResponse = await axios({
-          url: 'http://localhost:4001/keto-graphql',
+          url: 'http://192.168.68.103:4001/keto-graphql',
           // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
           method: 'post',
           data: {
