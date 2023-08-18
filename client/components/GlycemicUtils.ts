@@ -2,10 +2,11 @@ import TrackerContext from '../state/TrackerContext'
 import { SetStateAction, useContext } from 'react'
 import { TrackerItemType } from '../types/TrackerItemType'
 import axios from 'axios'
-import { TrackerContextType } from '../state/TrackerContextType'
+import { TrackerContextType } from '../types/TrackerContextType'
 import UserContext, { UserContextProps } from '../state/UserContext'
 import { FoodDataType } from '../types/FoodDataType'
 import { SearchListType } from '../types/SearchListType'
+// import TimeContext from '../state/TimeContext'
 
 export const favouriteFoodItem = (
   descriptionGI: string,
@@ -14,17 +15,18 @@ export const favouriteFoodItem = (
     (value: SetStateAction<boolean>): void
     (itemIsFavourite: boolean): void
   },
-  searchFoodList: SearchListType[],
-  setSearchFoodList: React.Dispatch<React.SetStateAction<SearchListType[]>>,
   foodData: FoodDataType[],
-  favFoodList: FoodDataType[],
-  setFavFoodList: React.Dispatch<React.SetStateAction<FoodDataType[]>>,
+  favFoodList,
+  updateFavFoodList,
   userId: number | null,
   trackerItems: TrackerItemType[],
-  setTrackerItems: React.Dispatch<React.SetStateAction<TrackerItemType[]>>
+  setTrackerItems: React.Dispatch<React.SetStateAction<TrackerItemType[]>>,
+  dispatch
 ) => {
+  // console.log(
+  //   'JUST INSIDE favouriteFoodItem favFoodList:' + JSON.stringify(favFoodList)
+  // )
   // get the food facts id for updating
-
   const matchingFoodFact = foodData.find(
     (item) => item.foodName === descriptionGI
   )
@@ -36,24 +38,21 @@ export const favouriteFoodItem = (
     isFavourite: !itemIsFavourite,
   })
   setItemIsFavourite(!itemIsFavourite)
+  const start = performance.now()
   saveFavouriteFoods(favouriteFoods, userId)
+  const end = performance.now()
+  console.log(`saveFavouriteFoods took ${end - start}ms`)
   if (itemIsFavourite) {
     // it IS a favourite, so we're unfavouriting
     // remove from the local fav food list
     console.log(
       'REMOVING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
     )
-
     const newFavFoods = favFoodList.filter(({ foodName }) => {
       return foodName !== matchingFoodFact?.foodName
     })
-    setFavFoodList(newFavFoods)
-    const updatedFoodData = searchFoodList.map((item) =>
-      item.foodName === descriptionGI
-        ? { ...item, isFavourite: !item.isFavourite }
-        : item
-    )
-    setSearchFoodList(updatedFoodData)
+    // setFavFoodList(newFavFoods)
+    dispatch(updateFavFoodList(newFavFoods))
     const updatedTrackerItems = trackerItems.map((item) =>
       item.description === descriptionGI
         ? { ...item, isFavourite: !item.isFavourite }
@@ -66,22 +65,28 @@ export const favouriteFoodItem = (
       'ADDING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
     )
     if (matchingFoodFact) {
-      setFavFoodList((prevFavFoodList) => [
-        ...prevFavFoodList,
+      // update fav food list
+      const newFavFoods = [
+        ...favFoodList,
         { ...matchingFoodFact, isFavourite: true },
-      ])
+      ]
+      // console.log(
+      //   'favouriteFoodItem, newFavFoods:' + JSON.stringify(newFavFoods)
+      // )
+      dispatch(updateFavFoodList(newFavFoods))
 
-      const updatedFoodData = searchFoodList.map((item) =>
-        item.foodName === descriptionGI ? { ...item, isFavourite: true } : item
-      )
-      setSearchFoodList(updatedFoodData)
+      let foundTrackerMatch = false
+      const updatedTrackerItems = trackerItems.map((item) => {
+        if (item.description === descriptionGI) {
+          foundTrackerMatch = true
+          return { ...item, isFavourite: true }
+        }
+        return item
+      })
 
-      const updatedTrackerItems = trackerItems.map((item) =>
-        item.description === descriptionGI
-          ? { ...item, isFavourite: true }
-          : item
-      )
-      setTrackerItems(updatedTrackerItems)
+      if (foundTrackerMatch) {
+        setTrackerItems(updatedTrackerItems)
+      }
     }
   }
 }
@@ -123,7 +128,8 @@ export const saveConsumptionLogs = async (
         toBeInserted
     )
     const consumptionResponse = await axios({
-      url: 'http://localhost:4001/pete-graphql',
+      url: 'http://109.76.67.82:4001/keto-graphql',
+      // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
       method: 'post',
       data: {
         query: `
@@ -150,6 +156,72 @@ export const saveConsumptionLogs = async (
   }
 }
 
+export const getFavouriteFoods = async (userId: number | null, theme) => {
+  try {
+    console.log('getFavouriteFoods, userId:' + userId)
+    const favouriteFoodResponse = await axios({
+      url: 'http://192.168.68.103:4001/keto-graphql',
+      // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
+      method: 'post',
+      data: {
+        query: `
+          query getFavFoods($userId: Int!) {
+            getFavFoods(favFoodsInput: { userId: $userId }) {
+              favFoodFacts {
+                foodFactsId: food_facts_id
+                foodName: food_name
+                publicFoodKey: public_food_key
+                calcium
+                carbohydrates
+                classification
+                energy
+                fatTotal: fat_total
+                iodine
+                magnesium
+                potassium
+                protein
+                saturatedFat: saturated_fat
+                sodium
+                totalDietaryFibre: total_dietary_fibre
+                totalSugars: total_sugars
+                isFavourite
+              }
+            }
+          }`,
+        variables: {
+          userId,
+        },
+      },
+    })
+
+    console.log(
+      'favouriteFoodResponse.data.data.getFavFoods.favFoodFacts:' +
+        JSON.stringify(favouriteFoodResponse.data.data.getFavFoods.favFoodFacts)
+    )
+    // const favFoods = [
+    //   ...favouriteFoodResponse.data.data.getFavFoods.favFoodFacts,
+    // ]
+
+    const favFoods =
+      await favouriteFoodResponse.data.data.getFavFoods.favFoodFacts.map(
+        (item) => ({
+          ...item,
+          carbBackgroundColor:
+            item.carbohydrates > 22
+              ? theme.badBackground
+              : item.carbohydrates > 11
+              ? theme.middlingBackground
+              : theme.tableBackground,
+          carbohydrates: Math.round(item.carbohydrates),
+        })
+      )
+
+    return favFoods
+  } catch (error) {
+    console.error('Error fetching favourite foods:', error)
+  }
+}
+
 export const saveFavouriteFoods = async (
   favouriteFoods: { foodFactsId: number; isFavourite: boolean }[],
   userId: number | null
@@ -162,7 +234,8 @@ export const saveFavouriteFoods = async (
         JSON.stringify(favouriteFoods)
     )
     const favouriteFoodResponse = await axios({
-      url: 'http://localhost:4001/pete-graphql',
+      url: 'http://192.168.68.103:4001/keto-graphql',
+      // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
       method: 'post',
       data: {
         query: `
@@ -185,26 +258,39 @@ export const saveFavouriteFoods = async (
   }
 }
 
-export const getTotalCarbsForSpecificDay = () => {
-  const { trackerItems, setTotalCarbs, selectedDate } =
-    useContext(TrackerContext)
-  let carbsForDayAmt = 0
-  console.log('GlycemicUtils, getTotalCarbsForSpecificDay called:')
+// export const getTotalCarbsForSpecificDay = (selectedDate: Date ) => {
+//   const { trackerItems, setTotalCarbs } = useContext(TrackerContext)
+//   // const { selectedDate } = useContext(TimeContext)
+//   let carbsForDayAmt = 0
+//   console.log('GlycemicUtils, getTotalCarbsForSpecificDay called:')
 
-  trackerItems.map((item) => {
-    const itemDate = new Date(item.consumptionDate)
+//   trackerItems.map((item) => {
+//     const itemDate = new Date(item.consumptionDate)
 
-    if (
-      itemDate.getFullYear() === selectedDate.getFullYear() &&
-      itemDate.getMonth() === selectedDate.getMonth() &&
-      itemDate.getDate() === selectedDate.getDate()
-    ) {
-      carbsForDayAmt = carbsForDayAmt + item.carbAmt
-      console.log('GlycemicUtils, carbsForDayAmt:' + carbsForDayAmt)
-    }
-  })
-  setTotalCarbs(carbsForDayAmt)
-  return carbsForDayAmt
+//     if (
+//       itemDate.getFullYear() === selectedDate.getFullYear() &&
+//       itemDate.getMonth() === selectedDate.getMonth() &&
+//       itemDate.getDate() === selectedDate.getDate()
+//     ) {
+//       console.log(
+//         'getTotalCarbsForSpecificDayTrack, item.carbAmt:' +
+//           item.carbAmt +
+//           ', item.portionCount:' +
+//           item.portionCount
+//       )
+//       carbsForDayAmt = carbsForDayAmt + item.carbAmt * item.portionCount
+//       console.log('GlycemicUtils, carbsForDayAmt:' + carbsForDayAmt)
+//     }
+//   })
+//   console.log(
+//     'getTotalCarbsForSpecificDayTrack, carbsForDayAmt:' + carbsForDayAmt
+//   )
+//   setTotalCarbs(carbsForDayAmt)
+//   return carbsForDayAmt
+// }
+
+export function formatDateToISO(date: Date): string {
+  return date.toISOString().split('T')[0]
 }
 
 export const getGLResult = (carbAmt: number, giAmt: number) => {
