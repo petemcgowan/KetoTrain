@@ -1,7 +1,7 @@
 {
   "name": "keto-limit-server",
   "version": "1.0.0",
-  "description": "Backend for Keto Limit",
+  "description": "Backend for Keto Train",
   "main": "server.mjs",
   "prettier": {
     "trailingComma": "es5",
