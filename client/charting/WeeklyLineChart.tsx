@@ -72,7 +72,7 @@ const WeeklyLineChart: FC<WeeklyLineChartProps> = ({
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.titleContainer}>
-                <Text style={styles.titleText}>KETO LIMIT</Text>
+                <Text style={styles.titleText}>KETO TRAIN</Text>
                 <ReText style={styles.priceText} text={mostRecent} />
             </View>
             <Animated.View style={styles.chartContainer}>

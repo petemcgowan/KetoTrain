@@ -46,7 +46,7 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
 }) => {
   const { trackerItems, setTrackerItems, setTotalCarbs } =
     useContext<TrackerContextType>(TrackerContext)
-
+  // console.log('GlycemicItem is rendering')
   // const { itemsForSelectedDate, selectedDate, setItemsForSelectedDate } =
   //   useContext<TimeContextType>(TimeContext)
   const dispatch = useDispatch()
@@ -76,7 +76,12 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
           borderColor: theme.tableLineColor,
           borderWidth: 1,
           flexDirection: 'row',
-          backgroundColor: carbBackgroundColor,
+          backgroundColor:
+            carbAmt > 22
+              ? theme.badBackground
+              : carbAmt > 11
+              ? theme.middlingBackground
+              : theme.tableBackground,
           alignItems: 'center',
           // width: width * 0.7,
         },
@@ -140,11 +145,6 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
   //   }
   // }
 
-  useEffect(() => {
-    // console.log('useEffect(GlycemicItem) called')
-  }, [])
-  // }, [favFoodList, carbBackgroundColor])
-
   return (
     <View style={dynamicStyles.foodRowContainer}>
       {/* <TouchableOpacity onPress={addTrackerItem}> */}
@@ -155,7 +155,14 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
       <View
         style={[
           styles.carbAmtContainer,
-          { backgroundColor: carbBackgroundColor },
+          {
+            backgroundColor:
+              carbAmt > 22
+                ? theme.badBackground
+                : carbAmt > 11
+                ? theme.middlingBackground
+                : theme.tableBackground,
+          },
         ]}
       >
         <Text style={styles.carbAmtText}>{carbAmt}</Text>
@@ -200,6 +207,7 @@ function arePropsEqual(
   return prevProps.descriptionGI === nextProps.descriptionGI
 }
 export default memo(GlycemicItem, arePropsEqual)
+// export default GlycemicItem
 
 const getStyles = (theme) =>
   StyleSheet.create({

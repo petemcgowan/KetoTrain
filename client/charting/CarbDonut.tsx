@@ -28,7 +28,7 @@ interface DonutProps {
 
 export default function CarbDonut({
   percentage,
-  radius = width * 0.35,
+  radius = width * 0.3,
   strokeWidth = 15,
   duration = 720,
   color,

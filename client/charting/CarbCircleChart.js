@@ -4,10 +4,11 @@ import { View, SafeAreaView, StyleSheet } from 'react-native'
 import CarbDonut from './CarbDonut'
 import TrackerContext from '../state/TrackerContext'
 import { ThemeContext } from '../state/ThemeContext'
+import { getTotalCarbsForSpecificDayGU } from '../components/GlycemicUtils'
 
-export default function CarbCircleChart({ focused }) {
+export default function CarbCircleChart({ focused, selectedDate, totalCarbs }) {
   console.log('CarbCircleChart is rendering')
-  const { totalCarbs } = useContext(TrackerContext)
+  const { trackerItems, setTotalCarbs } = useContext(TrackerContext)
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
@@ -15,14 +16,19 @@ export default function CarbCircleChart({ focused }) {
   const { theme } = context
   const styles = getStyles(theme)
 
-  let colorOfCarbChart = theme.middlingBackground
+  let colorOfCarbChart = theme.goodText
   if (totalCarbs > 50) {
-    colorOfCarbChart = theme.badBackground
+    colorOfCarbChart = theme.middlingText
+  }
+  if (totalCarbs > 100) {
+    colorOfCarbChart = theme.badText
   }
 
   useEffect(() => {
-    console.log('useEffect CarbCircleChart, totalCarbs' + totalCarbs)
-  }, [totalCarbs])
+    if (trackerItems && trackerItems.length > 0) {
+      getTotalCarbsForSpecificDayGU(trackerItems, new Date(), setTotalCarbs)
+    }
+  }, [trackerItems])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,7 +44,7 @@ export default function CarbCircleChart({ focused }) {
           key={1}
           percentage={totalCarbs}
           color={colorOfCarbChart}
-          max={100}
+          max={120}
           // max1={100}
           // max2={100}
           focused={focused}
