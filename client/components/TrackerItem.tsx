@@ -18,6 +18,7 @@ import {
   formatDateToYYYYMMDD,
   formatDateToISO,
   favouriteFoodItem,
+  getTotalCarbsForSpecificDayGU,
 } from './GlycemicUtils'
 import { TrackerContextType } from '../types/TrackerContextType'
 // import { SearchFoodContextType } from '../types/SearchFoodContextType'
@@ -51,15 +52,7 @@ const TrackerItem = ({
   const dispatch = useDispatch()
   const favFoodList = useSelector((state: RootState) => state.favFoodList)
 
-  // const { itemsForSelectedDate, selectedDate, setItemsForSelectedDate } =
-  //   useContext<TimeContextType>(TimeContext)
-
-  // const { searchFoodList, setSearchFoodList } =
-  //   useContext<SearchFoodContextType>(SearchFoodContext)
-
   const { foodData } = useContext<FoodContextType>(FoodContext)
-  // const { favFoodList, setFavFoodList } =
-  //   useContext<FavFoodContextType>(FavFoodContext)
   const { userId } = useContext(UserContext)
   const context = useContext(ThemeContext)
   if (!context) {
@@ -78,7 +71,12 @@ const TrackerItem = ({
           alignItems: 'center',
           borderColor: theme.tableLineColor,
           borderWidth: 1,
-          backgroundColor: carbBackgroundColor,
+          backgroundColor:
+            item.carbAmt > 22
+              ? theme.badBackground
+              : item.carbAmt > 11
+              ? theme.middlingBackground
+              : theme.tableBackground,
         },
       }),
     [trackerItems] // carbBackgroundColor (not needed i assume)
@@ -121,6 +119,7 @@ const TrackerItem = ({
       item.foodFactsId,
       item.portionCount
     )
+    getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
     // console.log('trackerItems:' + JSON.stringify(trackerItems))
   }
 
@@ -149,6 +148,7 @@ const TrackerItem = ({
         item.portionCount
       )
     }
+    getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
   }
 
   const favouriteTrackerItem = () => {
@@ -207,26 +207,12 @@ const TrackerItem = ({
     )
     setItemsForSelectedDate(newItemsForSelectedDate)
 
-    // const newTrackerItems = trackerItems.filter(({ description }) => {
-    //     return description !== item.description
-    //   })
-    //   setTrackerItems(newTrackerItems)
+    // let totalCarbs = 0
+    // itemsForSelectedDate.forEach((trackerItem) => {
+    //   totalCarbs += trackerItem.carbAmt * trackerItem.portionCount
+    // })
 
-    //   const newItemsForSelectedDate = itemsForSelectedDate.filter(
-    //     ({ description }) => {
-    //       return description !== item.description
-    //     }
-    //   )
-    //   setItemsForSelectedDate(newItemsForSelectedDate)
-
-    // setTrackerSelected(0)
-
-    let totalCarbs = 0
-    itemsForSelectedDate.forEach((trackerItem) => {
-      totalCarbs += trackerItem.carbAmt * trackerItem.portionCount
-    })
-
-    setTotalCarbs(totalCarbs)
+    // setTotalCarbs(totalCarbs)
 
     const itemsToSerialize = [
       {
@@ -241,7 +227,8 @@ const TrackerItem = ({
     const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
 
     // save to the database (including the delete)
-    saveConsumptionLogs(item, itemsToSerialize, dayToUpdate, true, false)
+    saveConsumptionLogs(itemsToSerialize, dayToUpdate, true, false)
+    getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
   }
 
   return (
