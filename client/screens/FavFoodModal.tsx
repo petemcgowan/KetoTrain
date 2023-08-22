@@ -14,16 +14,15 @@ import { FoodDataType } from '../types/FoodDataType'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/reducers'
 import { ThemeContext, themes } from '../state/ThemeContext'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
-const { width, height } = Dimensions.get('screen')
+const { height } = Dimensions.get('window')
 
 const FavFoodModal: React.FC<{
   isVisible: boolean
   onClose: () => void
   onSave: (selectedFoods: FoodDataType[]) => void
 }> = ({ isVisible, onClose, onSave }) => {
-  const { setTheme } = useContext(ThemeContext)
-
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
@@ -58,7 +57,7 @@ const FavFoodModal: React.FC<{
       <SafeAreaView style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalHeaderText}>Add Food</Text>
+            <Text style={styles.modalHeaderText}>Add Food To Track</Text>
           </View>
           <FlatList
             data={favFoodList}
@@ -73,11 +72,14 @@ const FavFoodModal: React.FC<{
                 }}
               >
                 <Text
-                  style={{
-                    color: selectedFoods.has(item.foodFactsId)
-                      ? 'white'
-                      : 'white',
-                  }}
+                  style={[
+                    {
+                      color: selectedFoods.has(item.foodFactsId)
+                        ? 'white'
+                        : 'white',
+                    },
+                    styles.tableText,
+                  ]}
                 >
                   {item.foodName}
                 </Text>
@@ -86,18 +88,23 @@ const FavFoodModal: React.FC<{
             keyExtractor={(item) => item.foodFactsId.toString()}
           />
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={onClose}>
-              <View style={styles.buttonView}>
+            <TouchableOpacity onPress={onClose} style={styles.buttonTouchable}>
+              <View style={styles.innerButtonView}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </View>
             </TouchableOpacity>
-            <View style={styles.buttonView}>
-              <TouchableOpacity onPress={handleSave}>
-                <View style={styles.buttonView}>
-                  <Text style={styles.buttonText}>OK</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              onPress={() => {
+                handleSave()
+                console.log('after handleSave')
+                setSelectedFoods(new Set())
+              }}
+              style={styles.buttonTouchable}
+            >
+              <View style={styles.innerButtonView}>
+                <Text style={styles.buttonText}>OK</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>
@@ -113,18 +120,22 @@ const getStyles = (theme) => {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      // backgroundColor: 'rgba(0, 0, 0, 0.5)',
       backgroundColor: 'transparent',
     },
     modalView: {
       justifyContent: 'center',
       alignItems: 'center',
       width: '80%',
-      height: '50%',
+      height: '60%',
       backgroundColor: theme.viewBackground,
     },
     modalHeaderText: {
       color: theme.buttonText,
+      fontSize: RFPercentage(3.0),
+    },
+    tableText: {
+      color: theme.buttonText,
+      fontSize: RFPercentage(2.7),
     },
     modalHeader: {
       width: '100%',
@@ -134,22 +145,24 @@ const getStyles = (theme) => {
     },
     buttonText: {
       color: theme.buttonText,
+      fontSize: RFPercentage(2.7),
+      textAlign: 'center',
     },
-    buttonView: {
+    buttonTouchable: {
       justifyContent: 'center',
       alignItems: 'center',
-      flex: 0.5,
-      height: height * 0.05,
+      width: '50%',
+      height: '100%',
       backgroundColor: theme.buttonBackground,
-      // width: '80%',
-      // height: '50%',
+    },
+    innerButtonView: {
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     buttonContainer: {
+      height: height * 0.1,
       flexDirection: 'row',
       width: '100%',
-      // justifyContent: 'space-between',
-      justifyContent: 'center',
-      alignItems: 'center',
     },
   })
 }
