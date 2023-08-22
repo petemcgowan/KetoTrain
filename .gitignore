@@ -76,3 +76,32 @@ design/logo/design ideas
 KetoLimit.code-workspace
 server/connection.json
 .env
+client/.env.debug
+client/.env.release
+KetoTrain.code-workspace
+client/auth/android/debug/google-services.json
+client/auth/android/debug .dev/google-services.json
+client/auth/android/release/google-services.json
+client/auth/android/release .release/google-services.json
+client/auth/client_534592509466-6jf73c1nq7qj3i24i9259ejuedb7jd9b.apps.googleusercontent.com.plist
+client/auth/client_534592509466-emk8vddvuarhkrqhdv1qlp5rg5ddtagi.apps.googleusercontent.com.plist
+client/auth/client_secret_534592509466-3v4edkbk66kelpart53633gvqfccfmrp.apps.googleusercontent.com.json
+client/auth/client_secret_534592509466-mla9cae97f60gjl773k5h79r5m1m51n5.apps.googleusercontent.com.json
+client/auth/client_secret_534592509466-n718suf9ep50hn8vm4p4fuc5ib48ep1t.apps.googleusercontent.com (1).json
+client/auth/client_secret_534592509466-n718suf9ep50hn8vm4p4fuc5ib48ep1t.apps.googleusercontent.com.json
+client/auth/client_secret_534592509466-r0b52u6k67qqluglvd7eo6sptlsf1eqr.apps.googleusercontent.com.json
+client/auth/client_secret_534592509466-tfde9rsgmmeahtknghht7rbjt14e0m0c.apps.googleusercontent.com.json
+client/auth/ios/debug/GoogleService-Info-Debug.plist
+client/auth/ios/debug/GoogleService-Info-Release.plist
+client/auth/ios/debug/GoogleService-Info.plist
+client/auth/ios/release/GoogleService-Info.plist
+client/ios/KetoLimit/GoogleService-Info-Debug.plist
+client/ios/KetoLimit/GoogleService-Info-Release.plist
+client/ios/KetoLimit/GoogleService-Info.plist
+client/android/app/src/main/res/values/strings.xml
+client/android/app/src/dev/debug/google-services.json
+client/android/app/src/dev/release/google-services.json
+client/android/app/src/prod/debug/google-services.json
+client/android/app/src/prod/release/google-services.json
+client/auth/google-services.json
+client/auth/Keto Limit Auth Release worksheet.md

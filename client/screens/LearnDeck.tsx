@@ -48,7 +48,7 @@ const slides = [
     //It can help regulate blood sugar, improve mental clarity, and even boost longevity. \n\nIntermittent fasting also promotes autophagy, the body's process for cleaning out damaged cells and regenerating new ones. Combining it with keto can amplify fat burning and health benefits. \n\nHowever, just like keto, it's important to approach intermittent fasting mindfully and ensure it's suitable for your individual needs.
     referenceLink:
       'https://www.health.harvard.edu/blog/intermittent-fasting-surprising-update-2018062914156',
-    referenceSource: 'Source: Harvard Health Blog</a>',
+    referenceSource: 'Source: Harvard Health Blog',
     image: require('../assets/images/learn/IntermittentFasting_sandglass_sand.jpg'),
   },
   {
@@ -67,7 +67,7 @@ const slides = [
     //Opt for water or unsweetened beverages to avoid hidden carbs. \n\nElectrolytes, which are vital for muscle function and other body processes, can be lost more rapidly on keto, so hydrating with electrolyte-rich sources, like bone broth or electrolyte tablets, can be beneficial. \n\nFurthermore, proper hydration supports kidney function and helps the body rid itself of waste products more efficiently. \n\nRemember, it's not just the amount, but also the timing of water intake that matters – evenly spacing it throughout the day ensures optimal absorption.
     referenceLink:
       'https://www.mayoclinic.org/healthy-lifestyle/nutrition-and-healthy-eating/in-depth/water/art-20044256',
-    referenceSource: 'Source: Mayo Clinic</a>',
+    referenceSource: 'Source: Mayo Clinic',
     image: require('../assets/images/learn/DrinkUp_refreshing_glass_of_pure_spring_water.jpg'),
   },
   {
