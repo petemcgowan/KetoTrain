@@ -81,21 +81,6 @@ const getStyles = (theme) =>
     searchAndList_container: {
       backgroundColor: theme.viewBackground,
     },
-    // italic: {
-    //   fontStyle: 'italic',
-    // },
-    // searchContainer: {
-    //   width: width * 0.85,
-    //   flexDirection: 'row',
-    //   alignItems: 'center',
-    //   backgroundColor: theme.viewBackground,
-    //   paddingLeft: 10,
-    //   borderRadius: 10,
-    //   borderColor: theme.tableLineColor,
-    //   borderWidth: 2,
-    //   marginLeft: 10,
-    //   marginVertical: 5,
-    // },
     searchAndFavourite: {
       flexDirection: 'row',
     },
@@ -105,12 +90,6 @@ const getStyles = (theme) =>
       justifyContent: 'center',
       width: width * 0.15,
     },
-    // searchInput: {
-    //   paddingTop: 5,
-    //   fontSize: RFPercentage(3.5),
-    //   color: theme.buttonText,
-    //   marginLeft: 2,
-    // },
     errorContainer: {
       flex: 1,
       justifyContent: 'center',

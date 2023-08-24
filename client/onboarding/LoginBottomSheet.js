@@ -6,9 +6,11 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  Platform,
 } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
-
+// import { AppleButton } from '@invertase/react-native-apple-authentication'
+import AppleSignInButton from './AppleSignInButton'
 import BottomSheet from 'reanimated-bottom-sheet'
 import hands_logging_in from '../assets/images/login_hands_logging_in_2.png'
 import GoogleSignInButton from './GoogleSignInButton'
@@ -19,10 +21,11 @@ export default function LoginBottomSheet({
   sheetRef,
   onStartNowPress,
   handleGoogleLogin,
+  onAppleButtonPress,
   isSigninInProgress,
 }) {
   useEffect(() => {
-    console.log('LoginBottomSheet, useEffect')
+    // console.log('LoginBottomSheet, useEffect')
   }, [])
 
   const renderContent = () => {
@@ -37,11 +40,26 @@ export default function LoginBottomSheet({
         <View style={styles.imageContainer}>
           <Image style={styles.image} source={hands_logging_in}></Image>
         </View>
-        <View style={styles.panelFooter}>
-          <GoogleSignInButton
-            onPress={handleGoogleLogin}
-            disabled={isSigninInProgress}
-          />
+        <View style={styles.buttonContainer}>
+          {/* <TouchableOpacity
+            onPress={() => {
+              console.log('alternate button pressed!')
+              onAppleButtonPress()
+            }}
+          >
+            <Text>Test Apple Sign In</Text>
+          </TouchableOpacity> */}
+          {Platform.OS === 'ios' && (
+            <View style={styles.appleButtonContainer}>
+              <AppleSignInButton onPress={onAppleButtonPress} />
+            </View>
+          )}
+          <View style={styles.googleButtonContainer}>
+            <GoogleSignInButton
+              onPress={handleGoogleLogin}
+              disabled={isSigninInProgress}
+            />
+          </View>
         </View>
       </View>
     )
@@ -50,7 +68,7 @@ export default function LoginBottomSheet({
   return (
     <BottomSheet
       ref={sheetRef}
-      snapPoints={[0, height * 0.5]}
+      snapPoints={[0, height * 0.6]}
       borderRadius={10}
       renderContent={renderContent}
     />
@@ -60,11 +78,17 @@ export default function LoginBottomSheet({
 const styles = StyleSheet.create({
   panel: {
     backgroundColor: 'rgb(32, 32, 32)',
-    height: height * 0.5,
+    height: height * 0.6,
     padding: 20,
     justifyContent: 'space-between',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+  },
+  appleButtonContainer: {
+    marginBottom: 10,
+  },
+  googleButtonContainer: {
+    marginBottom: 10,
   },
   panelHeader: {
     flexDirection: 'row',
@@ -94,8 +118,8 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  panelFooter: {
-    flexDirection: 'row',
+  buttonContainer: {
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
