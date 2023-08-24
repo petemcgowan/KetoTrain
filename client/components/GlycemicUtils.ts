@@ -104,7 +104,6 @@ export type DataPoint = {
 }
 
 export const saveConsumptionLogs = async (
-  trackerItem: TrackerItemType,
   addedItems: {
     foodFactsId: number
     consumptionDate: string
@@ -115,20 +114,9 @@ export const saveConsumptionLogs = async (
   toBeInserted: boolean
 ) => {
   try {
-    console.log(
-      'saveConsumptionLogs, trackerItem:',
-      JSON.stringify(trackerItem) + ', dayToUpdate:' + dayToUpdate
-    )
-    console.log(
-      'saveConsumptionLogs, addedItems:',
-      JSON.stringify(addedItems) +
-        ', toBeDeleted:' +
-        toBeDeleted +
-        ', toBeInserted:' +
-        toBeInserted
-    )
     const consumptionResponse = await axios({
-      url: 'http://109.76.67.82:4001/keto-graphql',
+      // url: 'http://109.76.67.82:4001/keto-graphql',
+      url: 'http://localhost:4001/keto-graphql',
       // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
       method: 'post',
       data: {
@@ -160,7 +148,8 @@ export const getFavouriteFoods = async (userId: number | null, theme) => {
   try {
     console.log('getFavouriteFoods, userId:' + userId)
     const favouriteFoodResponse = await axios({
-      url: 'http://192.168.68.103:4001/keto-graphql',
+      // url: 'http://192.168.68.103:4001/keto-graphql',
+      url: 'http://localhost:4001/keto-graphql',
       // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
       method: 'post',
       data: {
@@ -234,7 +223,8 @@ export const saveFavouriteFoods = async (
         JSON.stringify(favouriteFoods)
     )
     const favouriteFoodResponse = await axios({
-      url: 'http://192.168.68.103:4001/keto-graphql',
+      // url: 'http://192.168.68.103:4001/keto-graphql',
+      url: 'http://localhost:4001/keto-graphql',
       // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
       method: 'post',
       data: {
@@ -256,6 +246,30 @@ export const saveFavouriteFoods = async (
   } catch (error) {
     console.error('Error fetching favourite foods:', error)
   }
+}
+
+export const getTotalCarbsForSpecificDayGU = (
+  trackerItems,
+  selectedDate,
+  setTotalCarbs
+) => {
+  let carbsForDayAmt = 0
+  console.log('selectedDate(KetoTracker):' + JSON.stringify(selectedDate))
+  trackerItems.map((item) => {
+    const itemDate = new Date(item.consumptionDate)
+
+    if (
+      itemDate.getFullYear() === selectedDate.getFullYear() &&
+      itemDate.getMonth() === selectedDate.getMonth() &&
+      itemDate.getDate() === selectedDate.getDate()
+    ) {
+      carbsForDayAmt = carbsForDayAmt + item.carbAmt * item.portionCount
+    }
+  })
+  setTotalCarbs(carbsForDayAmt)
+  console.log('getTotalCarbsForSpecificDayGU, carbsForDayAmt:' + carbsForDayAmt)
+
+  return carbsForDayAmt
 }
 
 // export const getTotalCarbsForSpecificDay = (selectedDate: Date ) => {
