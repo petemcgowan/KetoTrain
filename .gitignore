@@ -105,3 +105,5 @@ client/android/app/src/prod/debug/google-services.json
 client/android/app/src/prod/release/google-services.json
 client/auth/google-services.json
 client/auth/Keto Limit Auth Release worksheet.md
+firebase/android/google-services.json
+release/mockups/Keto Train with images.mockup
