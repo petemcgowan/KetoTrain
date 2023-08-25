@@ -56,7 +56,7 @@ const BottomTabNavigator = () => {
         <Tab.Screen
           name="Track"
           component={KetoTrackerScreen}
-          options={{
+          options={({ navigation }) => ({
             tabBarIcon: ({ ref }) => (
               <Lottie
                 ref={ref}
@@ -82,6 +82,17 @@ const BottomTabNavigator = () => {
               color: '#BBBccc',
               fontSize: RFPercentage(1.8),
             },
+            headerLeft: () => (
+              <View style={styles.settingsButton}>
+                <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                  <FontAwesome5
+                    name="cog"
+                    size={RFPercentage(3.7)}
+                    color={theme.tabHeaderText}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
             headerRight: () => (
               <View style={styles.colourSchemeButton}>
                 <TouchableOpacity
@@ -103,7 +114,7 @@ const BottomTabNavigator = () => {
                 </TouchableOpacity>
               </View>
             ),
-          }}
+          })}
         />
         <Tab.Screen
           name="Search"
@@ -273,6 +284,10 @@ const getStyles = (theme) =>
     },
     colourSchemeButton: {
       marginRight: 10,
+      marginBottom: 5,
+    },
+    settingsButton: {
+      marginLeft: 10,
       marginBottom: 5,
     },
   })
