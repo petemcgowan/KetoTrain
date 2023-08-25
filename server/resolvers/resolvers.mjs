@@ -10,6 +10,7 @@ import {
   createLogsForPastWeek,
   updatePortionAmount,
   setupFavouriteFoods,
+  deleteUserFunction,
   // getWaterConsumptions,
   // getWeightLogs,
   getUserInfo,
@@ -42,6 +43,7 @@ export const resolvers = {
       throw error
     }
   },
+  deleteUser: deleteUserFunction,
   getUserDashboardData: async (args, context, info) => {
     try {
       const emailAddress = args.userDashboardInput.emailAddress

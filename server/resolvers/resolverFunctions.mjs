@@ -10,6 +10,37 @@ import Sequelize, { Op } from 'sequelize'
 import { sequelize } from '../db/sequelizeSetup.mjs'
 import { toSnakeCase } from '../schema/DatabaseUtils.mjs'
 
+// const { ConsumptionLog, FavouriteFood, User } = require('./models')
+// import { ConsumptionLogs } from '../models/ConsumptionLogs.mjs'
+// import { FavouriteFood } from '../models/FavouriteFoods.mjs'
+// import { User } from '../models/Users.mjs'
+
+export const deleteUserFunction = async (args, context, info) => {
+  try {
+    // Delete from consumption_logs
+    await ConsumptionLogs.destroy({
+      where: { user_id: args.userId },
+    })
+
+    // Delete from favourite_foods
+    await FavouriteFoods.destroy({
+      where: { user_id: args.userId },
+    })
+
+    // Delete from users
+    await Users.destroy({
+      where: { user_id: args.userId },
+    })
+
+    return true
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+// module.exports = { deleteUserFunction };
+
 export async function getUserInfo(emailAddress) {
   try {
     // Retrieve user details

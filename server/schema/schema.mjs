@@ -124,6 +124,7 @@ export const schema = buildSchema(`
     fillFoodFacts: [FoodFacts]
     replaceConsumptionLogs(addedItems: [ConsumptionLogInput]!, dayToUpdate: String!, toBeDeleted: Boolean!, toBeInserted: Boolean! ): [ConsumptionLogs]
     setFavouriteFoods(favouriteFoods: [FavouriteFoodsInput]!, userId: Int!): FavouriteFoods
+    deleteUser(userId: Int!): Boolean!
     setGLWaterConsumption(waterConsumptions: [WaterConsumptionsInput!]!): [WaterConsumptions]!
     setGLWeightLogs(weightLogs: [WeightLogsInput!]!): [WeightLogs]!
     updatePortionAmount(userId: Int!, consumptionDate: String!, foodFactsId: Int!, portionAmount: Int!): Boolean
