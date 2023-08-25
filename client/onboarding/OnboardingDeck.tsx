@@ -15,6 +15,7 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import LoginBottomSheet from './LoginBottomSheet'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import UserContext, { UserContextProps } from '../state/UserContext'
+import { appleAuth } from '@invertase/react-native-apple-authentication'
 
 const { width, height } = Dimensions.get('window')
 
@@ -97,9 +98,59 @@ const OnboardingDeck = () => {
       console.log('userInfo:' + JSON.stringify(userInfo))
       setEmailAddress(userInfo.user.email)
       navigation.navigate('LoadingScreen')
+      sheetRef.current?.snapTo(1)
+      console.log('sheet closed snapping to 1')
+      setIsSheetOpen(false)
       setSigninInProgress(false)
     } catch (error) {
       console.log('Error in handleGoogleLogin:' + error)
+    }
+  }
+
+  async function onAppleButtonPress() {
+    try {
+      setSigninInProgress(true)
+      console.log('handleAppleLogin')
+
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+      })
+      console.log(
+        'appleAuthRequestResponse:' + JSON.stringify(appleAuthRequestResponse)
+      )
+
+      const credentialState = await appleAuth.getCredentialStateForUser(
+        appleAuthRequestResponse.user
+      )
+      console.log('credentialState:' + JSON.stringify(credentialState))
+
+      if (credentialState === appleAuth.State.AUTHORIZED) {
+        // User is authenticated with Apple. Handle accordingly.
+        // You can now set their email or other details and navigate them to your app's main screen.
+        console.log(
+          'credentialState authorized, appleAuthRequestResponse.email:' +
+            appleAuthRequestResponse.email
+        )
+        if (appleAuthRequestResponse.email) {
+          setEmailAddress(appleAuthRequestResponse.email)
+        } else {
+          setEmailAddress(appleAuthRequestResponse.user) // for anonymized users, this is our uniqueness
+        }
+        navigation.navigate('LoadingScreen')
+      } else {
+        console.error(
+          "I'm not expecting this control flow, the user has not been authorized by Apple, appleAuthRequestResponse.email:",
+          appleAuthRequestResponse.email
+        )
+      }
+      sheetRef.current?.snapTo(1)
+      console.log('sheet closed snapping to 1')
+      setIsSheetOpen(false)
+
+      setSigninInProgress(false)
+    } catch (error) {
+      console.log('Error in handleAppleLogin:', error)
     }
   }
 
@@ -177,9 +228,9 @@ const OnboardingDeck = () => {
           <Text style={styles.buttonText}>Start Now</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.link} onPress={onLinkPress}>
+        {/* <TouchableOpacity style={styles.link} onPress={onLinkPress}>
           <Text style={styles.linkText}>Already have an account?</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View
         style={
@@ -190,6 +241,7 @@ const OnboardingDeck = () => {
           sheetRef={sheetRef}
           onStartNowPress={onStartNowPress}
           handleGoogleLogin={handleGoogleLogin}
+          onAppleButtonPress={onAppleButtonPress}
           isSigninInProgress={isSigninInProgress}
         />
       </View>

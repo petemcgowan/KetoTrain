@@ -34,17 +34,6 @@ export default function LoadingScreen() {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const findDuplicates = (data) => {
-    const publicFoodKeys = data.map((item) => item.publicFoodKey)
-    const duplicates = data.filter(
-      (item, index) =>
-        publicFoodKeys.indexOf(item.publicFoodKey) !== index &&
-        publicFoodKeys.lastIndexOf(item.publicFoodKey) === index
-    )
-
-    return duplicates
-  }
-
   useEffect(() => {
     console.log('App, useEffect')
     if (emailAddress) {
@@ -64,6 +53,7 @@ export default function LoadingScreen() {
       try {
         const userDashboardDataResponse = await axios({
           // url: 'http://192.168.68.103:4001/keto-graphql',
+          // url: 'http://localhost:4001/keto-graphql',
           url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
           method: 'post',
           data: {
@@ -239,7 +229,7 @@ export default function LoadingScreen() {
     const timeoutId = setTimeout(() => {
       console.log('about to navigate to MainApp')
       navigation.navigate('MainApp')
-    }, 1200) // wait
+    }, 1000) // wait
     // navigation.navigate('MainApp')
     return () => clearTimeout(timeoutId) // cleanup on component unmount
   }, [navigation])
