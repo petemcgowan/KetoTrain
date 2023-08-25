@@ -4,6 +4,8 @@ import { TrackerProvider } from './state/TrackerContext'
 import { FoodProvider } from './state/FoodContext'
 import { LogBox, Text } from 'react-native'
 import { TrackerItemType } from '../types/TrackerItemType'
+import { ApolloProvider } from '@apollo/client'
+import client from './components/apolloClient'
 
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -48,16 +50,18 @@ export default function App() {
   }, [])
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-        <ThemeProvider>
-          <TrackerProvider value={trackerProviderValue}>
-            <FoodProvider value={foodProviderValue}>
-              <CentralNavigation />
-            </FoodProvider>
-          </TrackerProvider>
-        </ThemeProvider>
-      </PersistGate>
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+          <ThemeProvider>
+            <TrackerProvider value={trackerProviderValue}>
+              <FoodProvider value={foodProviderValue}>
+                <CentralNavigation />
+              </FoodProvider>
+            </TrackerProvider>
+          </ThemeProvider>
+        </PersistGate>
+      </Provider>
+    </ApolloProvider>
   )
 }

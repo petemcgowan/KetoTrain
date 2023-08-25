@@ -38,29 +38,37 @@ export default function CentralNavigation() {
     }
   }, [])
 
+  console.log(
+    'CentralNavigation will render based on hasSeenIntro:' + hasSeenIntro
+  )
+  const initialRoute = hasSeenIntro ? 'LoadingScreen' : 'OnboardingDeck'
+
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName="OnboardingDeck"
+        initialRouteName={initialRoute}
         screenOptions={{ headerShown: false }}
       >
+        {/* {hasSeenIntro && ( */}
         <Stack.Screen name="OnboardingDeck" component={OnboardingDeck} />
+        {/* )} */}
         <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-        {hasSeenIntro && (
-          <Stack.Screen name="MainApp" options={{ headerShown: false }}>
-            {() => (
-              <Drawer.Navigator
-                drawerContent={(props) => <DrawerContent {...props} />}
-              >
-                <Drawer.Screen name="Home" component={BottomTabNavigator} />
-                <Drawer.Screen
-                  name="DeleteAccount"
-                  component={DeleteAccountScreen}
-                />
-              </Drawer.Navigator>
-            )}
-          </Stack.Screen>
-        )}
+        {/* {hasSeenIntro && ( */}
+        <Stack.Screen name="MainApp" options={{ headerShown: false }}>
+          {() => (
+            <Drawer.Navigator
+              drawerContent={(props) => <DrawerContent {...props} />}
+              screenOptions={{ headerShown: false }}
+            >
+              <Drawer.Screen name="Home" component={BottomTabNavigator} />
+              <Drawer.Screen
+                name="DeleteAccount"
+                component={DeleteAccountScreen}
+              />
+            </Drawer.Navigator>
+          )}
+        </Stack.Screen>
+        {/* )} */}
       </Stack.Navigator>
     </NavigationContainer>
   )

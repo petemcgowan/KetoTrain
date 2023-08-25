@@ -4,14 +4,21 @@
 import React, { useContext } from 'react'
 import { useMutation } from '@apollo/client'
 import { Alert, TouchableOpacity, View, StyleSheet, Text } from 'react-native'
-import { ThemeContext } from '../state/ThemeContext'
 import { useNavigation } from '@react-navigation/native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 // import { navigate } from './RootNavigation'
 import { DrawerNavigationProp } from '@react-navigation/drawer'
-import { RootParamList } from '../types/RootParamList'
 import { useDrawerStatus } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
+
+import { RootParamList } from '../types/RootParamList'
+import UserContext from '../state/UserContext'
+import { ThemeContext } from '../state/ThemeContext'
+import DELETE_USER from '../types/DELETE_USER'
+import { actionCreators } from '../redux/index'
+import { useDispatch } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
 type DeleteAccountScreenNavigationProp = DrawerNavigationProp<
   RootParamList,
   'DeleteAccountScreen'
@@ -30,21 +37,30 @@ export function DeleteAccountScreen() {
   const styles = getStyles(theme)
 
   const [deleteUser, { loading, error }] = useMutation(DELETE_USER)
+  const { userId } = useContext(UserContext)
+  const dispatch = useDispatch()
+  const { updateHasSeenIntro } = bindActionCreators(actionCreators, dispatch)
 
   const handleDelete = async () => {
     try {
       // Call GraphQL mutation to delete the account here
-      const response = await deleteUser({ variables: { userId: YOUR_USER_ID } })
+      const response = await deleteUser({ variables: { userId: userId } })
 
       if (response.data.deleteUser) {
-        // Success case...
+        // Success case.., show a confirmation message
+        Alert.alert('Success', 'Your account has been deleted.')
+        navigation.navigate('OnboardingDeck')
+        updateHasSeenIntro(false)
+      } else {
+        // Didn't delete case.., show a confirmation message
+        console.log('ERROR, the user may not have been deleted')
+        Alert.alert(
+          'Oops',
+          'the account may not have been deleted.  Try exiting/re-entering the app and try again'
+        )
       }
-      // Show a confirmation message
-      Alert.alert('Success', 'Your account has been deleted.')
-
-      // Redirect to OnboardingDeck route
-      navigation.navigate('OnboardingDeck')
     } catch (error) {
+      console.error('There was an error deleting your account.', error)
       Alert.alert('Error', 'There was an error deleting your account.')
     }
   }
