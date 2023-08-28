@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 import com.android.build.OutputFile
 
@@ -129,10 +129,27 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
+//project.ext.envConfigFiles = [
+//        debug: ".env.debug",
+//        release: ".env.release",
+//        devDebug: ".env.debug",
+//        devRelease: ".env.release",
+//        prodDebug: ".env.debug",
+//        prodRelease: ".env.release"
+//]
+//
+project.ext.envConfigFiles = [
+        debug: ".env.debug",
+        release: ".env.release",
+        release2: ".env.release"
+]
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
+
+    flavorDimensions "default"
 
     defaultConfig {
         applicationId "com.buachaillmaith.ketolimit"
@@ -141,6 +158,7 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+
 
         if (isNewArchitectureEnabled()) {
             // We configure the NDK build only if you decide to opt-in for the New Architecture.
@@ -225,6 +243,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file(project.property("RELEASE_KEYSTORE_FILE"))
+            storePassword project.property("RELEASE_STORE_PASSWORD")
+            keyAlias project.property("RELEASE_KEY_ALIAS")
+            keyPassword project.property("RELEASE_KEY_PASSWORD")
+        }
     }
     buildTypes {
         debug {
@@ -233,10 +257,63 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
+//            signingConfig signingConfigs.release
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+//            debuggable true
+//            buildConfigField 'boolean', 'LOGGING_ENABLED', 'true'
         }
+        release2 {
+            signingConfig signingConfigs.debug
+//            minifyEnabled enableProguardInReleaseBuilds
+//            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            buildConfigField 'boolean', 'LOGGING_ENABLED', 'true'
+        }
+    }
+//    buildTypes {
+//        debug {
+//            signingConfig signingConfigs.debug
+//        }
+//        release {
+//            // Caution! In production, you need to generate your own keystore file.
+//            // see https://reactnative.dev/docs/signed-apk-android.
+//            signingConfig signingConfigs.debug
+//            minifyEnabled false
+//            /**minifyEnabled enableProguardInReleaseBuilds
+//            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"*/
+//        }
+//    }
+//    flavorDimensions "default"
+//    productFlavors {
+//        dev {
+//            dimension "default"
+//            applicationIdSuffix ".dev"
+//            versionNameSuffix "-dev"
+//            resValue "string", "build_config_package", "com.buachaillmaith.ketolimit"
+//        }
+//        prod {
+//            dimension "default"
+//            resValue "string", "build_config_package", "com.buachaillmaith.ketolimit"
+//        }
+//    }
+//    productFlavors {
+//        dev {
+//            dimension "default"
+//            applicationId "com.buachaillmaith.ketolimit.dev"
+//            resValue "string", "build_config_package", "com.buachaillmaith.ketolimit.dev"
+//        }
+//        prod {
+//            dimension "default"
+//            applicationId "com.buachaillmaith.ketolimit.release"
+//            resValue "string", "build_config_package", "com.buachaillmaith.ketolimit.release"
+//        }
+//    }
+
+
+    // Dynamically assign envFile based on the build variant
+    applicationVariants.all { variant ->
+        variant.resValue "string", "ENVFILE", project.envConfigFiles[variant.name]
     }
 
     // applicationVariants are e.g. debug, release

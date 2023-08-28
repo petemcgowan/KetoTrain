@@ -5,7 +5,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 buildscript {
     ext {
         buildToolsVersion = "33.0.0"
-        minSdkVersion = 21
+        minSdkVersion = 26
         compileSdkVersion = 33
         targetSdkVersion = 33
         googlePlayServicesAuthVersion = "19.2.0"
