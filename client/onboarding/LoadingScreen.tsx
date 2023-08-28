@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react'
-import { View, StyleSheet, Text, Dimensions } from 'react-native'
+import { View, StyleSheet, Text, Dimensions, Alert } from 'react-native'
 import LottieView from 'lottie-react-native'
 import { useNavigation } from '@react-navigation/native'
 import TrackerContext from '../state/TrackerContext'
@@ -34,7 +34,7 @@ export default function LoadingScreen() {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log('App, useEffect')
     if (emailAddress) {
       console.log(`User ID is ${emailAddress}`)
@@ -222,16 +222,32 @@ export default function LoadingScreen() {
         }
       } catch (error) {
         console.error('Error fetching food facts:', error)
+        console.log(
+          'Error details:',
+          error.config,
+          error.request,
+          error.message,
+          error.response
+        )
+        return false
       }
+      return true
     }
 
-    getUserDashboardData()
-    const timeoutId = setTimeout(() => {
-      console.log('about to navigate to MainApp')
-      navigation.navigate('MainApp')
-    }, 1000) // wait
-    // navigation.navigate('MainApp')
-    return () => clearTimeout(timeoutId) // cleanup on component unmount
+    const returnSuccess = await getUserDashboardData()
+    if (returnSuccess) {
+      const timeoutId = setTimeout(() => {
+        console.log('about to navigate to MainApp')
+        navigation.navigate('MainApp')
+      }, 1000) // wait
+      return () => clearTimeout(timeoutId) // cleanup on component unmount
+    } else {
+      Alert.alert(
+        'Oops',
+        'Cannot connect to the server!  Try again but contact support if it persists! '
+      )
+      navigation.navigate('OnboardingDeck')
+    }
   }, [navigation])
 
   return (

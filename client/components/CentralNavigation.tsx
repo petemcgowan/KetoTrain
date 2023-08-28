@@ -4,7 +4,10 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { DrawerContent } from './DrawerContent'
 import { createStackNavigator } from '@react-navigation/stack'
-import { appleAuth } from '@invertase/react-native-apple-authentication'
+
+let appleAuth
+// import { appleAuth } from '@invertase/react-native-apple-authentication'
+
 import { navigationRef } from './RootNavigation'
 
 import BottomTabNavigator from '../screens/BottomTabNavigator'
@@ -16,6 +19,7 @@ import { useDispatch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { RootState } from '../redux/index'
 import { DeleteAccountScreen } from './DeleteAccountScreen'
+import { Platform } from 'react-native'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -26,15 +30,22 @@ export default function CentralNavigation() {
   const dispatch = useDispatch()
   const { updateHasSeenIntro } = bindActionCreators(actionCreators, dispatch)
 
-  useEffect(() => {
-    const unsubscribe = appleAuth.onCredentialRevoked(async () => {
-      console.warn('User’s Apple credentials have been revoked')
-      // Handle the revocation - possibly sign the user out or show a notification.
-    })
+  if (Platform.OS === 'ios') {
+    appleAuth = require('@invertase/react-native-apple-authentication')
+    // AppleAuth related code here
+  }
 
-    // remove the listener when the component is unmounted.
-    return () => {
-      unsubscribe()
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      const unsubscribe = appleAuth.onCredentialRevoked(async () => {
+        console.warn('User’s Apple credentials have been revoked')
+        // Handle the revocation - possibly sign the user out or show a notification.
+      })
+
+      // remove the listener when the component is unmounted.
+      return () => {
+        unsubscribe()
+      }
     }
   }, [])
 

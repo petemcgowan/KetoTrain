@@ -116,8 +116,8 @@ export const saveConsumptionLogs = async (
   try {
     const consumptionResponse = await axios({
       // url: 'http://109.76.67.82:4001/keto-graphql',
-      url: 'http://localhost:4001/keto-graphql',
-      // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
+      // url: 'http://localhost:4001/keto-graphql',
+      url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
       method: 'post',
       data: {
         query: `
@@ -149,8 +149,8 @@ export const getFavouriteFoods = async (userId: number | null, theme) => {
     console.log('getFavouriteFoods, userId:' + userId)
     const favouriteFoodResponse = await axios({
       // url: 'http://192.168.68.103:4001/keto-graphql',
-      url: 'http://localhost:4001/keto-graphql',
-      // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
+      // url: 'http://localhost:4001/keto-graphql',
+      url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
       method: 'post',
       data: {
         query: `
@@ -224,8 +224,8 @@ export const saveFavouriteFoods = async (
     )
     const favouriteFoodResponse = await axios({
       // url: 'http://192.168.68.103:4001/keto-graphql',
-      url: 'http://localhost:4001/keto-graphql',
-      // url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
+      // url: 'http://localhost:4001/keto-graphql',
+      url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
       method: 'post',
       data: {
         query: `
