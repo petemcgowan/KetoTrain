@@ -1,0 +1,1245 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.3 (Debian 15.3-1.pgdg120+1)
+-- Dumped by pg_dump version 15.3
+
+-- Started on 2023-08-04 10:01:24 BST
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 237 (class 1255 OID 90297)
+-- Name: update_last_modified_ts_column(); Type: FUNCTION; Schema: public; Owner: ketotrainer
+--
+
+CREATE FUNCTION public.update_last_modified_ts_column() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+   NEW.last_modified_ts = now();
+   RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.update_last_modified_ts_column() OWNER TO ketotrainer;
+
+--
+-- TOC entry 238 (class 1255 OID 90298)
+-- Name: update_timestamp_column(); Type: FUNCTION; Schema: public; Owner: ketotrainer
+--
+
+CREATE FUNCTION public.update_timestamp_column() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    NEW."updated_at" = now();
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.update_timestamp_column() OWNER TO ketotrainer;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 214 (class 1259 OID 90299)
+-- Name: food_facts; Type: TABLE; Schema: public; Owner: ketotrainer
+--
+
+CREATE TABLE public.food_facts (
+    food_facts_id integer NOT NULL,
+    food_name character varying(255) NOT NULL,
+    public_food_key character varying(255) NOT NULL,
+    calcium double precision NOT NULL,
+    carbohydrates double precision NOT NULL,
+    classification double precision NOT NULL,
+    energy double precision NOT NULL,
+    fat_total double precision NOT NULL,
+    iodine double precision NOT NULL,
+    magnesium double precision NOT NULL,
+    potassium double precision NOT NULL,
+    protein double precision NOT NULL,
+    saturated_fat double precision NOT NULL,
+    sodium double precision NOT NULL,
+    total_dietary_fibre double precision NOT NULL,
+    total_sugars double precision NOT NULL,
+    creation_ts timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_ts timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.food_facts OWNER TO ketotrainer;
+
+--
+-- TOC entry 215 (class 1259 OID 90306)
+-- Name: FoodFacts_id_seq; Type: SEQUENCE; Schema: public; Owner: ketotrainer
+--
+
+CREATE SEQUENCE public."FoodFacts_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."FoodFacts_id_seq" OWNER TO ketotrainer;
+
+--
+-- TOC entry 3402 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: FoodFacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ketotrainer
+--
+
+ALTER SEQUENCE public."FoodFacts_id_seq" OWNED BY public.food_facts.food_facts_id;
+
+
+--
+-- TOC entry 216 (class 1259 OID 90307)
+-- Name: consumption_logs; Type: TABLE; Schema: public; Owner: ketotrainer
+--
+
+CREATE TABLE public.consumption_logs (
+    consumption_log_id integer NOT NULL,
+    food_facts_id integer,
+    consumption_date timestamp with time zone NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.consumption_logs OWNER TO ketotrainer;
+
+--
+-- TOC entry 217 (class 1259 OID 90312)
+-- Name: consumption_log_id_seq; Type: SEQUENCE; Schema: public; Owner: ketotrainer
+--
+
+CREATE SEQUENCE public.consumption_log_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+ALTER TABLE public.consumption_log_id_seq OWNER TO ketotrainer;
+
+--
+-- TOC entry 3403 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: consumption_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ketotrainer
+--
+
+ALTER SEQUENCE public.consumption_log_id_seq OWNED BY public.consumption_logs.consumption_log_id;
+
+
+--
+-- TOC entry 218 (class 1259 OID 90313)
+-- Name: favourite_foods; Type: TABLE; Schema: public; Owner: ketotrainer
+--
+
+CREATE TABLE public.favourite_foods (
+    favourite_foods_id integer NOT NULL,
+    user_id integer NOT NULL,
+    food_facts_id integer,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.favourite_foods OWNER TO ketotrainer;
+
+--
+-- TOC entry 219 (class 1259 OID 90318)
+-- Name: favourite_foods_id_seq; Type: SEQUENCE; Schema: public; Owner: ketotrainer
+--
+
+CREATE SEQUENCE public.favourite_foods_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.favourite_foods_id_seq OWNER TO ketotrainer;
+
+--
+-- TOC entry 3404 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: favourite_foods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ketotrainer
+--
+
+ALTER SEQUENCE public.favourite_foods_id_seq OWNED BY public.favourite_foods.favourite_foods_id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 90319)
+-- Name: users; Type: TABLE; Schema: public; Owner: ketotrainer
+--
+
+CREATE TABLE public.users (
+    user_id integer NOT NULL,
+    email_address character varying(255) NOT NULL,
+    user_name character varying(255),
+    last_login_date timestamp with time zone,
+    creation_ts timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    last_modified_ts timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO ketotrainer;
+
+--
+-- TOC entry 221 (class 1259 OID 90326)
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: ketotrainer
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO ketotrainer;
+
+--
+-- TOC entry 3405 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ketotrainer
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.user_id;
+
+
+--
+-- TOC entry 222 (class 1259 OID 90327)
+-- Name: water_consumptions; Type: TABLE; Schema: public; Owner: ketotrainer
+--
+
+CREATE TABLE public.water_consumptions (
+    water_consumptions_id integer NOT NULL,
+    user_id integer NOT NULL,
+    consumption_date timestamp with time zone NOT NULL,
+    litre_amount double precision NOT NULL
+);
+
+
+ALTER TABLE public.water_consumptions OWNER TO ketotrainer;
+
+--
+-- TOC entry 223 (class 1259 OID 90330)
+-- Name: water_consumptions_id_seq; Type: SEQUENCE; Schema: public; Owner: ketotrainer
+--
+
+CREATE SEQUENCE public.water_consumptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+ALTER TABLE public.water_consumptions_id_seq OWNER TO ketotrainer;
+
+--
+-- TOC entry 3406 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: water_consumptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ketotrainer
+--
+
+ALTER SEQUENCE public.water_consumptions_id_seq OWNED BY public.water_consumptions.water_consumptions_id;
+
+
+--
+-- TOC entry 224 (class 1259 OID 90331)
+-- Name: weight_logs; Type: TABLE; Schema: public; Owner: ketotrainer
+--
+
+CREATE TABLE public.weight_logs (
+    weight_logs_id integer NOT NULL,
+    user_id integer NOT NULL,
+    weigh_in_timestamp timestamp with time zone NOT NULL,
+    kg_amount double precision NOT NULL
+);
+
+
+ALTER TABLE public.weight_logs OWNER TO ketotrainer;
+
+--
+-- TOC entry 225 (class 1259 OID 90334)
+-- Name: weight_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: ketotrainer
+--
+
+CREATE SEQUENCE public.weight_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+ALTER TABLE public.weight_logs_id_seq OWNER TO ketotrainer;
+
+--
+-- TOC entry 3407 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: weight_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: ketotrainer
+--
+
+ALTER SEQUENCE public.weight_logs_id_seq OWNED BY public.weight_logs.weight_logs_id;
+
+
+--
+-- TOC entry 3206 (class 2604 OID 90335)
+-- Name: consumption_logs consumption_log_id; Type: DEFAULT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.consumption_logs ALTER COLUMN consumption_log_id SET DEFAULT nextval('public.consumption_log_id_seq'::regclass);
+
+
+--
+-- TOC entry 3209 (class 2604 OID 90336)
+-- Name: favourite_foods favourite_foods_id; Type: DEFAULT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.favourite_foods ALTER COLUMN favourite_foods_id SET DEFAULT nextval('public.favourite_foods_id_seq'::regclass);
+
+
+--
+-- TOC entry 3203 (class 2604 OID 90337)
+-- Name: food_facts food_facts_id; Type: DEFAULT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.food_facts ALTER COLUMN food_facts_id SET DEFAULT nextval('public."FoodFacts_id_seq"'::regclass);
+
+
+--
+-- TOC entry 3212 (class 2604 OID 90338)
+-- Name: users user_id; Type: DEFAULT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- TOC entry 3215 (class 2604 OID 90339)
+-- Name: water_consumptions water_consumptions_id; Type: DEFAULT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.water_consumptions ALTER COLUMN water_consumptions_id SET DEFAULT nextval('public.water_consumptions_id_seq'::regclass);
+
+
+--
+-- TOC entry 3216 (class 2604 OID 90340)
+-- Name: weight_logs weight_logs_id; Type: DEFAULT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.weight_logs ALTER COLUMN weight_logs_id SET DEFAULT nextval('public.weight_logs_id_seq'::regclass);
+
+
+--
+-- TOC entry 3387 (class 0 OID 90307)
+-- Dependencies: 216
+-- Data for Name: consumption_logs; Type: TABLE DATA; Schema: public; Owner: ketotrainer
+--
+
+COPY public.consumption_logs (consumption_log_id, food_facts_id, consumption_date, created_at, updated_at, user_id) FROM stdin;
+22	500	2023-08-01 00:00:00+00	2023-08-02 00:56:12.286437+00	2023-08-02 00:56:12.286437+00	2
+\.
+
+
+--
+-- TOC entry 3389 (class 0 OID 90313)
+-- Dependencies: 218
+-- Data for Name: favourite_foods; Type: TABLE DATA; Schema: public; Owner: ketotrainer
+--
+
+COPY public.favourite_foods (favourite_foods_id, user_id, food_facts_id, created_at, updated_at) FROM stdin;
+35	2	500	2023-08-04 06:34:54.79196+00	2023-08-04 06:34:54.79196+00
+\.
+
+
+--
+-- TOC entry 3385 (class 0 OID 90299)
+-- Dependencies: 214
+-- Data for Name: food_facts; Type: TABLE DATA; Schema: public; Owner: ketotrainer
+--
+
+COPY public.food_facts (food_facts_id, food_name, public_food_key, calcium, carbohydrates, classification, energy, fat_total, iodine, magnesium, potassium, protein, saturated_fat, sodium, total_dietary_fibre, total_sugars, creation_ts, last_modified_ts) FROM stdin;
+918	Haloumi Cheese	F002466	620	1.8	19401	1050	17.1	8	18	77	21.3	11.03	2900	0	1.8	2023-06-22 19:23:13.781667	2023-07-30 01:24:27.216195
+919	Mozzarella Cheese	F002472	685	0	19401	1213	22.1	28.8	28	79	22.2	14.37	522	0	0	2023-06-22 19:23:13.781667	2023-07-30 01:24:27.216195
+1838	Bolognese sauce, beef, tomato based	F008032	16	3.8	18701	388	4.5	2.3	20	450	8.8	1.47	56	1.4	3.2	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1839	Cheese or Cream-based sauce	F008036	32	5.3	23107	363	6.8	6.2	5	94	1.4	2.77	482	0.1	2.7	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1483	Walnuts, unsalted	F006116	89	3	22204	2904	69.2	0	150	440	14.4	4.43	3	6.4	2.7	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1840	Tomato sauce, heated	F008050	27	7.5	23104	226	1.5	0.9	15	337	1.6	0.17	375	1.8	6.2	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1841	Plum sauce	F008054	15	56.5	23103	958	0.8	0	24	32	0.1	0.41	950	0.6	48.2	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1842	Rogan Josh sauce	F008055	28	6.2	23107	295	4.1	5.1	20	329	1.5	1.9	508	1.9	3.1	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1843	Salsa sauce, tomato-based	F008056	36	6.3	23104	146	0	1	15	270	1.3	0	480	1.6	4.9	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+501	Anchovy, canned in oil	F000074	167	0	15401	762	8.9	13	69	180	25.4	1.97	5480	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+500	Amaranth, grain, whole, uncooked	F000061	147	55.6	12101	1527	6.4	1	237	508	15.2	1.62	2	11.1	3.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1845	Curry sauce, simmer	F008063	31	10.7	23107	494	6.9	4	21	180	2.1	3.12	510	2.3	7.1	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+503	Apple, dried	F000089	22	60.4	16802	1078	0	2.4	24	640	1.2	0	260	8.5	59.4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1846	Soy sauce	F008065	21	3.2	23103	209	0	5.4	50	299	6.8	0	5600	0	2.2	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1848	Tabasco sauce	F008077	12	0.1	23103	57	0.8	0.7	12	128	1.3	0.12	633	0.6	0.1	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1849	Tomato sauce	F008083	13	24.1	23104	437	0	4.6	14	292	1.3	0	870	1.3	23.7	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1851	White sauce, savoury	F008090	99	10.8	23108	748	13.5	21.3	12	145	3.9	9.21	130	0.2	5.1	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1852	Worcestershire sauce	F008094	160	17.6	23103	311	0.2	1	83	890	1.3	0.04	1060	0	16.9	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1996	Sundried Tomato	F009217	100	35.2	24602	1101	4.6	1.6	150	3170	11.2	0.51	73	14.7	33.9	2023-06-22 19:23:13.781667	2023-07-30 05:22:16.209157
+513	Apricot, canned in pear juice	F000122	12	9.6	16404	192	0	0.4	10	189	0.8	0	4	1.8	8.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+531	Baked beans, tomato sauce	F000243	39	10	25201	334	0.3	1.5	27	240	4.8	0.04	378	4.8	2.1	2023-06-22 19:23:13.781667	2023-07-30 05:37:22.602934
+516	Apricot, dried	F000130	67	44.4	16802	886	0.2	2.2	57	1510	4.3	0	37	8.4	40.5	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+507	Apple, green skin	F000098	4	10.8	14676	202	0	0	4	99	0.3	0	2	2.4	10.4	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+511	Apple, red skin	F000110	5	12.7	16101	240	0	0	5	113	0.2	0	1	2.7	12	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+517	Apricot	F000134	13	7.7	16403	167	0.4	0	12	290	0.2	0	0	1.5	7.6	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+520	Artichoke, globe	F000144	30	1.3	24402	145	0.2	0	18	360	2.8	0	6	8.1	0.9	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+525	Asparagus, green	F000155	11	1.4	24402	88	0.1	0	15	320	2.5	0	2	2.2	1.4	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+526	Avocado	F000162	10	0.2	24705	579	13.2	0	26	450	1.6	1.93	7	7.5	0	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+529	Bacon, middle rasher, untrimmed	F000228	4	0.2	18601	1310	28.2	0	15	277	15.4	10.95	1274	0	0.2	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+494	Brandy, Gin, Rum, Vodka and Whisky 40% v/v	F000051	1	0.1	29301	892	0	0	0	1	0	0	3	0	0.1	2023-06-22 19:23:13.781667	2023-07-29 23:37:51.057863
+1048	Cream, thickened, regular fat 35%	F003270	60	2.4	19301	1409	36.1	11.3	6	84	2	23.28	27	0	2.4	2023-06-22 19:23:13.781667	2023-07-30 02:02:12.183078
+533	Baking powder, dry powder	F000247	6	19.8	31501	364	0.3	1	9	8267	0.8	0.05	6868	0.4	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+534	Baking soda (bicarbonate), dry powder	F000248	0	0	31501	0	0	0	0	0	0	0	27360	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1137	Self-raising Flour, wholemeal	F004015	68	65.3	12103	1471	2.1	1	102	284	11.4	0.3	655	11.3	0.9	2023-06-22 19:23:13.781667	2023-07-30 02:21:02.699163
+536	Bamboo shoot, canned	F000253	15	1.3	24402	57	0	0.7	5	51	0.8	0	10	2.8	0.8	2023-06-22 19:23:13.781667	2023-07-30 05:37:22.602934
+546	Nougat bar, caramel, milk chocolat	F000348	160	62.6	28103	1712	17.2	0	34	290	5.2	10.13	190	1.6	55.3	2023-06-22 19:23:13.781667	2023-07-30 05:37:22.602934
+547	Snack bar, fruit filled	F000368	22	71.1	28304	1400	3	2	19	174	3.9	1.27	199	4.5	31.4	2023-06-22 19:23:13.781667	2023-07-30 05:37:22.602934
+548	Snack bar, oat based	F009803	78	44.8	-1	1910	26.7	8.3	89	340	8	16.72	170	5.7	21.2	2023-06-22 19:23:13.781667	2023-07-30 05:37:22.602934
+549	Snack bar, with >35% nuts	F009802	88	20.8	28301	1982	31.9	6	110	450	25	6.85	270	4.8	15	2023-06-22 19:23:13.781667	2023-07-30 05:37:22.602934
+551	Barley, pearl, boiled	F000378	14	25.1	12101	590	1.3	1.4	41	145	4.1	0.21	10	5.4	0.4	2023-06-22 19:23:13.781667	2023-07-30 05:37:22.602934
+542	Muesli bar, dried fruit	F000333	26	59.2	28302	1586	11.5	0	72	335	8.3	3.2	144	7	15.9	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+538	Banana, lady finger or sugar	F000267	10	25	16501	474	0.1	0	38	320	1.5	0	2	3.7	18.2	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+569	Haricot bean, boiled	F000437	57	12.6	25101	464	0.7	0	49	340	8.2	0.09	8	8.8	4.7	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+571	Lima bean, boiled	F000442	16	10.2	25101	355	0.3	0	35	350	6.4	0.07	7	5.3	0.6	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+554	Barramundi, fillet	F000386	18	0	15101	523	5.3	2.3	29	345	19.2	1.19	56	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+556	Basil, green	F000396	220	0.2	24403	94	0.5	6.4	55	440	2.6	0.03	10	3.3	0	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+559	Bassa, fillet	F000402	18	0	15101	332	1.8	30	31	347	15.7	0.5	84	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+562	Broad bean	F000419	17	2.2	24502	235	0.5	0	30	250	6.9	0	4	7.1	0.7	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+564	Butter bean	F000422	16	2.3	24502	104	0.2	0	22	230	2.3	0	3	2.3	1.8	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+566	Green bean	F000431	45	3.3	24502	106	0	1	24	280	1.8	0	0	2.8	2.6	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+578	Beef, all cuts, separable fat, cooked	F000472	8	0	18101	2317	55.6	2.6	11	160	15.3	21.58	29	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+580	Diced Beef, or strips, lean, casseroled	F000503	5	0	18101	745	3.1	0.8	21	251	37	1.12	28	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+614	Minced Beef, mince, higher fat	F000655	4	0	18101	767	10.4	2.2	23	305	22.5	4.74	51	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+607	Beef, corned, canned	F000544	6	0.3	18606	957	15.7	8.2	12	140	21.5	7.39	750	0.7	0.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+586	Casserole meat beef, boneless or bone-in	F000519	5	0	18101	653	3.6	0.8	22	258	30.6	1.28	42	0	0	2023-06-22 19:23:13.781667	2023-07-30 00:30:54.117709
+626	Rump steak, lean, grilled	F000738	6	0	18101	710	4.5	1.7	27	350	32	1.5	43	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+638	Sirloin steak, lean, grilled	F000809	10	0	18101	659	3.8	1.7	26	350	30.5	1.24	49	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+620	Roasted beef, silverside or topside, lean	F000704	4	0	18101	526	3.6	1.2	24	356	23	1.38	44	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+674	T-bone steak, with bone or blade, lean, grilled	F000880	8	0	18101	643	3.4	1.7	28	375	30.6	1.11	48	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+686	Stir-fry beef strips, lean, dry-fried	F000929	4	0	18101	644	3.2	1.7	23	360	30.9	1.02	47	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+693	Topside roast beef, lean, roasted	F000962	4	0	18101	660	2.8	1.7	24	340	32.7	0.78	54	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+658	Fillet steak, boneless, fillet or tenderloin, semi-trimmed	F009781	6	0	18101	665	8	1.2	26	369	21.7	3.14	55	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+698	Beer, alcohol 4-4.9%	F000994	4	2.3	29101	152	0	0	6	36	0.4	0	4	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+701	Beer, light, alcohol 1-2.9%	F001004	3	2.2	29102	100	0	0	5	27	0.2	0	3	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+704	Beetroot, purple, baked	F001013	10	10.2	24302	246	0.1	0	32	354	2.3	0	66	4.3	10.2	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+713	Corn cake biscuit	F001115	3	71.5	13205	1547	3	8.1	79	180	9.8	0.42	240	5.9	0.4	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+724	Rice cake biscuit	F001147	9	76.3	13204	1603	3.5	13	130	270	8.8	0.6	41	3.5	0.8	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+729	Seed based biscuit, savoury	F009832	110	6	132	2395	49.6	15	350	610	20.1	5.78	500	14.6	1.4	2023-06-22 19:23:13.781667	2023-07-30 00:48:42.214182
+734	Chocolate chip biscuit, or coated	F001170	46	61.9	13105	1979	22.7	8.6	41	220	5.8	12.79	210	3	35.8	2023-06-22 19:23:13.781667	2023-07-30 00:48:42.214182
+735	Cream filled biscuit	F009834	30	62.8	-1	1944	21.5	8.5	28	140	5.4	10.6	330	2.7	33.6	2023-06-22 19:23:13.781667	2023-07-30 00:48:42.214182
+741	Blackberry	F001267	30	7.5	16201	211	0.3	0	30	114	1.4	0	0	6.1	7.5	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+743	Blue grenadier, flesh	F001277	8	0.2	15101	307	1.2	27.1	20	306	15.2	0.28	53	0	0.2	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+746	Blueberry	F001290	11	9.6	16201	194	0	0	6	83	0.5	0	2	3.5	9.2	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+748	Bok choy	F001301	83	0.6	24201	79	0.2	3.9	18	250	2.5	0	57	2.4	0.6	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+750	Braised steak & onions, canned	F001322	12	4.5	18606	264	1.6	2.7	12	160	7.2	0.72	380	0.8	1	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+995	Cocoa powder	F002980	170	10.5	11804	1335	15.2	4	590	4400	22.1	9.17	81	27.7	1.5	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+739	Shortbread biscuit	F001244	33	60.8	13101	2110	26.3	6.5	19	110	6.2	16.06	270	2.3	20.4	2023-06-22 19:23:13.781667	2023-07-30 00:48:42.214182
+740	Wheatmeal biscuit	F001251	30	67	13101	1728	11.7	6.8	46	167	7.8	1.28	423	5.6	21.6	2023-06-22 19:23:13.781667	2023-07-30 00:48:42.214182
+751	White Bread roll	F001353	107	44.6	12201	1044	2.9	48	29	137	9.3	0.47	380	3	3.4	2023-06-22 19:23:13.781667	2023-07-30 00:52:14.886858
+753	Wholemeal Bread roll	F001360	90	45.2	12207	1095	3	61.9	54	190	10.1	0.53	560	5.8	3	2023-06-22 19:23:13.781667	2023-07-30 00:52:14.886858
+755	Mixed grain Bread roll	F001365	160	40.3	12204	1046	3	62.6	80	290	12.2	0.45	660	5.6	2.3	2023-06-22 19:23:13.781667	2023-07-30 00:52:14.886858
+757	Cheese Bread roll	F001372	238	35.8	12304	1173	9	43.2	29	124	12.4	4.92	441	2.4	2.8	2023-06-22 19:23:13.781667	2023-07-30 00:52:14.886858
+758	Cheese & bacon Bread roll	F001373	218	27	12304	1174	11.2	34.7	29	187	16.6	5.88	765	1.8	2.3	2023-06-22 19:23:13.781667	2023-07-30 00:52:14.886858
+759	Banana Bread	F001374	41	43.1	13303	1224	11	7.7	25	150	5.7	1.93	360	1.5	25.1	2023-06-22 19:23:13.781667	2023-07-30 00:52:14.886858
+761	Pita or Lebanese Bread, flat, white	F001420	50	49.1	12302	1102	2.1	50.2	30	150	9.5	0.62	498	3.7	3.1	2023-06-22 19:23:13.781667	2023-07-30 00:54:40.543416
+763	Sour dough bread, from rye flour	F001450	32	42.7	12210	980	1.6	58	32	130	9.2	0.31	510	5.2	2	2023-06-22 19:23:13.781667	2023-07-30 00:54:40.543416
+806	Corn flakes, breakfast cereal	F001708	3	75.6	12501	1553	2.9	0	34	140	7.3	0.39	270	4	7.7	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+807	Mixed grain Breakfast cereal	F001720	936	70.5	12512	1669	4.1	0	40	116	18.2	0.72	474	2.7	13.2	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+811	Ceral puffed or popped rice	F001803	6	81.2	12504	1559	1.1	3.7	25	101	6.8	0.2	658	2.1	6.2	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+814	Wheat Bran cereal, flakes, sultanas	F001823	56	63.3	12509	1391	1.5	8.6	120	757	9.8	0.26	269	14.8	24.5	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+812	Cocoa pops	F001807	388	83.2	12504	1615	2.9	0	36	208	5.3	1.14	496	2.6	30.4	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+803	Breadcrumbs, white	F001683	124	68.5	12201	1598	4.1	86.2	43	193	14	0.5	650	4.7	4.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+792	Garlic bread, cooked	F001600	66	42.8	12307	1442	15.1	53	28	130	8	7.13	580	3	3.4	2023-06-22 19:23:13.781667	2023-07-30 01:03:21.974249
+793	Gluten free bread	F001603	50	36.6	12213	888	3.9	125.3	23	190	5.5	0.51	526	3.9	2.6	2023-06-22 19:23:13.781667	2023-07-30 01:03:21.974249
+787	Wholemeal bread	F001553	133	39.2	12207	993	2.5	61.9	63	212	10.4	0.39	418	6.9	3.2	2023-06-22 19:23:13.781667	2023-07-30 01:05:37.713366
+795	Mixed grain bread	F001621	155	39.8	12204	1078	4.5	60.3	60	217	10.7	0.58	409	5.8	2.5	2023-06-22 19:23:13.781667	2023-07-30 01:05:37.713366
+797	Naan bread	F001647	120	47.8	12202	1224	7.1	55	28	160	8	1.35	630	2.6	6	2023-06-22 19:23:13.781667	2023-07-30 01:05:37.713366
+800	Pizza base	F001653	70	48.5	12203	1109	3.3	38	28	140	8.6	0.52	390	2.7	3.7	2023-06-22 19:23:13.781667	2023-07-30 01:05:37.713366
+801	Tortilla bread, white	F001669	37	46.3	12302	1263	9	46.4	22	110	7.3	3.97	750	2	4.3	2023-06-22 19:23:13.781667	2023-07-30 01:05:37.713366
+802	Wrap, bread, white	F001415	39	46.9	12302	1266	8.4	45	24	150	7.8	3.71	610	3	5.3	2023-06-22 19:23:13.781667	2023-07-30 01:05:37.713366
+821	Bream, fillet, baked	F001881	32	0	15101	714	7	39	42	475	26.8	2.41	115	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+830	Brussels sprout, boiled	F001913	15	2.2	24201	156	0.3	0	18	336	4	0	30	4.7	2.2	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+832	Buckwheat groats, cooked in water	F001918	4	12.3	12101	290	0.7	0.7	43	123	2.7	0.12	2	1.1	0.3	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+838	Bulgur, soaked in water	F001928	12	28.3	12101	664	0.9	0	55	169	5.4	0.13	2	7.3	0.4	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+840	Hot cross bun, dried fruit	F009792	60	50.2	12305	1108	3.2	32.1	29	310	7.2	0.6	230	4.1	21	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+844	Butter, salted	F001973	17	0.6	14101	3036	81.3	8.8	2	23	1.1	56.3	776	0	0.6	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+824	Broccoli, baked	F001899	39	0.5	24202	160	0.4	0	26	410	5.7	0	26	4.5	0.5	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+834	Buffalo, riverine, cube roll	F001920	6	0	18202	650	6.6	1.2	24	297	23.9	3.7	56	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+861	Chocolate Cake, iced	F002111	54	46.4	13301	1554	17.8	13.9	56	410	6.6	11.57	361	2.6	27	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+863	Fruit Cake, uniced	F002150	43	48.2	13303	1266	9.9	6	30	424	3.9	5.71	138	3	38.7	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+857	Cake mix, plain, dry powder	F002021	61	73.5	13303	1603	8.2	0	13	81	4.8	4.3	670	1.4	42.5	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+851	Red cabbage, boiled	F002003	35	2.8	24201	127	0.3	0	14	398	2.3	0	16	3.5	2.8	2023-06-22 19:23:13.781667	2023-07-30 01:15:40.995597
+855	White cabbage, boiled	F002014	32	2.9	24201	94	0.1	0	13	236	1.4	0	13	2.4	2.9	2023-06-22 19:23:13.781667	2023-07-30 01:15:40.995597
+858	Carrot Cake, iced	F002100	41	47.6	13303	1620	20.4	16.6	25	150	4.4	4.64	305	1.5	30.5	2023-06-22 19:23:13.781667	2023-07-30 01:16:51.976969
+872	Sponge Cake, uniced, jam & cream	F002177	54	58	13302	1524	12.2	11	13	114	6.7	5.47	278	1.2	37.6	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+877	Camel, steak	F009789	4	0	18202	514	4.3	2.9	20	350	20.8	2.2	53	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:59:21.533356
+879	Capsicum, green, fried	F002238	7	2.8	24705	76	0	0	11	211	1	0	1	1.7	2.8	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+897	Cauliflower, boiled	F002377	18	3.4	24202	106	0.2	0	15	227	2	0	40	1.2	2.9	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+902	Celery	F002390	44	2.2	24402	63	0.1	0	10	267	0.6	0	98	1.4	1.2	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+891	Cassava, boiled	F002285	20	32.7	24302	632	0.3	0	11	261	1.2	0	2	5	1.3	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+899	Celeriac, boiled	F002383	42	5.4	24302	174	0.2	0	22	426	1.7	0	21	5.5	3	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+890	Carrot	F002276	26	6.6	24301	146	0	0.6	12	264	0.6	0	49	3.4	6.2	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+878	Capers, pickled, canned, drained	F002220	40	1.7	23201	126	0.9	0	33	40	2.4	0.27	2348	3.2	0.4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+884	Cardamom seed, ground	F002258	383	34.4	31302	1236	6.7	0	229	1119	10.8	2.2	18	28	4.4	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+883	Caramels, soft & hard	F002257	67	74.5	28401	1620	11.4	20	11	120	2.5	8.65	250	1.5	54.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+868	Butter Cake, iced	F002168	4	52.7	13303	1555	16.1	15.6	10	77	5	2.85	420	1.4	36.7	2023-06-22 19:23:13.781667	2023-07-30 01:17:48.766902
+927	Cherry	F002522	22	12.9	16403	250	0.2	0.1	8	230	0.8	0	0	1.5	10.9	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+928	Chicken, barbecued, with skin	F002568	10	0	18301	806	8.9	3.6	28	310	27.5	2.47	430	1.1	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+912	Cottage Cheese	F002435	89	1.8	19403	556	5.7	15.3	8	123	17	3.47	277	0	1.8	2023-06-22 19:23:13.781667	2023-07-30 01:22:33.960132
+913	Cream Cheese, plain	F002444	69	0.2	19403	1420	34.2	13	6	80	8.5	22.07	320	0	0.2	2023-06-22 19:23:13.781667	2023-07-30 01:22:33.960132
+909	Cheddar cheese	F002414	760	0.3	19401	1689	33.5	25.5	27	73	24.6	22.72	686	0	0.3	2023-06-22 19:23:13.781667	2023-07-30 01:24:27.216195
+910	Cheddar Cheese, reduced fat 15%	F002425	886	4.9	19407	1054	15.4	23	23	170	22.4	10.26	1171	0	4.9	2023-06-22 19:23:13.781667	2023-07-30 01:24:27.216195
+915	Feta Cheese	F002452	315	0.4	19401	1136	22.3	26.5	15	74	16.6	14.16	1100	0	0.4	2023-06-22 19:23:13.781667	2023-07-30 01:24:27.216195
+917	Goat Cheese, soft	F002463	63	0.9	19401	1194	21.7	84.3	11	127	21.2	14.38	430	0	0.9	2023-06-22 19:23:13.781667	2023-07-30 01:24:27.216195
+920	Parmesan Cheese, dried	F002478	970	0	19401	1949	33.3	26	42	80	40.6	21.06	1300	0	0	2023-06-22 19:23:13.781667	2023-07-30 01:25:02.291452
+922	Ricotta Cheese	F002488	170	2.7	19403	665	11.8	19	10	91	10.4	7.73	170	0	2.7	2023-06-22 19:23:13.781667	2023-07-30 01:25:02.291452
+929	Chicken breast, baked	F002590	9	0	18301	637	3.9	0	30	320	29	1.25	46	0	0	2023-06-22 19:23:13.781667	2023-07-30 01:33:36.856562
+937	Chicken drumstick, baked	F002645	24	0.4	18301	830	8.5	2.1	26	300	29.9	2.54	120	0	0.4	2023-06-22 19:23:13.781667	2023-07-30 01:33:36.856562
+945	Chicken mince, fried	F009831	6	0	18301	532	1.4	0	28	379	28.1	0.41	52	0	0	2023-06-22 19:23:13.781667	2023-07-30 01:33:36.856562
+947	Chicken, nugget, grilled	F002751	13	19.9	18903	818	5.9	0	20	180	14.8	1.19	434	1.3	0.9	2023-06-22 19:23:13.781667	2023-07-30 01:33:36.856562
+950	Chicken lunch meat	F002756	8	4.4	18605	483	1.2	4.4	22	350	20	0.39	760	0.2	0.2	2023-06-22 19:23:13.781667	2023-07-30 01:33:36.856562
+977	Chilli (chili), green	F002896	12	1	24705	181	0.3	0	11	280	2.8	0	4	12.9	1	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+979	Chilli (chili), red	F002901	16	4.2	24705	200	0.4	0	28	300	1.4	0	3	10.6	4.2	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+980	Chives	F002907	90	2.6	24403	120	0.3	6.6	12	210	1.5	0	7	4.7	2.6	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+989	Choko, boiled	F002948	19	4.3	24705	103	0.2	0	12	94	0.6	0	9	1.7	3.7	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+993	Cinnamon, ground	F002963	1002	27.5	31302	1004	1.2	0.1	60	431	4	0.62	10	53.1	2.2	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+994	Cloves, ground	F002970	632	31.6	31302	1389	13	50.7	259	1020	6	5.49	277	33.9	2.4	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+970	Chickpea, canned, drained	F002880	45	13.3	25102	474	2.1	0	27	140	6.3	0.21	250	5.7	0.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+973	Chicory, boiled, drained	F002883	34	0.9	24302	78	0.2	2.4	13	233	2.1	0	40	2.1	0.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+985	Chocolate, milk, fondant or caramel filled	F002934	170	61.4	28103	2002	24.7	22.6	41	320	6	15.23	79	2	53.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+986	Chocolate, milk, with dried fruit & nuts	F002937	218	55.3	28102	2080	27.9	17.9	64	524	7.8	15.1	62	2.9	53.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+987	Chocolate, milk, with nuts	F002939	208	40.7	28102	2325	39.5	15.8	85	505	9.9	13.98	48	4.7	39.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+951	Chicken schnitzel, baked without fat	F009790	8	13.1	18903	868	9.6	9.6	25	332	16.5	1.3	529	1.7	2.1	2023-06-22 19:23:13.781667	2023-07-30 01:36:59.772059
+957	Chicken thigh, baked	F002804	18	0	18301	733	8.7	2.1	26	290	24.2	2.69	76	0	0	2023-06-22 19:23:13.781667	2023-07-30 01:36:59.772059
+964	Chicken wing, baked	F002847	13	0	18301	810	7.7	2.1	24	270	30.9	2.35	84	0	0	2023-06-22 19:23:13.781667	2023-07-30 01:36:59.772059
+981	Cooking Chocolate	F002916	78	57	28101	2140	30.3	22.6	87	650	4	27.72	45	4.6	55.3	2023-06-22 19:23:13.781667	2023-07-30 01:38:41.641897
+982	Dark Chocolate, high cocoa solids	F002921	52	62.6	28101	2202	30.1	10	120	440	3.9	18.22	55	1.2	52	2023-06-22 19:23:13.781667	2023-07-30 01:38:41.641897
+983	Dark Chocolate, no added sugar	F009837	51	32.1	281	2118	38.3	8.4	150	560	6.9	23.07	3	9.9	0.5	2023-06-22 19:23:13.781667	2023-07-30 01:38:41.641897
+984	Milk Chocolate	F002929	252	56	28101	2178	30.5	22.6	49	425	7.6	18.76	68	2.3	54.6	2023-06-22 19:23:13.781667	2023-07-30 01:38:41.641897
+988	White Chocolate	F002946	230	54.6	28101	2273	34.5	27	25	310	7.1	21.4	78	0.2	54.6	2023-06-22 19:23:13.781667	2023-07-30 01:38:41.641897
+991	Chutney or relish	F002953	25	43.1	23201	752	0.3	0.5	13	210	0.5	0	690	2.2	41.5	2023-06-22 19:23:13.781667	2023-07-30 01:39:52.114006
+992	Cider, apple 4-5% v/v	F002955	3	5.6	29401	209	0	0	2	56	0	0	3	0	5.6	2023-06-22 19:23:13.781667	2023-07-30 01:39:52.114006
+1011	Coffee, espresso. ground	F003041	11	0	11201	40	0.3	0	37	520	1.7	0.11	2	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+1012	Coffee, flat white/latte/cappuccino, from ground, milk	F009796	95	3.4	11202	195	2.5	21	16	220	2.8	1.72	29	0	3.4	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+1030	Coriander	F003192	86	1.9	24403	132	0.6	9.8	30	540	3.1	0.02	45	3.2	1.2	2023-06-22 19:23:13.781667	2023-07-30 06:02:50.536645
+1037	Cornmeal (polenta), boiled	F003227	2	22.3	12101	452	0.5	1.6	12	42	2.7	0.07	2	1	0.2	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1006	Cod or hake, smoked, steamed	F003003	20	0	15102	396	1.5	0	27	252	20.1	0.36	548	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1017	Cone, wafer style, for ice cream	F003095	26	72.3	13101	1474	2.3	5	26	137	7.9	0.41	327	3.2	0.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1031	Corn chips, plain, toasted, salted	F003198	130	56	26201	2053	25	5.4	92	170	7.5	5.81	420	5.2	0.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+999	Coconut flesh	F002983	7	3.3	22203	1396	32.8	0	15	270	3.8	28.95	5	8.1	2.9	2023-06-22 19:23:13.781667	2023-07-30 01:41:19.328527
+1000	Coconut water or juice	F002984	17	4.7	22203	87	0.1	0	11	200	0.5	0.09	17	0	4.7	2023-06-22 19:23:13.781667	2023-07-30 01:41:19.328527
+1003	Coconut, grated	F002987	12	7.3	22203	2777	65.4	3.9	72	574	6.9	57.72	15	15.4	6.6	2023-06-22 19:23:13.781667	2023-07-30 01:41:19.328527
+1005	Coconut milk, regular fat	F002991	3	1.7	22203	620	15.4	2	26	160	1.4	12.49	26	0	1.7	2023-06-22 19:23:13.781667	2023-07-30 01:41:19.328527
+1024	Orange or Lemon Cordial	F003135	4	40.2	11403	659	0	1	2	32	0.2	0	43	0	40.2	2023-06-22 19:23:13.781667	2023-07-30 01:42:56.869632
+1025	Blackcurrant cordial juice	F003128	6	45	11403	731	0	1	3	54	0.1	0	0	0	45	2023-06-22 19:23:13.781667	2023-07-30 01:42:56.869632
+1032	Corn on the cob	F003200	16	13	24704	381	1.9	0	12	234	3.8	0.5	19	4	5.6	2023-06-22 19:23:13.781667	2023-07-30 02:00:01.952956
+1035	Corn, kernels, boiled	F003201	5	19.9	24704	452	0.9	0	27	210	3.1	0.24	8	3.5	2.6	2023-06-22 19:23:13.781667	2023-07-30 02:00:01.952956
+1039	Couscous, boiled	F003235	13	32.7	12103	677	0.1	0.4	23	111	6.1	0.01	3	1.9	1.5	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1041	Crab, flesh, purchased steamed or boiled	F003243	120	0	15201	370	0.7	59	33	280	20.2	0.14	420	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1043	Cranberry	F003249	8	4.3	16201	131	0.1	0	6	80	0.5	0.01	2	3.6	4.3	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1050	Crocodile, steak, fried	F009817	10	0	34101	677	2.5	5.4	37	583	34.4	0.64	88	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1045	Cream, imitation (non-dairy)	F003255	17	17.7	19305	1108	21.8	0	2	24	1	19.34	57	0	16.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1056	Cucumber, common	F003320	18	1.2	24705	50	0.1	0.1	14	136	0.8	0	10	1.4	1.2	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1060	Cumquat (kumquat)	F003328	62	9.4	16303	266	0.9	0.3	20	186	1.9	0.23	10	6.5	9.4	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1063	Apple Custard	F003423	17	15.8	16504	326	0.6	0.1	32	250	1.4	0.16	4	2.5	14.7	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1071	Dill	F003509	170	2.5	24403	170	1.2	6.6	31	370	3.4	0.06	42	3.3	1.2	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1053	Croissant, plain	F003305	40	35.6	13401	1505	19.1	1.1	24	130	10	12	462	2.7	5.1	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1059	Cumin, ground	F003327	931	33.7	31302	1782	22.3	13.6	366	1788	17.8	1.73	168	10.5	2.2	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1061	Currant, dried	F003331	87	65.1	16801	1167	0.5	0	43	810	2.8	0	46	6	63.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1062	Curry powder	F003337	525	2.8	31302	1231	14	0	255	1170	14.3	1.64	52	53.2	2.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1070	Date, dried	F003496	47	67.2	16802	1212	0.2	1.5	50	730	2	0	14	9.7	65.9	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1078	Dripping, beef	F003627	0	0	14501	3703	100	0	0	0	0.2	52.1	0	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1046	Sour Cream, light 18% fat	F003267	80	4.5	19304	868	19.7	15	5	74	3.6	12.73	19	0	4.5	2023-06-22 19:23:13.781667	2023-07-30 02:02:12.183078
+1047	Sour Cream, regular fat	F003269	50	2	19303	1414	36.3	15	5	74	1.9	23.46	19	0	2	2023-06-22 19:23:13.781667	2023-07-30 02:02:12.183078
+1054	Crumpet, toasted	F003313	92	41.6	13606	860	0.8	70.9	19	88	5.6	0.16	1051	2.5	1.9	2023-06-22 19:23:13.781667	2023-07-30 02:02:45.965244
+1066	Vanilla Custard, regular fat	F003442	120	13.9	19602	392	3	13	11	165	3.3	1.96	61	0	11.6	2023-06-22 19:23:13.781667	2023-07-30 02:05:05.658305
+1072	Hummus Dip	F003539	49	9.4	23503	1039	19.5	1.6	65	260	6.9	1.83	410	3.9	0.8	2023-06-22 19:23:13.781667	2023-07-30 02:06:46.163554
+1073	Donut, dusted with cinnamon & sugar	F003573	60	43.9	13605	1583	19.5	2.4	20	120	6.6	8.7	487	2	13.7	2023-06-22 19:23:13.781667	2023-07-30 02:06:46.163554
+1074	Donut, iced	F003574	21	48.2	13605	1517	15.9	0	22	94	6.7	6.86	414	1.7	22.9	2023-06-22 19:23:13.781667	2023-07-30 02:06:46.163554
+1075	Donut, jam filled, sugar coated	F003575	55	46.2	13605	1535	17.6	2.1	18	114	6	7.83	440	1.9	19	2023-06-22 19:23:13.781667	2023-07-30 02:06:46.163554
+1076	French or Italian Dressing	F003592	0	11.7	23303	948	19.6	0	0	0	0.1	2.02	970	0	11.4	2023-06-22 19:23:13.781667	2023-07-30 02:06:46.163554
+1077	Thousand Island Dressing	F003612	12	16.6	23301	1494	31.8	5	6	130	1	3.37	878	1.4	14.7	2023-06-22 19:23:13.781667	2023-07-30 02:06:46.163554
+1081	Duck, baked	F003631	26	0	18302	765	9.5	2.1	20	250	24.3	2.95	95	0	0	2023-06-22 19:23:13.781667	2023-07-30 02:09:11.124125
+1097	Egg, yolk	F003737	100	0.2	17101	1311	28.2	80	8	104	15.6	8.57	58	0	0.2	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1104	Endive	F003784	46	0.4	24401	58	0.2	2.1	10	190	1.5	0	76	2.2	0.3	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1107	Feijoa	F003818	6	8	16504	176	0.4	0.1	7	124	0.6	0.1	2	3	7.7	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1109	Fennel	F003820	20	3.3	24801	92	0.1	0	10	280	1	0	38	1.8	3.3	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1110	Fenugreek seed	F003821	176	4.2	31302	1080	6.4	2.3	191	770	23	1.03	67	47.6	0.6	2023-06-22 19:23:13.781667	2023-07-30 06:48:58.228625
+1113	Fish finger, crumbed, grilled	F003896	15	18.9	15501	1050	13.2	4.8	25	216	13.8	1.78	341	1.2	1.7	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1116	Eel	F003920	20	0	15302	745	11.7	21.6	20	272	18.4	2.36	51	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1119	Flathead, flesh, baked	F003970	86	0	15101	541	1.4	0	40	551	28.8	0.38	133	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1112	Fig	F003834	38	8.1	16503	195	0.3	0	9	180	1.4	0	3	3.3	8.1	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1106	Fat, solid, vegetable oil based	F003817	0	0	14502	3702	100	0	0	0	0.2	49.02	0	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1089	Egg, fried	F003718	53	0.3	17101	606	9.6	62.1	14	159	14.3	2.61	170	0	0.3	2023-06-22 19:23:13.781667	2023-07-30 02:10:01.601684
+1090	Egg, hard-boiled	F003721	39	0.7	17101	574	9.5	47.3	10	107	12.4	2.56	127	0	0.3	2023-06-22 19:23:13.781667	2023-07-30 02:10:01.601684
+1093	Egg, poached	F003725	49	0.3	17101	555	8.8	57	12	146	13.1	2.39	156	0	0.3	2023-06-22 19:23:13.781667	2023-07-30 02:10:01.601684
+1098	Eggplant, baked	F003759	27	3	24705	109	0.4	0	9	200	1.3	0	6	2.9	3	2023-06-22 19:23:13.781667	2023-07-30 02:11:40.861241
+1102	Emu, steak, fried	F003778	5	0	183	644	3.3	1.2	26	368	30.8	0.96	53	0	0	2023-06-22 19:23:13.781667	2023-07-30 02:11:40.861241
+1117	White Fish, battered, baked	F003950	21	20.6	15501	820	7	10.7	23	243	12.2	0.77	383	0.5	1.6	2023-06-22 19:23:13.781667	2023-07-30 02:14:59.904627
+1118	White Fish, crumbed, baked	F003954	21	16.7	15501	856	10	10.7	24	243	11.8	1.12	383	0.5	1.7	2023-06-22 19:23:13.781667	2023-07-30 02:14:59.904627
+1124	Cornflour Flour, maize & wheat starch	F003989	8	84.4	12103	1466	0.4	0	5	16	0.6	0.08	10	0.5	0	2023-06-22 19:23:13.781667	2023-07-30 02:21:02.699163
+1127	Rice Flour	F003998	6	71.6	12103	1437	2	10.2	70	144	7.3	0.34	1	2.2	0.6	2023-06-22 19:23:13.781667	2023-07-30 02:21:02.699163
+1148	Gemfish, flesh, baked	F004201	16	0.1	15101	460	3.6	20.4	18	195	19.2	0.99	54	0	0.1	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1152	Gherkin, pickled	F004206	22	24.4	23202	441	0.3	0	8	11	0.4	0	520	0.9	23.6	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1158	Goat, all cuts, separable fat, baked	F004229	7	0	18202	2556	64.5	11	12	175	10	32.7	40	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1138	Frankfurt, cooked	F004025	33	3.4	18502	1051	19.9	7.7	20	93	14.3	7.51	770	1.8	0.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1142	Fruit salad, canned in fruit juice	F004141	6	10.4	16702	200	0.1	0	10	150	0.7	0	4	1.4	9.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1155	Ginger, fresh	F004213	17	4.8	24302	132	0.4	0	28	240	0.8	0	11	2.8	1.7	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1146	Garlic	F004193	30	10.2	24802	522	2.8	0.5	25	510	6.1	0.78	8	16.9	1.5	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1147	Gelatine, all types	F004196	250	0	31502	1449	0.4	0	15	7	84.4	0.19	330	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1151	Ghee, clarified butter	F004205	4	0	14102	3701	99.9	8.8	0	5	0.3	65.69	2	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1156	Glucose, liquid or syrup	F004219	8	87.5	27102	1268	0	0	2	3	0	0	150	0	33	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1129	Soya Flour	F004002	285	14.6	25201	1543	8.9	0	285	2090	49.8	1.53	9	16	9.3	2023-06-22 19:23:13.781667	2023-07-30 02:21:02.699163
+1130	Spelt Flour	F004004	29	59.1	12103	1470	2.4	1.3	110	330	18.7	0.27	2	7.4	0.9	2023-06-22 19:23:13.781667	2023-07-30 02:21:02.699163
+1132	White Flour, plain	F004007	21	73.2	12103	1479	1.3	7.5	36	170	10	0.18	3	2.2	1.9	2023-06-22 19:23:13.781667	2023-07-30 02:21:02.699163
+1134	Self-raising Flour, white	F004009	59	73.2	12103	1479	1.3	5.8	33	150	10	0.18	740	2.2	1.9	2023-06-22 19:23:13.781667	2023-07-30 02:21:02.699163
+1136	Wholemeal Flour, wholemeal	F004014	29	61.6	12103	1371	1.6	8.9	89	310	11.6	0.22	2	8.8	2	2023-06-22 19:23:13.781667	2023-07-30 02:21:02.699163
+1139	Apple juice	F004099	2	8.2	11307	137	0	3	2	47	0.1	0	5	0	7.8	2023-06-22 19:23:13.781667	2023-07-30 02:28:38.315868
+1140	Cranberry juice	F004102	8	11.3	11307	182	0	4	6	20	0	0	16	0.1	11.3	2023-06-22 19:23:13.781667	2023-07-30 02:28:38.315868
+1141	Orange juice	F004114	8	9.6	11307	163	0	4	5	72	0.2	0	9	0	9.6	2023-06-22 19:23:13.781667	2023-07-30 02:28:38.315868
+1157	Gluten, from wheat	F004220	142	13.2	12103	1507	0	3	25	100	75.2	0	29	0.6	0	2023-06-22 19:23:13.781667	2023-07-30 02:30:14.786266
+1172	Goji berry, dried	F004244	53	49.1	16802	1244	3.7	2.6	84	1400	11.9	0.64	450	11.2	47.7	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1174	Sultanas, black	F004254	11	14	16601	278	0.1	0	9	150	1.2	0	3	3.3	14	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1176	Grape, green	F004260	10	15.6	16601	273	0	0	8	220	0.8	0	0	0.8	15.2	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1177	Grape, red globe	F004259	10	16.3	16601	322	0.2	0	8	270	0.9	0	5	3.5	16.3	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1181	Gravy, prepared from dry powder with water	F004265	4	4.5	23101	109	0.5	0.9	3	11	0.7	0.24	502	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1183	Ham, leg, lean	F004299	9	2	18602	467	2.5	8.8	22	335	17	0.85	1250	1.8	0.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1182	Guava, Hawaiian	F004286	10	3.5	16504	144	0.5	0	12	150	0.7	0	4	5.4	3.4	2023-06-22 19:23:13.781667	2023-07-30 06:07:06.26994
+1186	Honey	F004380	8	72.3	27102	1162	0	0	2	66	0.3	0	8	0	72.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1187	Hot dog, bread roll, frankfurt & sauce filling	F004389	57	27.4	13503	992	8.8	35	24	131	10.6	3.08	610	2.5	4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1188	Ice confection, stick or tub, fruit juice or fruit flavoured	F004415	3	18.7	27303	306	0.1	0	3	33	0.2	0	6	0	18.7	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1179	Grapefruit	F004262	21	4.8	16303	125	0.2	0	8	120	0.9	0	4	1.7	4.8	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1193	Jackfruit	F004594	18	16.7	16504	347	0.3	0	14	350	2.2	0.1	3	3	16.3	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1192	Ice cream, vanilla flavour, regular fat	F004508	93	20.5	19501	788	10.6	22.2	12	142	3.7	7.16	48	0	18.4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1194	Jam, berry	F004600	8	67.3	27201	1100	0	0	6	56	0.3	0	12	1.6	67.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1198	Jelly, sugar sweetened, all flavours, prepared	F004615	2	13.2	27301	230	0	0.6	1	1	1	0	78	0	13.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1184	Hamburger, white roll, cheese, onion, pickles & sauce	F004358	120	22.4	13506	1096	12.1	20	23	200	15.1	5.88	590	1.7	2.9	2023-06-22 19:23:13.781667	2023-07-30 02:32:55.281035
+1199	Apple & blackcurrant juice	F004656	5	9.3	11301	162	0	0	4	94	0.2	0	6	0	9.3	2023-06-22 19:23:13.781667	2023-07-30 02:35:54.43195
+1200	Apple Juice	F004663	6	7	11301	121	0	4	6	120	0.2	0	6	0.2	7	2023-06-22 19:23:13.781667	2023-07-30 02:35:54.43195
+1201	Lemon Juice	F004726	20	1.8	11301	115	0.2	0	9	120	0.6	0	2	2.5	1.8	2023-06-22 19:23:13.781667	2023-07-30 02:35:54.43195
+1202	Lime Juice	F004729	22	1.2	11301	122	0.2	0	11	150	0.8	0	3	4.1	1.2	2023-06-22 19:23:13.781667	2023-07-30 02:35:54.43195
+1203	Orange & mango Juice	F004731	9	7.7	11301	146	0	0	9	160	0.6	0	4	0.2	7.7	2023-06-22 19:23:13.781667	2023-07-30 02:35:54.43195
+1204	Orange Juice	F004739	7	5.4	11301	112	0	0	7	145	0.8	0	2	0.3	5.4	2023-06-22 19:23:13.781667	2023-07-30 02:35:54.43195
+1205	Kale, cooked	F004780	328	0.4	24201	147	0	9.1	70	657	4.7	0	171	6.7	0.4	2023-06-22 19:23:13.781667	2023-07-30 02:36:44.835755
+1207	Kangaroo, loin fillet, grilled	F004786	4	0	18201	556	1.2	0	30	390	30.1	0.38	44	0	0	2023-06-22 19:23:13.781667	2023-07-30 02:37:07.632816
+1215	Kingfish, yellowtail, fillet, with skin, grilled	F004810	160	0	15101	1175	17.4	11	40	532	31.3	4.19	49	0	0	2023-06-22 19:23:13.781667	2023-07-30 02:37:43.989164
+1219	Kiwifruit, green (hayward)	F004816	28	9.1	16601	230	0.7	0	15	279	1.2	0.17	2	3	8.8	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1222	Kombucha, flavoured, added juice or intense sweeteners	F009795	0	0.9	29505	28	0	0	0	2	0	0	0	0.1	0.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1223	Lamb, all cuts, separable fat, cooked	F004830	6	0	18102	2251	53.4	0	8	110	16.2	24.72	28	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1220	Kohlrabi, boiled	F004819	25	4.4	24201	170	0.1	0	26	478	3.8	0	16	3.4	4.4	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1225	Diced Lamb, boneless, lean, casseroled	F004837	8	0	18102	776	6.2	0.9	26	275	32.2	2	43	0	0	2023-06-22 19:23:13.781667	2023-07-30 02:40:19.450384
+1235	Lamb chop, with bone, chump, lean, grilled	F004898	11	0	18102	957	10.2	1.2	32	330	34.1	3.62	65	0	0	2023-06-22 19:23:13.781667	2023-07-30 02:41:06.902018
+1269	Lamb fillet, lean, grilled	F004953	6	0	18102	671	5.5	1.2	30	410	27.5	2.63	75	0	0	2023-06-22 19:23:13.781667	2023-07-30 02:44:28.953354
+1303	Lamb steak, boneless, lean, grilled	F005094	6	0	18102	769	6.6	1.4	28	359	30.8	2.15	75	0	0	2023-06-22 19:23:13.781667	2023-07-30 02:44:28.953354
+1322	Lasagne, beef	F005146	91	16.2	13509	751	8	9.6	22	324	9.9	4.39	112	1.4	3	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1323	Leek, boiled	F005162	35	4.1	24802	151	0.4	0.5	15	260	2.3	0	18	3.4	4.1	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1335	Lettuce, iceberg	F005192	18	2.1	24401	60	0	0	9	170	1	0	12	1.1	2.1	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1342	Lobster, southern rock, boiled	F005227	63	0	15201	411	0.8	34	45	364	22.5	0.13	283	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1327	Lemon	F005174	20	1.8	16302	115	0.2	0	9	120	0.6	0	2	2.5	1.8	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1329	Lentil, boiled	F005177	15	11.9	25101	385	0.5	0	21	144	7.3	0.07	1	4.1	0.5	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1338	Lime	F005199	22	1.2	16302	122	0.2	0	11	150	0.8	0	3	4.1	1.2	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1340	Liquorice, black	F005214	280	70.3	28401	1283	0.8	0	120	1060	5.7	0.56	120	3.5	40.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1352	Macaroni & cheese, cooked unfilled pasta	F005259	79	21.5	13509	697	5.4	8.7	23	63	6.4	3.47	59	1.7	1	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1353	Mackerel, grilled	F005267	15	0	15101	768	8.6	37.7	45	611	26.4	2.78	81	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1348	Lupin, dehulled, flakes, uncooked	F005248	81	10	25101	1295	7.7	0.4	188	715	36.9	1.06	50	27	3.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1350	Lupin, whole, uncooked	F005250	211	7.4	25101	1182	6.5	0.4	171	570	28.6	0.89	50	41.5	2.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1373	Mayonnaise, low fat	F005437	8	27.1	23302	514	1.8	0	2	16	0.5	0.23	678	0	20.5	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1356	Maize, grits, uncooked	F005279	1	73.3	12101	1461	1.3	3	20	428	8.1	0.16	0	2.7	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1374	Mayonnaise, 65% fat	F005441	8	8.7	23301	2651	67.2	17.3	2	14	0.8	8.28	480	0.5	7.9	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1347	Loquat	F005244	13	4.9	16105	122	0.2	0	7	180	1	0	2	1.7	4.9	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1351	Lychee	F005255	2	16.2	16504	296	0.1	0	7	150	1.1	0	1	1.3	16.2	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1360	Mandarin	F005293	29	9.8	16303	195	0	0	13	180	0.9	0	3	1.6	9.8	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1361	Mango	F005299	9	13.4	16504	237	0	0	10	153	0.4	0	0	1.3	12.9	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1383	Honey Dew Melon	F005516	39	7.1	16601	149	0.3	0	16	160	0.7	0	44	1	7.1	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1370	Margarine spread, polyunsaturated (70% fat)	F005370	7	0	14301	2552	69	3	1	24	0	14.79	562	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1372	Marmalade, orange	F005421	15	65.5	27201	1060	0	0	29	27	0.1	0	33	0.8	65.4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1376	Meat alternative, legume and/or vegetable base, cooked	F009816	51	26.3	20601	932	7.3	8.8	44	294	9.2	1	311	6.8	6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1378	Meat alternative, mycoprotein/fungus base, cooked	F009821	274	3.4	20601	655	5.6	3.4	58	164	18.8	1.17	233	7.7	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1380	Meat alternative, protein (soy/wheat/pea) base, cooked	F009823	91	4	20601	1165	16.5	11.4	56	395	23.9	6.86	642	5.4	1	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1387	Meringue, all flavours	F005522	3	90.1	27301	1538	1.4	1.6	0	32	2.6	0.13	40	0	89.4	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1407	Millet, boiled	F005690	4	22.1	12101	487	1.1	0.6	35	64	3.3	0.11	2	1.2	0.2	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1411	Mint, fresh	F005700	210	4.4	24403	225	1.1	6.6	34	380	3.1	0.26	28	7.2	0.9	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1413	Mixed leafy greens	F009788	96	0	24401	54	0	6.9	74	400	2.2	0	91	2	0	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1418	Muesli, granola, non-oat based, added nuts & seeds	F009808	56	53.5	12514	1851	18.8	7.7	170	410	11.9	2.01	59	6.6	8.7	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1386	Watermelon	F005520	5	7.3	16601	133	0	0.1	12	122	0.6	0	3	0.4	7	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1409	Mineral water, citrus flavoured	F005694	5	9.3	11505	152	0	0	4	5	0	0	15	0	9.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1410	Mineral water, natural, unflavoured	F005696	6	0	11702	0	0	0.2	4	1	0	0	8	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1412	Mixed dried fruit	F005712	57	71.2	16802	1241	0.6	0.9	32	733	2.4	0.08	18	3.6	68.4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1390	Sweetened Milk, canned, regular	F005582	268	55	19106	1362	9.2	36	25	357	8.3	6.03	106	0	55	2023-06-22 19:23:13.781667	2023-07-30 03:14:16.137354
+1391	Chocolate Milk, reduced fat	F005587	112	8.6	19803	264	1.9	21.5	14	169	3.3	1.25	46	0	8.6	2023-06-22 19:23:13.781667	2023-07-30 03:14:16.137354
+1402	Skim Milk	F005652	1100	56	19107	1519	0.8	200	110	1800	34.9	0.51	420	0	56	2023-06-22 19:23:13.781667	2023-07-30 03:14:16.137354
+1395	Milk, 1% fat	F005614	115	4.8	19103	181	1.2	25.6	11	156	3.3	0.85	36	0	4.8	2023-06-22 19:23:13.781667	2023-07-30 03:16:26.048208
+1396	Milk, 3.5% fat	F005634	106	5.4	19101	271	3.4	22.9	10	142	3.3	2.31	35	0	5.4	2023-06-22 19:23:13.781667	2023-07-30 03:16:26.048208
+1398	Milk, skim, 0.15% fat	F005637	115	5.3	19105	146	0	18	11	160	3.6	0	38	0	5.3	2023-06-22 19:23:13.781667	2023-07-30 03:16:26.048208
+1401	Milk, powder, regular fat	F005650	850	43	19107	2128	27.3	120	80	1300	25.3	18.26	310	0	43	2023-06-22 19:23:13.781667	2023-07-30 03:16:26.048208
+1414	Mixed vegetables, carrot, corn & pea/bean, boiled	F005813	31	5.9	24803	187	0.3	12	13	190	1.8	0	25	5.9	2.7	2023-06-22 19:23:13.781667	2023-07-30 03:16:26.048208
+1422	Berry Muffin	F005877	110	44.4	13304	1412	15.7	9.2	16	120	5.2	3.7	367	1.9	26.1	2023-06-22 19:23:13.781667	2023-07-30 03:19:15.878152
+1423	Chocolate chip Muffin	F005882	110	48.1	13304	1567	17.7	3.8	27	152	6.4	3.65	344	1.4	29.5	2023-06-22 19:23:13.781667	2023-07-30 03:19:15.878152
+1424	English Muffin	F005896	170	38.7	12301	938	2.1	55.2	24	130	10.1	0.34	418	3.2	1.7	2023-06-22 19:23:13.781667	2023-07-30 03:20:08.056175
+1427	Mulberry	F005916	20	4.3	16201	139	0.2	0	12	310	2.2	0	6	2.2	4.3	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1428	Mullet, yelloweye, fillet, baked	F005921	73	0	15101	752	8.2	13	38	423	26.4	3.65	179	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1434	Mushroom, common, fried	F005945	5	2.3	24703	156	0.7	0	20	643	4	0.14	15	2.5	0	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1449	Mutton, roasting piece, with bone, leg, lean	F005997	8	0	18102	509	3.8	1.2	35	340	21.6	1.33	80	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1467	Almonds, with skin, roasted	F006082	265	5.4	22204	2461	52.5	0	266	796	19.7	4.03	0	10.9	5.2	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1455	Nectarine, yellow	F006021	4	9	16401	178	0	0	9	240	0.8	0	0	1.6	9	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1438	Mussel, blue, steamed	F005968	173	4.7	15202	438	2.3	267.8	76	130	16	0.37	353	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1439	Mustard powder	F005972	160	17.2	31302	2289	39.5	0	310	650	29.4	2	3	5	5	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1440	Mustard, cream style	F005973	83	6.2	23103	348	3.1	0	55	160	5.8	0.14	1420	4.1	3.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1441	Mutton, all cuts, separable fat, cooked	F005976	8	0	18102	2694	67.9	0	26	310	10.7	28.4	64	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1468	Brazil nuts	F006087	150	2.4	22204	2886	68.5	0	350	560	14.4	14.8	2	8.5	2.1	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1443	Mutton, boneless dice or strips, shoulder, lean, casseroled	F005978	20	0	18102	1041	11.4	1.2	32	350	36.4	3.92	66	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:22:13.452201
+1457	Rice stick Noodle, boiled	F006038	6	26.1	12403	498	0	3.7	4	7	2.5	0	3	0.7	0	2023-06-22 19:23:13.781667	2023-07-30 03:26:50.012438
+1458	Soba Noodle, boiled	F006042	9	21.5	12403	455	0.4	4.1	21	40	3.6	0.07	170	1.6	0	2023-06-22 19:23:13.781667	2023-07-30 03:26:50.012438
+1460	Wheat Noodles, with egg, plain, boiled	F006044	11	28.2	12401	647	1	4.3	18	49	6.6	0.18	4	2.2	0.3	2023-06-22 19:23:13.781667	2023-07-30 03:26:50.012438
+1490	Octopus, boiled	F006146	59	0	15202	324	1.2	16.7	30	311	16.6	0.25	204	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1509	Okra, cooked	F006194	84	1.5	24705	120	0.2	0.6	49	271	3.3	0.06	2	4	1.5	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1473	Chestnuts, roasted	F006096	13	34.3	22204	724	0.6	11	33	574	3.4	0.12	1	8.1	3.8	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1474	Hazelnuts	F006098	86	5.1	22204	2689	61.4	0	160	680	14.8	2.7	3	10.4	4.4	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1475	Macadamia nuts	F006099	48	4.5	22204	3018	74	0	95	410	9.2	10.04	1	6.4	4.5	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1480	Pecan nuts	F006111	51	4.9	22204	2973	71.9	0	110	500	9.8	4.54	3	8.4	4.3	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1481	Pine nuts	F006112	11	4.5	22204	2925	70	0	230	600	13	4.22	3	5.1	3.4	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1482	Pistachio nuts	F006113	90	15.8	22204	2542	50.6	0	100	950	19.7	5.8	7	9	5.9	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1512	Onion, brown	F006224	37	9.4	24802	224	0	0.4	20	290	2.1	0	12	4.4	9.4	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1484	Nutmeg, ground	F006118	184	28.5	31302	2090	36.3	0	183	350	5.8	30.51	16	20.8	3	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1488	Oats, rolled, mixed with sugar or honey & other flavours, uncooked	F006141	47	69.1	12601	1629	7.5	78	77	240	8.3	1.16	8	7.5	24	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1489	Oats, rolled, uncooked	F006143	40	49.9	12101	1486	9.5	74	104	310	12.2	1.73	2	9.5	1	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1470	Cashew nuts, roasted, salted	F006090	34	26.7	22204	2554	48.5	2.8	240	630	17	9	270	3	6.4	2023-06-22 19:23:13.781667	2023-07-30 03:32:18.503075
+1478	Peanuts, without skin, roasted, with oil, salted	F006109	40	14.1	22201	2667	52.8	0	130	620	25.1	9.18	335	6.2	4.4	2023-06-22 19:23:13.781667	2023-07-30 03:32:18.503075
+1492	Almond oil	F006154	0	0	14402	3700	100	0	0	0	0	6.02	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1494	Oil, polyunsaturated blend	F006156	0	0	14401	3700	100	0	0	0	0	14.15	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1495	Canola oil	F006159	1	0	14402	3700	100	0	0	0	0	7.3	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1498	Grapeseed oil	F006167	0	0	14401	3700	100	0	0	0	0	11.38	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1499	Flaxseed oil	F006168	1	0	14401	3699	100	0	0	0	0	9	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1502	Olive oil	F006177	0	0	14402	3695	99.9	0	0	0	0	15.52	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1503	Palm oil	F006181	0	0	14402	3700	100	0	0	0	0	49.3	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1504	Peanut oil	F006183	0	0	14402	3700	100	0	1	0	0	17.36	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1507	Sunflower oil	F006189	0	0	14401	3700	100	0	0	0	0	10.16	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1508	Vegetable oil	F006191	0	0	14401	3700	100	0	0	0	0	10.52	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:35:50.332573
+1511	Olive, green or black	F006198	52	1.8	23202	862	20.5	3.9	16	66	2.4	2.59	1450	2.3	0	2023-06-22 19:23:13.781667	2023-07-30 03:37:24.502824
+1514	Onion, red, fried	F009820	31	8.9	24802	183	0	0	18	226	1.2	0	8	2.2	8.9	2023-06-22 19:23:13.781667	2023-07-30 03:39:23.804924
+1521	Orange, peeled	F006277	23	8.2	16301	175	0	0	12	190	1	0	0	2.4	8.2	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1524	Ostrich, fan fillet	F006282	3	0	18303	424	0.7	0	26	308	23.4	0.22	53	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1527	Oyster, native	F006288	139	0.6	15202	191	1.5	161.8	78	190	7.3	0.36	585	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:14:45.903825
+1533	Parsley, curly	F006322	200	0.4	24403	96	0.2	6.6	33	850	1.9	0	48	5.8	0.4	2023-06-22 19:23:13.781667	2023-07-30 06:16:22.843642
+1538	Passionfruit	F006333	10	5.7	16504	304	0.3	0	28	200	3	0	19	13.9	5.7	2023-06-22 19:23:13.781667	2023-07-30 06:16:22.843642
+1523	Oregano, dried	F006281	1597	26.4	31302	1096	4.3	0	270	1260	9	1.46	25	42.5	4.1	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1530	Pancake, plain	F006298	83	30.3	13601	927	7.6	24.1	21	174	7.4	4.5	79	0.8	4.2	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1535	Parsnip, boiled	F006327	39	10.8	24302	255	0.2	0	24	406	1.9	0	19	3.9	5.2	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1516	Onion, white, fried	F006242	41	7.5	24802	203	0.2	0.8	19	267	2.7	0	21	3.3	7.5	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1531	Paprika, dry powder	F006316	229	19.1	31302	1311	12.9	0	178	2280	14.1	1.9	68	34.9	10.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1540	Pasta in cream based sauce, prepared from dry mix	F009830	84	23.6	13509	599	2.6	16.5	22	226	5.6	1.12	240	1.1	5.1	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1518	Onion, spring, fried	F006249	35	7.4	24802	204	0.3	0.8	18	226	2.7	0	21	3.1	7.2	2023-06-22 19:23:13.781667	2023-07-30 03:39:23.804924
+1545	Pasta, white wheat flour & egg, boiled	F006444	16	29.1	12401	694	1.4	4.3	27	66	7.5	0.21	4	2.6	0.6	2023-06-22 19:23:13.781667	2023-07-30 03:51:06.98544
+1553	Pasta, wholemeal wheat flour, boiled	F006464	28	24.6	12401	586	0.8	3.4	39	92	5.4	0.11	5	5.7	0	2023-06-22 19:23:13.781667	2023-07-30 03:51:06.98544
+1555	Green curry Paste	F006469	33	6.3	23109	461	7.9	1.6	50	195	2.4	1.39	1807	3	3.4	2023-06-22 19:23:13.781667	2023-07-30 03:51:06.98544
+1556	Curry Paste, Indian style 	F006471	136	10.2	23109	1287	26.4	1.6	48	602	4.8	2.73	3434	5.4	4.2	2023-06-22 19:23:13.781667	2023-07-30 03:51:06.98544
+1557	Shrimp Paste	F006476	1380	0	15504	394	1	67.5	39	393	21	0.27	6000	0	0	2023-06-22 19:23:13.781667	2023-07-30 03:51:06.98544
+1558	Soybean Paste	F005702	69	19.7	25201	766	5.1	120	79	380	12.9	0.74	3800	4.3	10.4	2023-06-22 19:23:13.781667	2023-07-30 03:51:06.98544
+1574	Split Pea, boiled	F006544	13	9.1	25101	364	0.4	0	23	140	6.6	0.05	9	8.3	2.9	2023-06-22 19:23:13.781667	2023-07-30 06:48:58.228625
+1582	Pear, brown skin	F006585	6	14.3	16103	264	0	0	7	100	0.3	0	2	3.4	10.4	2023-06-22 19:23:13.781667	2023-07-30 06:16:22.843642
+1592	Pie, savoury, meat	F006665	15	21.2	13405	943	11.2	8.8	18	124	8.9	5.55	500	2.4	1.3	2023-06-22 19:23:13.781667	2023-07-30 06:16:22.843642
+1595	Apple pie	F006679	18	31.4	13402	1059	12.9	0.9	10	26	3	6.18	200	1.3	15.1	2023-06-22 19:23:13.781667	2023-07-30 06:16:22.843642
+1596	Pigeon (squab), whole	F006698	13	0	18303	1219	25.5	1.3	18	199	16.2	6.84	68	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:16:22.843642
+1568	Pawpaw (papaya)	F006528	28	6.9	16504	142	0.1	0	14	140	0.4	0	7	2.3	6.9	2023-06-22 19:23:13.781667	2023-07-30 06:38:33.549497
+1579	Peach, yellow	F006573	5	8.7	16401	172	0	0.9	8	210	0.7	0	0	1.6	8.1	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1598	Pikelet	F006701	97	47.9	13602	1160	5.9	7.8	23	144	7.5	3.38	470	1.7	13.4	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1576	Peach, canned in pear juice	F006553	4	9.5	16402	184	0	0.8	7	141	0.6	0	8	1.3	8.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1580	Peanut butter, smooth & crunchy, added sugar & salt	F006577	54	14.3	22202	2495	49.6	10	190	620	22.2	8.75	477	5.8	8.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1583	Pear, canned in pear juice	F006593	6	10.6	16104	194	0	0	6	100	0.5	0	6	1.7	8.7	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1590	Pepper, black, ground	F006618	443	38.6	31302	1156	3.3	6	171	1329	10.4	1.39	20	25.3	0.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1600	Pineapple, canned in pineapple juice	F006707	4	12	16505	236	0.6	0	11	121	0.5	0.16	5	0.8	12	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1602	Pineapple, canned in syrup	F006711	4	19.8	16505	360	0.6	0	11	80	0.3	0.16	6	0.7	19.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1559	Pastry, spinach & cheese filling, baked	F006493	150	24.7	13405	1214	16.4	7.9	27	170	9.4	8.3	490	2.5	2.7	2023-06-22 19:23:13.781667	2023-07-30 03:52:51.26481
+1560	Pastry, filo, baked	F006496	19	75.1	13401	1631	3.1	1.5	37	156	12.2	0.42	766	4.3	2.1	2023-06-22 19:23:13.781667	2023-07-30 03:52:51.26481
+1564	Pastry, puff, with butter, baked	F006504	15	42.7	13401	1796	24.7	0	17	82	7.1	15.45	208	4.4	1.3	2023-06-22 19:23:13.781667	2023-07-30 03:52:51.26481
+1569	Green Peas, boiled	F006535	18	6.4	24501	251	0.4	0	21	140	4.8	0	1	5.2	2.7	2023-06-22 19:23:13.781667	2023-07-30 03:55:49.760261
+1621	Pork, belly, rind removed, baked	F006860	8	0	18103	1606	30.8	0	16	294	27.4	11.19	68	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:08:42.701005
+1627	Pork, diced, untrimmed, fried	F006881	7	0	18103	647	3.1	0.8	30	465	31.3	1.02	90	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:08:42.701005
+1629	Pork, fillet, fully-trimmed, baked	F006892	4	0	18103	566	2.2	0.8	27	390	28.5	0.76	44	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:08:42.701005
+1613	Plum, dark, canned in syrup	F006825	4	21.6	16404	371	0	0.8	4	96	0.4	0	3	1	21.1	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1620	Popcorn, butter flavoured, salted	F006844	7	49.6	26202	2053	26.5	0	142	260	9.1	16.54	626	8.8	0.6	2023-06-22 19:23:13.781667	2023-07-30 06:18:07.156681
+1618	Plum	F006832	7	7.1	16403	162	0.1	0.1	6	153	0.6	0	2	2	6.5	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1619	Pomegranate	F006842	14	13.5	16504	329	0.2	0	9	210	1.9	0	4	6.4	13.5	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1605	Pineapple	F006702	9	7.9	16502	152	0	0	15	160	0.5	0	0	0.9	7.9	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1606	Pizza, cheese & tomato	F006725	210	28.7	13501	1194	11	8.5	26	170	16.2	4.82	440	2.8	2.7	2023-06-22 19:23:13.781667	2023-07-30 04:01:32.042612
+1607	Pizza, ham & pineapple, baked	F006761	171	28.2	13501	961	6	2.7	22	210	11.5	2.58	468	3.1	4.8	2023-06-22 19:23:13.781667	2023-07-30 04:01:32.042612
+1611	Pizza, supreme	F006799	158	20.5	13501	954	9.8	8.2	18	175	13	4.3	570	3	0.6	2023-06-22 19:23:13.781667	2023-07-30 04:01:32.042612
+1612	Pizza, vegetable	F006805	152	27.2	13501	863	6	6.6	22	162	9.3	3.03	389	2.8	2.8	2023-06-22 19:23:13.781667	2023-07-30 04:01:32.042612
+1651	Pork, loin chop, lean, BBQ'd	F007017	16	0	18103	687	4.5	0.4	24	400	30.6	1.56	58	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:08:42.701005
+1659	Pork, loin cutlet, untrimmed, fried	F007027	8	0	18103	1240	19.3	1.1	34	543	30.9	6.77	61	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:08:42.701005
+1667	Pork, medallion or loin steak, lean, fried	F007048	6	0	18103	631	3.5	0.8	29	455	29.5	1.19	52	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:08:42.701005
+1673	Pork, mince, fried	F007055	12	0	18103	849	11	1.5	22	350	25.9	4.17	59	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:08:42.701005
+1681	Pork, round steak, lean, fried	F007079	5	0	18103	563	1.7	0.8	25	390	29.4	0.54	51	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:08:42.701005
+1696	Pork, spare ribs, untrimmed, bake	F007113	17	0	18103	1663	32.4	0	22	396	27.4	12.68	54	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:08:42.701005
+1704	Porridge, rolled oats, regular milk	F007156	107	13.7	12601	515	4.9	32.2	27	186	5.3	2.49	34	1.6	5.3	2023-06-22 19:23:13.781667	2023-07-30 06:18:07.156681
+1711	Potato, chips, fast food, deep fried	F007235	10	28.2	24102	944	10.1	3.7	25	491	3.8	4.44	228	3	0	2023-06-22 19:23:13.781667	2023-07-30 04:36:19.5317
+1709	Salt & vinegar Crisps, potato, chips	F007201	22	43.6	26101	2097	32.6	5.5	64	1200	6.8	7.84	970	3.6	1.4	2023-06-22 19:23:13.781667	2023-07-30 06:18:07.156681
+1995	Tomato, roma	F009211	9	2.4	24601	74	0.1	0.1	7	214	1	0	8	1.2	2.3	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1707	Salted crisps, potato, chips, plain	F007193	21	45.8	26101	2140	33.3	4.9	60	1250	6	7.5	592	3.2	0.9	2023-06-22 19:23:13.781667	2023-07-30 04:33:34.946904
+1718	Potato, desiree, baked	F007250	10	16.2	24101	364	0	0	30	606	3.5	0	8	2.6	2.6	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1723	Potato, new, baked	F007305	7	19.4	24101	413	0.2	0	30	777	3.5	0	4	1.7	0.8	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1740	Prawn, black tiger, cooked	F007423	239	0	15201	383	1.1	42.3	45	179	20.2	0.21	918	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1750	Protein powder, whey, protein >70%, water	F009818	71	0.3	30104	261	0.4	40.6	14	80	14.2	0.2	36	0.3	0.2	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1753	Chocolate Pudding	F007507	53	37	13305	771	2.6	9.1	24	182	3.6	1.59	162	1.1	23.4	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1735	Potato, sebago, baked	F007383	4	20.8	24101	460	0.2	0	29	670	3.8	0	7	3.3	0.7	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1756	Pumpkin, butternut, baked	F007533	21	8.1	24701	222	0.7	0	20	442	2.5	0.16	1	2.1	6.1	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1765	Pumpkin, baked	F007553	22	7.9	24701	170	0	0	19	376	1.5	0	0	2.2	7	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1746	Prawn, Western king	F007454	45	0	15201	437	0.8	46.8	50	412	23.9	0.16	268	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1748	Prosciutto	F007459	10	0.3	18602	1224	18.8	2.7	22	410	30.8	6.68	1700	0	0.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1751	Prune (dried plum)	F007494	52	43.9	16802	841	0.4	0.8	42	700	2.3	0	7	7.8	31	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1752	Psyllium, uncooked	F007502	190	1	22102	826	1.3	17	34	860	3	0.26	55	88.7	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1754	Pudding, plum, steamed or boiled	F007512	66	53.2	13305	1383	11	12.4	24	344	4.4	6.87	236	2.6	40.1	2023-06-22 19:23:13.781667	2023-07-30 04:40:01.203468
+1755	Pudding, sticky date	F007529	50	48.5	13305	1468	16.6	7.6	17	180	3	10.97	337	1.6	38.6	2023-06-22 19:23:13.781667	2023-07-30 04:40:01.203468
+1771	Quail, lean flesh & skin, baked	F007569	16	0	18303	826	9.6	2.1	31	370	27.7	2.88	58	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:42:01.763326
+1776	Quinoa, cooked in water	F007596	14	16.3	12101	432	1.8	0.7	53	157	3.6	0.21	4	3.4	1.3	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1781	Rabbit, flesh, casseroled	F007602	17	0.2	18202	712	5.7	2.1	26	320	29.3	2.33	56	0	0.2	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1775	Quinoa, black, uncooked	F007593	58	50.6	12101	1455	6.6	0.5	196	563	13.1	0.81	6	16.1	4.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1785	Rambutan	F007612	8	15.7	16504	312	0.4	0	10	140	1	0	2	2.8	15.7	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1790	Raspberry	F007619	26	6.8	16201	204	0.2	0	20	156	1.1	0	1	5.6	6.5	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1791	Rhubarb, stalk	F007628	26	1.7	16601	94	0.2	0	10	130	1.5	0	12	2.2	1.7	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1784	Raisin	F007610	53	68.7	16801	1226	0.5	1.2	35	680	3.2	0.2	10	4.9	66.9	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1786	Raspberry, canned in syrup	F007614	10	17	16202	315	0.1	0	9	78	0.6	0	5	2.5	16.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1794	Rice, brown, boiled	F007641	7	33.5	12102	693	1.1	9.8	72	110	4.1	0.23	2	1.7	0.3	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1802	Rocket	F007712	214	0.3	24401	91	0.3	5.5	51	351	3.3	0	47	2.4	0.3	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1804	Rosemary	F007716	317	0.6	24403	396	5.9	6.6	91	668	3.3	2.72	26	14.1	0.4	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1808	Salami, all varieties	F007818	21	0.4	18603	1412	27.4	3.8	23	360	21.9	8.93	1500	0.5	0	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1782	Radish, red skinned	F007606	25	1.9	24302	62	0.2	0	9	180	0.8	0	20	1.1	1.9	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1783	Radish, white skinned	F007608	30	2.9	24302	86	0.3	0	13	210	0.7	0	28	1.8	2.9	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1803	Rosemary, dried	F007715	1280	20.4	31302	1314	15.2	2.3	220	955	4.9	7.05	50	42.6	19.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1805	Rye, grain, whole, uncooked	F007722	41	51.3	12101	1296	2.6	3	116	510	11.1	0.36	5	17.3	1.7	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1806	Rye, rolled, uncooked	F007724	38	50.8	12101	1278	2.6	3	108	510	10.4	0.29	3	17.3	1.4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1807	Sage, dried	F007726	1652	20.4	31302	1320	12.8	1.8	428	1070	10.6	7.03	11	40.3	1.7	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1813	Salami, pepperoni	F007819	22	1.6	18603	1774	36.1	2	27	290	23.5	13.38	1400	0	0.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1796	Rice, white, boiled or rice cooker	F007661	2	34.7	12102	659	0.2	2.6	4	25	3.1	0.04	0	0.8	0.1	2023-06-22 19:23:13.781667	2023-07-30 04:44:48.312376
+1800	Rice, wild, boiled	F007683	3	19.5	12101	426	0.3	2.5	32	101	4	0.04	3	1.8	0.7	2023-06-22 19:23:13.781667	2023-07-30 04:44:48.312376
+1814	Salmon, Atlantic, fillet, grilled	F007826	54	0	15101	1078	18.6	0	32	409	22.9	4.21	36	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:47:08.555171
+1827	Sardine, fried	F007972	872	0	15101	444	1.9	52	54	402	22	0.59	794	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:21:50.223664
+1823	Salmon, smoked, sliced	F007864	8	0	15102	787	10.1	7.4	34	420	24.3	1.74	1015	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1824	Salt substitute, potassium chloride	F007870	34	0	31301	0	0	19.9	1	50009	0	0	33	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1825	Salt, table, iodised	F007878	34	0	31301	0	0	4400	1	98	0	0	38168	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1826	Salt, table, non-iodised	F007879	34	0	31301	0	0	19.9	1	17	0	0	38178	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1821	Salmon, pink, canned in brine	F007853	191	0	15401	579	6.2	60	30	286	20.7	1.4	382	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:47:08.555171
+1822	Salmon, red, canned in brine	F007860	130	0	15401	617	5.5	13	26	270	24.4	1.14	350	0	0	2023-06-22 19:23:13.781667	2023-07-30 04:47:08.555171
+1829	Barbecue sauce	F007987	12	42.2	23103	725	0.1	2.2	9	130	0.8	0	710	0.9	38.4	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1830	Butter chicken sauce	F007992	21	5.8	23107	412	7.6	3	18	144	1.3	3.13	462	1.9	3.6	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1831	Cranberry sauce	F008000	3	40	23103	649	0	0	2	50	0	0	50	1.1	40	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1832	Fish sauce	F008004	30	4.4	23103	213	0.3	33	118	215	6.8	0.08	8255	1.2	4.4	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1833	Hoi sin (hoisin) sauce	F008008	41	37.2	23103	922	5.4	1.6	14	51	1.6	0.82	1550	10.4	33.5	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1834	Oyster sauce	F008026	40	21	23103	471	1	3	24	210	2.8	0.16	3790	0.3	15.6	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1835	Pasta, Sauce, low fat	F008028	9	6.6	23107	240	2.9	0	10	89	0.8	0.3	281	1.3	3.5	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1836	Basil Pesto pasta sauce	F008029	147	7.4	23103	1598	37.1	6	32	232	5.3	6.93	1251	1.5	2.1	2023-06-22 19:23:13.781667	2023-07-30 04:55:43.332427
+1853	Sausage roll	F008098	24	27.2	13405	1179	14.3	4.3	21	130	9.7	7.89	667	3	2.8	2023-06-22 19:23:13.781667	2023-07-30 05:03:07.312159
+1856	Sausage, beef, grilled	F008107	9	3.8	18501	911	14.9	4.1	16	206	17.2	6.99	795	0.2	0.4	2023-06-22 19:23:13.781667	2023-07-30 05:03:07.312159
+1860	Sausage, chorizo, fried	F008125	11	1.3	18603	1245	23.3	3.7	15	268	21.2	8.42	868	0.5	0.8	2023-06-22 19:23:13.781667	2023-07-30 05:03:07.312159
+1858	Chicken sausage, fried	F008116	19	4.9	18503	841	12	2.7	25	224	18.2	3.67	844	0.6	0.8	2023-06-22 19:23:13.781667	2023-07-30 05:04:54.134932
+1866	Vegetarian Sausage, fried	F008153	36	7.8	20601	849	9.9	30	24	158	20	0.9	632	1.6	2	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1875	Seaweed, boiled	F008203	54	0.4	24404	228	0.8	337.2	56	470	8.4	0.16	83	6.2	0	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1890	Silver perch, baked	F008258	25	0	15101	1266	22	39	42	475	26.7	5.85	96	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1893	Silverbeet, boiled	F008266	80	1.2	24401	77	0.2	6.9	28	260	1.8	0	218	2.3	1.2	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1898	Snack, grain based, flavoured	F004248	20	54.2	26301	1934	22.6	11	79	430	7.4	1.86	320	6.9	6.6	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1899	Snapper, fillet, baked	F008358	168	0	15101	554	2.2	52	44	615	27.8	0.64	116	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1902	Snow pea, boiled	F008371	26	5	24501	169	0.2	0	37	406	3.2	0	1	2.8	3.1	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1884	Shallot, fried	F008226	153	5	24802	172	0.2	0.4	53	435	2.4	0	9	4.7	5	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1877	Chia Seed	F008209	530	3.1	22101	1825	29.8	0	380	720	23.8	2.54	0	33.2	0.7	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1880	Pumpkin Seed	F008212	40	2.1	22101	2249	45	0	530	700	30.2	7.31	1	4.6	1.3	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+1897	Slice, caramel	F008278	141	52.4	13306	1849	24.4	16.8	37	296	5.3	16.77	193	0.8	41.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1876	Nori Seaweed, dried	F008204	310	2.3	24404	1266	4.3	2200	320	2900	46.7	0.88	470	34.3	0.3	2023-06-22 19:23:13.781667	2023-07-30 05:07:07.553379
+1864	Sausage, pork, fried	F008143	14	4.5	18501	1083	19.4	3.3	20	220	16.5	7.87	763	1.4	0.7	2023-06-22 19:23:13.781667	2023-07-30 05:03:07.312159
+1869	Scallop, fried	F008165	32	4.2	15202	439	1	178.1	52	450	19.5	0.18	188	0	1.1	2023-06-22 19:23:13.781667	2023-07-30 05:03:07.312159
+1871	Fruit scone	F008172	67	59.3	13307	1361	6.6	5.9	24	276	6.4	2.43	712	2.6	22.9	2023-06-22 19:23:13.781667	2023-07-30 05:04:54.134932
+1873	Scone, plain	F008174	81	50.7	13307	1350	9.4	14.4	25	155	8	5.94	560	1.4	6.8	2023-06-22 19:23:13.781667	2023-07-30 05:04:54.134932
+1874	Pumpkin scone	F008176	59	47.9	13307	1217	7.4	11.7	24	192	7.4	4.4	417	1.7	9.3	2023-06-22 19:23:13.781667	2023-07-30 05:04:54.134932
+1878	Flaxseed Seed, linseed	F008210	180	2.8	22101	1883	32.6	4.3	330	630	21.6	3.33	60	32.9	1.5	2023-06-22 19:23:13.781667	2023-07-30 05:07:07.553379
+1879	Poppy seed	F008211	1438	8.6	22101	2143	41.6	0	347	719	18	4.59	26	19.5	3	2023-06-22 19:23:13.781667	2023-07-30 05:07:07.553379
+1881	Sunflower Seed	F008215	99	3.1	22101	2362	48.3	0	370	610	24.7	4.39	0	13	2.1	2023-06-22 19:23:13.781667	2023-07-30 05:07:07.553379
+1882	Semolina, boiled	F008220	6	19.6	12103	413	0.4	1.1	8	36	3.4	0.06	3	1	0	2023-06-22 19:23:13.781667	2023-07-30 05:07:43.355527
+1886	Shark, battered, deep-fried	F008233	11	16.5	15501	1090	14.5	3.4	24	310	15.5	3.39	295	1.3	1.5	2023-06-22 19:23:13.781667	2023-07-30 05:07:43.355527
+1895	Chocolate Brownie, Slice, with Nuts	F008272	30	52.7	13306	1922	25.3	12.3	42	239	6.5	12.76	510	1.9	35.8	2023-06-22 19:23:13.781667	2023-07-30 05:10:07.673869
+1896	Chocolate Brownie, Slice, without Nuts	F008273	39	45.6	13306	1735	23.1	7.7	31	217	7.1	12.98	130	2.6	36.3	2023-06-22 19:23:13.781667	2023-07-30 05:10:07.673869
+1905	Coke, cola flavour	F008402	1	12.3	11503	206	0.2	0.8	0	0	0	0	2	0	12.3	2023-06-22 19:23:13.781667	2023-07-30 05:11:12.852132
+1949	Potato Starch	F008831	14	74.5	24102	1332	0.5	0	5	43	0	0.18	9	5.9	0	2023-06-22 19:23:13.781667	2023-07-30 05:16:45.795411
+1937	Hazelnut & Chocolate Spread	F008777	130	57.8	27204	2192	30.3	9	75	430	6.8	7.96	42	3.7	57.2	2023-06-22 19:23:13.781667	2023-07-30 05:18:06.951548
+1911	Soft drink, fruit flavours	F008438	2	8.8	11501	142	0	1.7	0	1	0	0	14	0	8.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1938	Marmite Spread, yeast	F008783	25	16.6	31102	624	0.9	8.8	71	1950	13.3	0.14	3400	11.8	11.8	2023-06-22 19:23:13.781667	2023-07-30 05:18:06.951548
+1939	Vegemite Spread, yeast	F008785	68	10.9	31102	683	0.9	8.8	130	2122	24.4	0.14	3000	6.5	1.6	2023-06-22 19:23:13.781667	2023-07-30 05:18:06.951548
+1915	Sorghum, grain, uncooked	F008474	10	65.8	12101	1465	3.6	1	124	363	8.2	0.36	1	8.6	1.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1916	Soup, broth style, with meat & noodles, instant dry mix	F008508	43	64.1	21201	1520	6.3	15	32	98	10.8	1.12	4536	2.2	6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1918	Soup, chicken & noodle, instant	F008513	5	3.4	21301	79	0.2	5.7	4	11	0.7	0.07	440	0.3	0.4	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1919	Soup, cream variety, instant	F008571	42	59.1	21202	1628	13.2	10	14	339	5.3	5.89	4230	6.5	8.1	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1920	Soup, vegetable & noodle, instant	F008661	42	65.5	21202	1514	6.3	5	41	15	8.7	2.59	2030	3.9	16	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1925	Soy beverage, 3% fat	F008721	13	4.6	20101	246	2.7	1.3	21	191	3.7	0.43	44	0.6	2.6	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1929	Spelt, boiled	F008744	12	24.5	12101	576	1.2	1.9	53	137	4.8	0.15	7	3.6	0.6	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1926	Spaghetti in tomato & cheese sauce, canned	F008737	9	10.7	13509	227	0	2.3	6	90	2.5	0	330	0.8	4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1931	Spinach, baby	F008749	93	0	24401	68	0	7.3	107	605	2.8	0	90	2.5	0	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1928	Spam, canned	F008740	5	1.9	18606	1238	26.1	4.7	13	440	14.2	8.6	920	0	1.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1934	Spinach, water	F008763	68	1	24401	110	0.5	7.3	29	460	2.9	0	25	2.8	0.5	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1935	Sprat, blue, wild caught, flesh, skin & bones, fried	F008774	872	0	15101	444	1.9	52	54	402	22	0.59	794	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1940	Spring roll, meat & vegetable filling, deep fried	F008794	26	27.5	13406	1047	11.7	0	22	110	7.5	3.27	501	2.8	4.3	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1941	Sprout, alfalfa	F008803	19	0.5	24503	91	0.3	0	21	58	3.2	0	39	2.2	0.5	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1942	Sprout, bean	F008806	10	1.6	24503	94	0.1	0	14	150	3.1	0	1	1.3	1	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1943	Squash, button, boiled	F008810	7	3.8	24702	130	0.2	0	14	150	3.2	0	1	0.6	3.4	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1947	Squid or calamari, fried	F008825	14	0	15202	410	1.5	23.8	45	195	20.9	0.39	355	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:25:44.93765
+1909	Red Bull, energy drink	F008421	9	10.8	11603	182	0	0	0	0	0.1	0	71	0	10.8	2023-06-22 19:23:13.781667	2023-07-30 05:11:12.852132
+1910	Energy drink, V	F008424	9	10.8	11603	182	0	0	0	0	0.1	0	110	0	10.8	2023-06-22 19:23:13.781667	2023-07-30 05:11:12.852132
+1913	Tonic water	F008460	1	8.8	11501	142	0	0.7	0	0	0	0	12	0	8.8	2023-06-22 19:23:13.781667	2023-07-30 05:11:12.852132
+1956	Strawberry	F008952	22	3.9	16201	108	0.2	0	8	185	0.7	0	0	2.5	3.8	2023-06-22 19:23:13.781667	2023-07-30 06:28:34.377271
+1951	Stock, dry powder or cube	F008933	71	22.5	31303	900	8.9	44	25	250	11.3	4.38	18400	0	4.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1977	Tapioca, pearl or seed style, boiled	F009089	4	11.5	12103	197	0	2.6	2	4	0	0.01	3	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:28:34.377271
+1962	Sultana	F008983	52	75	16801	1295	0.3	1.2	35	955	2.6	0	7	3.3	73.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1981	Tart, custard	F009102	74	30.2	13403	1014	10.7	10.7	14	88	6.3	5.17	270	1	11.4	2023-06-22 19:23:13.781667	2023-07-30 06:28:34.377271
+1986	Tilapia, fillet, baked	F009161	25	0	15101	654	6	39	42	475	25.3	1.88	115	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:28:34.377271
+1970	Taco seasoning mix, chilli-based	F009072	240	39.7	31303	1010	4.1	6	76	700	5.9	1.09	9350	9.9	19.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1971	Taco shell, from corn flour, plain	F009073	52	56.3	26201	1948	21.8	3.4	80	210	6.8	1.81	80	7.3	1.1	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1972	Tahini, sesame seed pulp	F009076	330	1	22102	2717	60.7	0	320	190	20.4	7.54	79	13.5	0.7	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1974	Tamarind, paste, pure	F009081	74	57.4	16804	1048	0.6	0	92	628	2.8	0.26	28	5.1	38.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1990	Cherry Tomato	F009190	14	3.5	24601	90	0	0	14	260	0.9	0	6	1.7	3.5	2023-06-22 19:23:13.781667	2023-07-30 06:28:34.377271
+1991	Tomato, common	F009193	11	3	24601	73	0	0	10	210	0.6	0	4	1.1	2.5	2023-06-22 19:23:13.781667	2023-07-30 06:28:34.377271
+1963	Swede, boiled	F009020	22	4	24302	100	0	0	11	300	1	0	12	2.4	3.6	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1985	Thyme, dried, ground	F009160	1890	26.9	31302	1182	7.4	2.3	220	814	9.1	3.7	55	37	1.7	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1965	Sweet potato, baked	F009033	33	17.2	24302	357	0.1	0	17	305	2.3	0	12	3.1	6.8	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1973	Tamarillo	F009080	8	3.4	16503	150	0.1	0.1	16	280	2	0	1	4.7	3.4	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1975	Tangelo	F009087	22	7.8	16303	172	0.1	0	10	140	0.6	0	4	2	7.8	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1993	Tomato, paste, with added salt	F009208	28	10.4	24602	277	0.3	4.7	38	960	3.1	0	630	3.5	9.9	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+1957	Brown Sugar	F008969	150	96.8	27101	1552	0	0	21	300	0.2	0	21	0	96.8	2023-06-22 19:23:13.781667	2023-07-30 05:16:45.795411
+1959	White Sugar, granulated	F008976	1	100	27101	1600	0	0	0	2	0	0	0	0	100	2023-06-22 19:23:13.781667	2023-07-30 05:16:45.795411
+1960	Icing Sugar, white	F008980	1	100	27101	1600	0	0	0	2	0	0	0	0	100	2023-06-22 19:23:13.781667	2023-07-30 05:16:45.795411
+1968	Golden Syrup	F009049	230	74.9	27102	1203	0	0	37	610	0.2	0	130	0	74.9	2023-06-22 19:23:13.781667	2023-07-30 05:19:06.55206
+1969	Maple Syrup, pure	F009052	102	67	27102	1082	0.1	0	21	212	0	0.01	12	0	60.4	2023-06-22 19:23:13.781667	2023-07-30 05:19:06.55206
+1983	Green Tea, without milk	F009117	3	0	11101	7	0.1	0	2	19	0.2	0	1	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:21:05.518935
+1984	Black Tea, without milk	F009125	1	0	11101	1	0	0	1	17	0.1	0	0	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:21:05.518935
+1989	Tofu (soy bean curd), firm	F009176	206	0	20601	543	8.3	2.3	99	150	12.8	1.16	22	1	0	2023-06-22 19:23:13.781667	2023-07-30 05:21:05.518935
+1976	Tangerine or tangor	F009088	26	8.1	16303	180	0.2	0	9	150	1	0	2	1.5	8.1	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+1994	Tomato, puree	F009209	22	3.8	24602	98	0.1	1.1	11	204	1.2	0	249	1.5	3.8	2023-06-22 19:23:13.781667	2023-07-30 05:22:16.209157
+1979	Taro, boiled	F009093	12	25.2	24302	504	0.2	0.6	20	290	2	0	6	3.8	1.2	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+2006	Tuna, canned in brine	F009285	5	0	15401	540	2.6	10.2	24	205	26.1	1.03	200	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:30:28.389123
+2007	Tuna, flavoured, canned in oil	F009293	13	3.3	15401	577	5.8	12	27	250	18	1.12	430	0.3	2.5	2023-06-22 19:23:13.781667	2023-07-30 06:30:28.389123
+2008	Tuna, yellowfin, flesh, baked	F009302	22	0	15101	596	1.4	36.4	68	608	32	0.33	51	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:30:28.389123
+2011	Turkey, breast, lean flesh, baked	F009306	8	0	18302	648	4	1.3	26	330	29.4	1.08	210	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:30:28.389123
+2013	Turkey, breast, lean flesh, skin & fat, baked	F009308	8	0	18302	809	9.2	1.3	24	317	27.7	2.56	199	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:30:28.389123
+1998	Tomato, whole, canned	F009222	20	3	24602	79	0	0.6	11	219	0.9	0.01	52	1	3	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+2020	Turnip, white, boiled	F009339	21	3.6	24302	101	0	0.4	8	310	1.4	0	24	1.8	3.4	2023-06-22 19:23:13.781667	2023-07-30 06:41:23.120203
+2019	Turmeric, ground	F009335	168	44.4	31302	1219	3.2	2.3	208	2080	9.7	1.88	27	22.7	3.2	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+2022	Vanilla bean extract	F009350	11	12.6	31401	1203	0.1	0.2	12	148	0.1	0.02	9	0	12.6	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2024	Veal, all cuts, separable fat, cooked	F009359	7	0	18104	1573	33	0	11	160	20.7	17.04	32	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2000	Trout, ocean, fillet, without skin, baked	F009267	100	0	15101	1651	33.7	18.9	44	399	23.8	8.55	338	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:24:53.207633
+2003	Trout, rainbow, baked	F009270	66	0	15101	883	11.6	0	39	502	26.8	3.44	96	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:24:53.207633
+2056	Watercress	F009532	85	0.8	24401	110	0.4	0	23	570	2.9	0	48	3.8	0.7	2023-06-22 19:23:13.781667	2023-07-30 06:30:28.389123
+2062	Whiting, King George, flesh, baked	F009557	53	0	15101	517	1	13.6	40	504	28.2	0.26	100	0	0	2023-06-22 19:23:13.781667	2023-07-30 06:30:28.389123
+2051	Water chestnut, canned	F009514	3	9.3	24801	218	0.9	0.7	4	100	0.6	0.27	10	2.7	5.1	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+2048	Vegetable crisps or chips, sweet potato & taro, flavoured	F009836	82	47.7	24102	2051	31.1	12	51	770	3	10.14	440	6.3	12.4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2049	Vine leaf, grape, canned	F009491	289	1.8	24401	254	2	6.6	14	29	4.3	0.36	2853	9.9	1.8	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2050	Vinegar (except balsamic vinegar)	F009498	1	0	23305	65	0	0.2	1	6	0	0	5	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2052	Water, bottled, still	F009516	1	0	11702	0	0	0.2	5	0	0	0	1	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2055	Water, tap	F009527	2	0	11701	0	0	0.7	1	0	0	0	3	0	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2059	Wheat bran, unprocessed, uncooked	F009535	75	22.6	12101	1119	4.1	17	450	1200	14.8	0.66	6	41.8	2.7	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2060	Wheat germ	F009536	64	32.7	12101	1285	6.1	3.9	270	910	20.6	1.08	4	20.1	7.4	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2061	Wheat, whole, uncooked	F009537	35	58.3	12101	1362	2.4	3	120	315	11.2	0.36	2	11.4	1.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2068	Wine, red	F009571	7	0.2	29201	335	0	1.8	14	111	0.2	0	5	0	0.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2075	Wine, rose	F009579	8	0.7	29201	289	0	2	11	51	0.2	0	5	0	0.7	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2076	Wine, white	F009581	8	0.2	29202	301	0	0.1	10	53	0.3	0	4	0	0.2	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2053	Water, coconut	F009794	12	3.2	22203	54	0	0	9	200	0.2	0	36	0	3.2	2023-06-22 19:23:13.781667	2023-07-30 05:28:32.194859
+2054	Soda Water	F008377	2	0	11702	0	0	0.7	1	0	0	0	3	0	0	2023-06-22 19:23:13.781667	2023-07-30 05:28:32.194859
+2065	Port Wine, fortified	F009566	5	12.4	29203	600	0	0	10	82	0.2	0	15	0	12.4	2023-06-22 19:23:13.781667	2023-07-30 05:29:03.693861
+2067	Sherry Wine, 11% sugars	F009568	4	11.1	29203	577	0	0	6	53	0.2	0	18	0	11.1	2023-06-22 19:23:13.781667	2023-07-30 05:30:03.729761
+2099	Zucchini, golden, fried	F009765	23	1.6	24702	111	0.4	0	14	328	3.1	0	1	1.4	1.6	2023-06-22 19:23:13.781667	2023-07-30 06:30:28.389123
+2084	Yam, wild harvested, cooked	F009604	3	20.9	24001	448	0.3	0	14	309	3.2	0	4	3.5	0.5	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2085	Yeast, dry powder	F009606	18	6.3	31101	1126	5	5.5	95	1470	36.4	0.75	170	26.9	0	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2102	Zucchini, green skin, fried	F009774	25	2.4	24702	92	0.4	0	23	268	1.3	0	1	1.6	2.4	2023-06-22 19:23:13.781667	2023-07-30 06:30:28.389123
+819	Whole wheat cereal, fruit & nuts	F001862	376	65.6	12509	1490	3.3	2	86	527	9.1	0.38	98	15.5	25	2023-06-22 19:23:13.781667	2023-07-30 06:47:58.61494
+2089	Yoghurt, flavoured, high fat (approx 5%)	F009811	150	12.9	19204	483	4.9	26	13	190	4.4	3.32	47	0.6	12.5	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2091	Yoghurt, flavoured, low fat (approx 2%)	F009810	160	12.2	19207	341	1.3	27	14	210	4.6	0.89	60	0.3	11.3	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+2092	Yoghurt, natural, regular fat (3% fat)	F009694	175	5	19201	306	3.2	24	16	230	5.1	2.17	58	0.1	4.9	2023-06-22 19:23:13.781667	2023-06-22 19:23:13.781667
+736	Plain biscuit	F001215	30	69.4	13101	1812	14.3	13.1	22	149	6.4	6.84	289	2.1	24.7	2023-06-22 19:23:13.781667	2023-07-30 00:48:42.214182
+2090	Yoghurt, flavoured, low fat (0.2%)	F009809	110	2.3	19209	227	0.3	23	10	140	9.6	0.2	35	0.4	1.6	2023-06-22 19:23:13.781667	2023-07-30 05:32:22.230781
+576	Red kidney bean, boiled	F000452	11	15.8	24502	604	0.4	0	15	395	13.8	0	2	9.8	1.3	2023-06-22 19:23:13.781667	2023-07-30 05:41:54.309144
+737	Jam and cream biscuit	F001233	27	64.1	13104	1974	22.5	0	14	85	4	11.24	260	1.8	33.5	2023-06-22 19:23:13.781667	2023-07-30 05:53:36.343137
+\.
+
+
+--
+-- TOC entry 3391 (class 0 OID 90319)
+-- Dependencies: 220
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: ketotrainer
+--
+
+COPY public.users (user_id, email_address, user_name, last_login_date, creation_ts, last_modified_ts) FROM stdin;
+1	peteburquette@gmail.com	\N	\N	2023-07-09 00:30:30.930294	2023-07-09 00:30:30.930294
+2	undefined	\N	\N	2023-07-09 01:53:34.559779	2023-07-09 01:53:34.559779
+\.
+
+
+--
+-- TOC entry 3393 (class 0 OID 90327)
+-- Dependencies: 222
+-- Data for Name: water_consumptions; Type: TABLE DATA; Schema: public; Owner: ketotrainer
+--
+
+COPY public.water_consumptions (water_consumptions_id, user_id, consumption_date, litre_amount) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3395 (class 0 OID 90331)
+-- Dependencies: 224
+-- Data for Name: weight_logs; Type: TABLE DATA; Schema: public; Owner: ketotrainer
+--
+
+COPY public.weight_logs (weight_logs_id, user_id, weigh_in_timestamp, kg_amount) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3408 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: FoodFacts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ketotrainer
+--
+
+SELECT pg_catalog.setval('public."FoodFacts_id_seq"', 2103, true);
+
+
+--
+-- TOC entry 3409 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: consumption_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ketotrainer
+--
+
+SELECT pg_catalog.setval('public.consumption_log_id_seq', 22, true);
+
+
+--
+-- TOC entry 3410 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: favourite_foods_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ketotrainer
+--
+
+SELECT pg_catalog.setval('public.favourite_foods_id_seq', 35, true);
+
+
+--
+-- TOC entry 3411 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ketotrainer
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 2, true);
+
+
+--
+-- TOC entry 3412 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: water_consumptions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ketotrainer
+--
+
+SELECT pg_catalog.setval('public.water_consumptions_id_seq', 1, false);
+
+
+--
+-- TOC entry 3413 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: weight_logs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: ketotrainer
+--
+
+SELECT pg_catalog.setval('public.weight_logs_id_seq', 1, false);
+
+
+--
+-- TOC entry 3218 (class 2606 OID 90342)
+-- Name: food_facts FoodFacts_pkey; Type: CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.food_facts
+    ADD CONSTRAINT "FoodFacts_pkey" PRIMARY KEY (food_facts_id);
+
+
+--
+-- TOC entry 3220 (class 2606 OID 90344)
+-- Name: consumption_logs consumption_log_pkey; Type: CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.consumption_logs
+    ADD CONSTRAINT consumption_log_pkey PRIMARY KEY (consumption_log_id);
+
+
+--
+-- TOC entry 3224 (class 2606 OID 90346)
+-- Name: users email_address_uniq; Type: CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT email_address_uniq UNIQUE (email_address);
+
+
+--
+-- TOC entry 3222 (class 2606 OID 90348)
+-- Name: favourite_foods favourite_foods_pkey; Type: CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.favourite_foods
+    ADD CONSTRAINT favourite_foods_pkey PRIMARY KEY (favourite_foods_id);
+
+
+--
+-- TOC entry 3226 (class 2606 OID 90350)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- TOC entry 3228 (class 2606 OID 90352)
+-- Name: water_consumptions water_consumptions_pkey; Type: CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.water_consumptions
+    ADD CONSTRAINT water_consumptions_pkey PRIMARY KEY (water_consumptions_id);
+
+
+--
+-- TOC entry 3230 (class 2606 OID 90354)
+-- Name: weight_logs weight_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.weight_logs
+    ADD CONSTRAINT weight_logs_pkey PRIMARY KEY (weight_logs_id);
+
+
+--
+-- TOC entry 3237 (class 2620 OID 90355)
+-- Name: food_facts update_last_mod_time; Type: TRIGGER; Schema: public; Owner: ketotrainer
+--
+
+CREATE TRIGGER update_last_mod_time BEFORE UPDATE ON public.food_facts FOR EACH ROW EXECUTE FUNCTION public.update_last_modified_ts_column();
+
+
+--
+-- TOC entry 3238 (class 2620 OID 90356)
+-- Name: consumption_logs update_timestamp; Type: TRIGGER; Schema: public; Owner: ketotrainer
+--
+
+CREATE TRIGGER update_timestamp BEFORE UPDATE ON public.consumption_logs FOR EACH ROW EXECUTE FUNCTION public.update_timestamp_column();
+
+
+--
+-- TOC entry 3239 (class 2620 OID 90357)
+-- Name: favourite_foods update_timestamp; Type: TRIGGER; Schema: public; Owner: ketotrainer
+--
+
+CREATE TRIGGER update_timestamp BEFORE UPDATE ON public.favourite_foods FOR EACH ROW EXECUTE FUNCTION public.update_timestamp_column();
+
+
+--
+-- TOC entry 3240 (class 2620 OID 90358)
+-- Name: users update_timestamp; Type: TRIGGER; Schema: public; Owner: ketotrainer
+--
+
+CREATE TRIGGER update_timestamp BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.update_timestamp_column();
+
+
+--
+-- TOC entry 3241 (class 2620 OID 90359)
+-- Name: water_consumptions update_timestamp; Type: TRIGGER; Schema: public; Owner: ketotrainer
+--
+
+CREATE TRIGGER update_timestamp BEFORE UPDATE ON public.water_consumptions FOR EACH ROW EXECUTE FUNCTION public.update_timestamp_column();
+
+
+--
+-- TOC entry 3242 (class 2620 OID 90360)
+-- Name: weight_logs update_timestamp; Type: TRIGGER; Schema: public; Owner: ketotrainer
+--
+
+CREATE TRIGGER update_timestamp BEFORE UPDATE ON public.weight_logs FOR EACH ROW EXECUTE FUNCTION public.update_timestamp_column();
+
+
+--
+-- TOC entry 3231 (class 2606 OID 90361)
+-- Name: consumption_logs consumption_log_food_facts_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.consumption_logs
+    ADD CONSTRAINT consumption_log_food_facts_id_fkey FOREIGN KEY (food_facts_id) REFERENCES public.food_facts(food_facts_id);
+
+
+--
+-- TOC entry 3232 (class 2606 OID 90366)
+-- Name: consumption_logs consumption_log_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.consumption_logs
+    ADD CONSTRAINT consumption_log_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- TOC entry 3233 (class 2606 OID 90371)
+-- Name: favourite_foods favourite_foods_food_facts_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.favourite_foods
+    ADD CONSTRAINT favourite_foods_food_facts_id_fkey FOREIGN KEY (food_facts_id) REFERENCES public.food_facts(food_facts_id);
+
+
+--
+-- TOC entry 3234 (class 2606 OID 90376)
+-- Name: favourite_foods favourite_foods_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.favourite_foods
+    ADD CONSTRAINT favourite_foods_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3235 (class 2606 OID 90381)
+-- Name: water_consumptions water_consumptions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.water_consumptions
+    ADD CONSTRAINT water_consumptions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- TOC entry 3236 (class 2606 OID 90386)
+-- Name: weight_logs weight_logs_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ketotrainer
+--
+
+ALTER TABLE ONLY public.weight_logs
+    ADD CONSTRAINT weight_logs_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+-- Completed on 2023-08-04 10:01:28 BST
+
+--
+-- PostgreSQL database dump complete
+--
+
