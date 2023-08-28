@@ -5,6 +5,7 @@ import {
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin'
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next'
+import Config from 'react-native-config'
 
 const LoginPage = ({ navigation }) => {
   const [isSigninInProgress, setSigninInProgress] = useState(false)
@@ -50,14 +51,9 @@ const LoginPage = ({ navigation }) => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId:
-        '534592509466-tfde9rsgmmeahtknghht7rbjt14e0m0c.apps.googleusercontent.com',
-      // androidClientId:
-      //   '534592509466-r0b52u6k67qqluglvd7eo6sptlsf1eqr.apps.googleusercontent.com',
-      androidClientId:
-        '534592509466-mla9cae97f60gjl773k5h79r5m1m51n5.apps.googleusercontent.com',
-      iosClientId:
-        '534592509466-emk8vddvuarhkrqhdv1qlp5rg5ddtagi.apps.googleusercontent.com',
+      webClientId: Config.WEB_CLIENT_ID,
+      androidClientId: Config.ANDROID_CLIENT_ID,
+      iosClientId: Config.IOS_CLIENT_ID,
       // offlineAccess: true,
     })
   }, [])

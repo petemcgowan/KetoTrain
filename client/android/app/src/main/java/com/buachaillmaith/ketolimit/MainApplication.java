@@ -12,6 +12,7 @@ import com.facebook.soloader.SoLoader;
 import com.buachaillmaith.ketolimit.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import android.util.Log;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -67,6 +68,7 @@ public class MainApplication extends Application implements ReactApplication {
    */
   private static void initializeFlipper(
       Context context, ReactInstanceManager reactInstanceManager) {
+      Log.d("MainApplication", "BuildConfig.DEBUG(Pete) = " + BuildConfig.DEBUG);
     if (BuildConfig.DEBUG) {
       try {
         /*
