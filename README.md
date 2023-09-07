@@ -4,7 +4,6 @@
 
 [![Available on the App Store](/img/app-store-available-on-the.svg)](https://apps.apple.com/us/app/keto-train/id6463052792)
 [![Available on Google Play](/img/Google_Play_2022_logo.svg)](https://play.google.com/store/apps/developer?id=Buachaill+Maith)
-[![Source on GitHub](/img/github-full.svg)](https://github.com/petemcgowan/KetoTrain)
 
 Keto Train is a full-stack React Native / TypeScript app that provides tools and resources for monitoring daily keto limit. It uses Open Food Facts for nutritional information and features carb limit tracking, D3 charting, Lottie animations, custom motion design, and a Dockerized backend.
 
