@@ -97,7 +97,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore.
@@ -155,8 +155,8 @@ android {
         applicationId "com.buachaillmaith.ketolimit"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.03"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
 
@@ -244,10 +244,14 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file(project.property("RELEASE_KEYSTORE_FILE"))
-            storePassword project.property("RELEASE_STORE_PASSWORD")
-            keyAlias project.property("RELEASE_KEY_ALIAS")
-            keyPassword project.property("RELEASE_KEY_PASSWORD")
+//            storeFile file(project.property("RELEASE_KEYSTORE_FILE"))
+//            storePassword project.property("RELEASE_STORE_PASSWORD")
+//            keyAlias project.property("RELEASE_KEY_ALIAS")
+//            keyPassword project.property("RELEASE_KEY_PASSWORD")
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
         }
     }
     buildTypes {

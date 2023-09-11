@@ -17,7 +17,7 @@ import CentralNavigation from './components/CentralNavigation'
 import { useNavigationState } from '@react-navigation/native'
 
 export default function App() {
-  console.info('App is rendering (warn)')
+  console.info('App... is rendering')
   const [trackerItems, setTrackerItems] = useState([])
   const [totalCarbs, setTotalCarbs] = useState(0)
   const [foodData, setFoodData] = useState()
