@@ -15,6 +15,17 @@ interface favFoodListReducer {
   payload: boolean
 }
 
-export type IntroAction = HasSeenIntroAction
-export type SearchFoodListAction = searchFoodListReducer
-export type FavFoodListAction = favFoodListReducer
+interface UpdateEmailAddressAction {
+  type: ActionType.UPDATE_EMAIL_ADDRESS
+  payload: string | null
+}
+
+// export type IntroAction = HasSeenIntroAction
+// export type SearchFoodListAction = searchFoodListReducer
+// export type FavFoodListAction = favFoodListReducer
+// export type EmailAddressAction = UpdateEmailAddressAction
+export type Action =
+  | HasSeenIntroAction
+  | searchFoodListReducer
+  | favFoodListReducer
+  | UpdateEmailAddressAction

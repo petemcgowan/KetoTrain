@@ -1,13 +1,13 @@
-import {IntroAction} from '../actions/index';
+import { Action } from '../actions/index'
 
-const initialState = false; // set this to true to enable the intro slides
+const initialState = false // set this to true to enable the intro slides
 
-export const hasSeenIntro = (state = initialState, action: IntroAction) => {
+export const hasSeenIntro = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'UPDATE_HAS_SEEN_INTRO_VALUE':
-      state = action.payload;
-      return state;
+      state = action.payload
+      return state
     default:
-      return state;
+      return state
   }
-};
+}
