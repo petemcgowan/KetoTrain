@@ -30,3 +30,12 @@ export const initFavFoodList = (list) => ({
   type: ActionType.INIT_FAV_FOOD_LIST,
   payload: list,
 })
+
+export const updateEmailAddress = (email: string | null) => {
+  return (dispatch: Dispatch) => {
+    dispatch({
+      type: ActionType.UPDATE_EMAIL_ADDRESS,
+      payload: email,
+    })
+  }
+}
