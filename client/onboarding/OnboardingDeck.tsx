@@ -7,6 +7,8 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
+  Platform,
+  Alert,
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
@@ -16,6 +18,12 @@ import LoginBottomSheet from './LoginBottomSheet'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import UserContext, { UserContextProps } from '../state/UserContext'
 import { appleAuth } from '@invertase/react-native-apple-authentication'
+
+// firebase vanilla auth
+import auth from '@react-native-firebase/auth'
+import { actionCreators } from '../redux/index'
+import { useDispatch } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 const { width, height } = Dimensions.get('window')
 
@@ -64,11 +72,15 @@ const slides = [
 const OnboardingDeck = () => {
   const [activeSlide, setActiveSlide] = useState(0)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [isLoginFormVisible, setIsLoginFormVisible] = useState(false)
+
   const sheetRef = useRef<BottomSheet>(null)
   const [isSigninInProgress, setSigninInProgress] = useState(false)
   const navigation = useNavigation()
   const [backgroundColor, setBackgroundColor] = useState('#000')
-  const { setEmailAddress } = useContext(UserContext) as UserContextProps
+  // const { setEmailAddress } = useContext(UserContext) as UserContextProps
+  const dispatch = useDispatch()
+  const { updateEmailAddress } = bindActionCreators(actionCreators, dispatch)
 
   const onScroll = (event: any) => {
     const slide = Math.ceil(
@@ -96,7 +108,7 @@ const OnboardingDeck = () => {
         console.log('Error during Google Sign In:', error)
       })
       console.log('userInfo:' + JSON.stringify(userInfo))
-      setEmailAddress(userInfo.user.email)
+      updateEmailAddress(userInfo.user.email)
       navigation.navigate('LoadingScreen')
       sheetRef.current?.snapTo(1)
       console.log('sheet closed snapping to 1')
@@ -106,6 +118,127 @@ const OnboardingDeck = () => {
       console.log('Error in handleGoogleLogin:' + error)
     }
   }
+
+  // vanilla firebase auth
+  const onUserChanged = (user) => {
+    // Handle user state changes
+    if (user) {
+      console.log('User is logged in: ', user.email)
+    } else {
+      console.log('User is logged out')
+    }
+  }
+
+  const validateLoginDetails = async (email, password) => {
+    if (!email) {
+      Alert.alert('Error', 'Please enter an email address.')
+      return
+    }
+    if (!email.includes('@')) {
+      Alert.alert('Error', 'Please enter a valid email address.')
+      return
+    }
+    if (!password) {
+      Alert.alert('Error', 'Please enter a password.')
+      return
+    }
+    if (password.length < 8) {
+      Alert.alert('Error', 'Password should be at least 8 characters long.')
+      return
+    }
+  }
+
+  // this is a "new function" to handle email Login, that I pulled from the button press one.  This actually logs in and then navigates.  No validation.  createUserWithEmailAndPassword
+  const signupCreateUser = async (email, password) => {
+    validateLoginDetails(email, password)
+
+    try {
+      setSigninInProgress(true)
+      // new function, in the dialog to be called handEmailLogin
+      const userCredential = await auth().createUserWithEmailAndPassword(
+        email,
+        password
+      )
+      const user = userCredential.user
+      updateEmailAddress(user.email)
+      console.log('User account created & signed in!' + JSON.stringify(user))
+      Alert.alert('Info', 'User account created & signed in!')
+      navigation.navigate('LoadingScreen')
+      // remove the bottom sheet?  (while navigating)
+      sheetRef.current?.snapTo(1)
+      setIsSheetOpen(false)
+      setSigninInProgress(false)
+    } catch (error) {
+      console.error('Error signing up: ', error)
+    }
+  }
+
+  // validate user input.  Also calls Firebase to authenticate.  Then navigates. signInWithEmailAndPassword
+  const handleEmailLogin = async (email, password) => {
+    validateLoginDetails(email, password)
+    try {
+      const userCredential = await auth().signInWithEmailAndPassword(
+        email,
+        password
+      )
+      const user = userCredential.user
+      updateEmailAddress(user.email)
+      console.log('User signed in!' + JSON.stringify(user))
+
+      navigation.navigate('LoadingScreen')
+      sheetRef.current?.snapTo(1)
+      setIsSheetOpen(false)
+      setSigninInProgress(false)
+    } catch (error) {
+      console.error('Error signing in: ', error)
+    }
+  }
+
+  const signOut = async () => {
+    try {
+      await auth().signOut()
+      console.log('User signed out!')
+    } catch (error) {
+      console.error('Error signing out: ', error)
+    }
+  }
+
+  // password reset
+  const handleForgotPassword = async (email) => {
+    if (!email) {
+      Alert.alert('Error', 'Please enter an email address.')
+      return
+    }
+    if (!email.includes('@')) {
+      Alert.alert('Error', 'Please enter a valid email address.')
+      return
+    }
+
+    try {
+      await auth().sendPasswordResetEmail(email)
+      console.log('Password reset email sent!')
+      Alert.alert('Info', 'Password reset email sent!')
+    } catch (error) {
+      if (error.code === 'auth/user-not-found') {
+        Alert.alert(
+          'Error',
+          'No account exists with this email address. Please enter a valid email address.'
+        )
+        console.log('No account exists with this email address, email:' + email)
+      } else {
+        Alert.alert('Error', 'Failed to reset password. Please try again.')
+        console.log('Failed to reset password, email:' + email)
+        console.error('Error resetting password: ', error)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      const subscriber = auth().onAuthStateChanged(onUserChanged)
+      return subscriber // unsubscribe on unmount
+    }
+  }, [])
 
   async function onAppleButtonPress() {
     try {
@@ -133,9 +266,9 @@ const OnboardingDeck = () => {
             appleAuthRequestResponse.email
         )
         if (appleAuthRequestResponse.email) {
-          setEmailAddress(appleAuthRequestResponse.email)
+          updateEmailAddress(appleAuthRequestResponse.email)
         } else {
-          setEmailAddress(appleAuthRequestResponse.user) // for anonymized users, this is our uniqueness
+          updateEmailAddress(appleAuthRequestResponse.user) // for anonymized users, this is our uniqueness
         }
         navigation.navigate('LoadingScreen')
       } else {
@@ -155,15 +288,24 @@ const OnboardingDeck = () => {
   }
 
   const onStartNowPress = () => {
-    console.log('onStartNowPress')
-    if (isSheetOpen) {
-      sheetRef.current?.snapTo(0)
-      console.log('sheet open snapping to 0')
+    console.log('onStartNowPress,isLoginFormVisible:' + isLoginFormVisible)
+
+    if (isLoginFormVisible) {
+      setIsLoginFormVisible(false) // hide email login form
+      sheetRef.current?.snapTo(0) // close bottom sheet
+      console.log('email form visible, snapping to 0')
+      setIsSheetOpen(false)
     } else {
-      sheetRef.current?.snapTo(1)
-      console.log('sheet closed snapping to 1')
+      if (isSheetOpen) {
+        sheetRef.current?.snapTo(0) // close
+        console.log('sheet open snapping to 0')
+        setIsSheetOpen(false)
+      } else {
+        sheetRef.current?.snapTo(1) // open
+        console.log('sheet closed snapping to 1')
+        setIsSheetOpen(true)
+      }
     }
-    setIsSheetOpen(!isSheetOpen)
   }
 
   const onLinkPress = () => {
@@ -243,6 +385,11 @@ const OnboardingDeck = () => {
           handleGoogleLogin={handleGoogleLogin}
           onAppleButtonPress={onAppleButtonPress}
           isSigninInProgress={isSigninInProgress}
+          handleEmailLogin={handleEmailLogin}
+          signupCreateUser={signupCreateUser}
+          handleForgotPassword={handleForgotPassword}
+          setIsLoginFormVisible={setIsLoginFormVisible}
+          isLoginFormVisible={isLoginFormVisible}
         />
       </View>
     </SafeAreaView>
@@ -310,7 +457,7 @@ const styles = StyleSheet.create({
   },
   dot: {
     fontSize: RFPercentage(6.2),
-    lineHeight: RFPercentage(6.2), // special handling for special
+    lineHeight: RFPercentage(6.2), // special handling for special character
     color: '#888',
     marginHorizontal: 11,
   },
