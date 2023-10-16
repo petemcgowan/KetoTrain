@@ -5,7 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { DrawerContent } from './DrawerContent'
 import { createStackNavigator } from '@react-navigation/stack'
 
-let appleAuth
+// let appleAuth
 // import { appleAuth } from '@invertase/react-native-apple-authentication'
 
 import { navigationRef } from './RootNavigation'
@@ -30,24 +30,24 @@ export default function CentralNavigation() {
   const dispatch = useDispatch()
   const { updateHasSeenIntro } = bindActionCreators(actionCreators, dispatch)
 
-  if (Platform.OS === 'ios') {
-    appleAuth = require('@invertase/react-native-apple-authentication')
-    // AppleAuth related code here
-  }
+  // if (Platform.OS === 'ios') {
+  //   appleAuth = require('@invertase/react-native-apple-authentication')
+  // }
 
-  useEffect(() => {
-    if (Platform.OS === 'ios') {
-      const unsubscribe = appleAuth.onCredentialRevoked(async () => {
-        console.warn('User’s Apple credentials have been revoked')
-        // Handle the revocation - possibly sign the user out or show a notification.
-      })
+  // useEffect(() => {
+  //   if (Platform.OS === 'ios') {
+  //     console.log('appleAuth:' + JSON.stringify(appleAuth))
+  // const unsubscribe = appleAuth.onCredentialRevoked(async () => {
+  //   console.warn('User’s Apple credentials have been revoked')
+  //   // Handle the revocation - possibly sign the user out or show a notification.
+  // })
 
-      // remove the listener when the component is unmounted.
-      return () => {
-        unsubscribe()
-      }
-    }
-  }, [])
+  // // remove the listener when the component is unmounted.
+  // return () => {
+  //   unsubscribe()
+  // }
+  //   }
+  // }, [])
 
   console.log(
     'CentralNavigation will render based on hasSeenIntro:' + hasSeenIntro
@@ -60,7 +60,7 @@ export default function CentralNavigation() {
         initialRouteName={initialRoute}
         screenOptions={{ headerShown: false }}
       >
-        {/* {hasSeenIntro && ( */}
+        {/* {!hasSeenIntro && ( */}
         <Stack.Screen name="OnboardingDeck" component={OnboardingDeck} />
         {/* )} */}
         <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
