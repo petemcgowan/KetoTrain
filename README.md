@@ -1,5 +1,11 @@
 # Keto Train
 
+## Main vs design/release project versions
+
+This is the main code project for Keto Train. You can find its design/release project here:
+https://github.com/petemcgowan/KetoTrain
+
+
 <div align="center">
 
 ![Keto Train Logo](/img/01_Logo_Keto_Train.jpeg)
