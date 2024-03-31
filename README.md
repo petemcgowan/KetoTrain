@@ -14,8 +14,8 @@ https://github.com/petemcgowan/KetoTrain
 
 <div align="center">
 
-<a href="https://apps.apple.com/us/app/keto-train/id6463052792"><img src="/img/app-store-available-on-the.svg" width="50%"></a>
-<a href="https://play.google.com/store/apps/developer?id=Buachaill+Maith"><img src="/img/Google_Play_2022_logo.svg" width="50%"></a>
+<a href="https://apps.apple.com/us/app/keto-train/id6463052792"><img src="/img/app-store-available-on-the.svg" width="30%"></a>
+<a href="https://play.google.com/store/apps/developer?id=Buachaill+Maith"><img src="/img/Google_Play_2022_logo.svg" width="30%"></a>
 
 </div>
 
