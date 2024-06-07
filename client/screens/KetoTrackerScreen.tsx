@@ -113,13 +113,6 @@ const KetoTrackerScreen = () => {
     // Update itemsForSelectedDate
     setItemsForSelectedDate([...itemsForSelectedDate, ...uniqueNewTrackerItems])
 
-    // Calculate the total carbs for the selected date
-    // let totalCarbs = 0
-    // updatedItemsForSelectedDate.map((trackerItem: TrackerItemType) => {
-    //   totalCarbs += trackerItem.carbAmt * trackerItem.portionCount
-    // })
-    // setTotalCarbs(totalCarbs)
-
     // Save the new tracker items
     const addedItems = updatedItemsForSelectedDate.map((item) => ({
       foodFactsId: item.foodFactsId,
@@ -154,24 +147,6 @@ const KetoTrackerScreen = () => {
       />
     )
   }
-
-  // const getTotalCarbsForSpecificDayTrack = () => {
-  //   let carbsForDayAmt = 0
-  //   console.log('selectedDate(KetoTracker):' + JSON.stringify(selectedDate))
-  //   trackerItems.map((item) => {
-  //     const itemDate = new Date(item.consumptionDate)
-
-  //     if (
-  //       itemDate.getFullYear() === selectedDate.getFullYear() &&
-  //       itemDate.getMonth() === selectedDate.getMonth() &&
-  //       itemDate.getDate() === selectedDate.getDate()
-  //     ) {
-  //       carbsForDayAmt = carbsForDayAmt + item.carbAmt * item.portionCount
-  //     }
-  //   })
-  //   setTotalCarbs(carbsForDayAmt)
-  //   return carbsForDayAmt
-  // }
 
   const handleNextDayTrack = () => {
     console.log(

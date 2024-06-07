@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import {
-  ScrollView,
   FlatList,
   Dimensions,
   StyleSheet,
@@ -179,9 +178,7 @@ const LearnDeck = () => {
 
       <FlatList
         data={slides}
-        // ref={horizontalScrollRef}
         horizontal
-        // scrollEnabled={false}
         pagingEnabled
         onScroll={onScroll}
         showsHorizontalScrollIndicator={false}
@@ -213,7 +210,6 @@ const getStyles = (theme) =>
     },
     scrollView: {
       flex: 0.55,
-      // paddingTop: 20,
       paddingTop: 45,
     },
     imageBox: {
@@ -227,8 +223,6 @@ const getStyles = (theme) =>
       left: 0,
       right: 0,
       top: 0,
-      // bottom: height * 0.3 + 10,
-      // bottom: height * 0.3 + 10,
       justifyContent: 'center',
       alignItems: 'center',
     },

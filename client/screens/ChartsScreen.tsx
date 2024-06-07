@@ -1,21 +1,10 @@
 import React, { useContext } from 'react'
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  Text,
-  Dimensions,
-  ScrollView,
-} from 'react-native'
-// import DonutFactory from '../charting/DonutFactory'
-// import LineChartContainer from '../charting/LineChartContainer'
+import { StyleSheet, View, SafeAreaView, Text, ScrollView } from 'react-native'
 import { ThemeContext } from '../state/ThemeContext'
 import EnergyChart from '../charting/EnergyChart'
 import TrackerContext from '../state/TrackerContext'
 import MacroPieChart from '../charting/ConsumptionChart'
 import MacroAreaChart from '../charting/MacroAreaChart'
-
-const { width, height } = Dimensions.get('window')
 
 const ChartsScreen = () => {
   const { trackerItems } = useContext(TrackerContext)
@@ -25,13 +14,11 @@ const ChartsScreen = () => {
   }
   const { theme } = context
   const styles = getStyles(theme)
-  // /*style={{ backgroundColor: 'green', width: width, height: height }}*/
 
   return (
     <ScrollView style={styles.tabContainer}>
       <SafeAreaView style={styles.chartContainer}>
         <View style={styles.ketoLimitContainer}>
-          {/* <DonutFactory /> */}
           <Text style={styles.chartTitle}>
             Nutrient consumption breakdown (last week)
           </Text>
@@ -40,7 +27,6 @@ const ChartsScreen = () => {
           <EnergyChart trackerItems={trackerItems} />
           <Text style={styles.chartTitle}>Nutrient breakdown by day</Text>
           <MacroAreaChart trackerItems={trackerItems} />
-          {/* <LineChartContainer /> */}
         </View>
       </SafeAreaView>
     </ScrollView>
@@ -57,9 +43,7 @@ const getStyles = (theme) =>
     },
     chartTitle: {
       fontSize: 18,
-      // fontWeight: 'bold',
       color: theme.buttonText,
-      // marginBottom: 10,
       textAlign: 'center',
     },
     ketoLimitContainer: {
