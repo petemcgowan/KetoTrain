@@ -1,12 +1,9 @@
-// import { navigate } from './RootNavigation'
-// navigate('OnboardingDeck')
-
 import React, { useContext } from 'react'
 import { useMutation } from '@apollo/client'
 import { Alert, TouchableOpacity, View, StyleSheet, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
-// import { navigate } from './RootNavigation'
+
 import { DrawerNavigationProp } from '@react-navigation/drawer'
 import { useDrawerStatus } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
@@ -27,7 +24,6 @@ type DeleteAccountScreenNavigationProp = DrawerNavigationProp<
 export function DeleteAccountScreen() {
   const navigation = useNavigation<DeleteAccountScreenNavigationProp>()
   const drawerStatus = useDrawerStatus()
-  // const dispatch = useDispatch()
 
   const context = useContext(ThemeContext)
   if (!context) {
@@ -72,12 +68,6 @@ export function DeleteAccountScreen() {
     }
     navigation.goBack()
   }
-
-  // const handleBack = () => {
-  //   navigate.closeDrawer()
-  //   // navigation.closeDrawer()
-  //   navigation.goBack()
-  // }
 
   return (
     <View style={[styles.container, styles.viewBackground]}>

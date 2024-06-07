@@ -49,16 +49,6 @@ const BoxesLayout = ({
           padding: 1.5,
         }}
       >
-        {/* <View
-          style={[dynamicStyles.box, { backgroundColor: giBackgroundColor }]}
-        >
-          <Text style={dynamicStyles.text}>{giAmt}</Text>
-        </View>
-        <View
-          style={[dynamicStyles.box, { backgroundColor: glBackgroundColor }]}
-        >
-          <Text style={dynamicStyles.text}>{glAmt}</Text>
-        </View> */}
         <View
           style={[dynamicStyles.box, { backgroundColor: carbBackgroundColor }]}
         >
