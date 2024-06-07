@@ -11,15 +11,10 @@ import {
 } from 'react-native'
 import FavFoodList from './FavFoodList'
 import SearchFoodList from './SearchFoodList'
-// import TrackerContext from '../state/TrackerContext'
-// import GlycemicItem from './GlycemicItem'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { ThemeContext } from '../state/ThemeContext'
-// import { getFavouriteFoods } from './GlycemicUtils'
 import UserContext from '../state/UserContext'
-// import FavFoodContext from '../state/FavFoodContext'
-// import { setFavouriteFoodsDB } from '../../server/resolvers/resolverFunctions.mjs'
 
 const { width } = Dimensions.get('screen')
 
@@ -38,7 +33,6 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
   const [searchPhraseNew, setSearchPhraseNew] = useState('')
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
   const { userId } = useContext(UserContext)
-  // const { favFoodList, setFavFoodList } = useContext(FavFoodContext)
 
   useEffect(() => {
     console.log('GlycemicList, useEffect called')
@@ -46,14 +40,7 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
 
   const favouriteAction = async () => {
     console.log('favouriteAction called')
-    // if (!showOnlyFavorites) {
-    //   // we're looking to display favourites
-    //   console.log('favFoodList before:' + JSON.stringify(favFoodList))
-    //   const favFoods = await getFavouriteFoods(userId, theme)
-    //   console.log('favFoods after:' + JSON.stringify(favFoods))
 
-    //   setFavFoodList(favFoods)
-    // }
     setShowOnlyFavorites(!showOnlyFavorites)
   }
 
@@ -63,7 +50,6 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
         <View style={styles.searchContainer}>
           <TextInput
             placeholder="Search"
-            // style={styles.searchInput}
             style={[
               styles.searchInput,
               !searchPhraseNew ? styles.italic : null,
@@ -100,7 +86,6 @@ function arePropsEqual(prevProps, nextProps) {
 }
 
 export default memo(GlycemicList, arePropsEqual)
-// export default GlycemicList
 
 const getStyles = (theme) =>
   StyleSheet.create({

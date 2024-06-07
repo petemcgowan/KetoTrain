@@ -162,11 +162,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     padding: 2,
-    // backgroundColor: "black",
   },
   valueText: {
     color: 'white',
-    // backgroundColor: "aqua",
     width: 25,
     fontSize: 14,
     fontWeight: 'bold',
@@ -181,9 +179,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   image: {
-    // justifyContent: "center",
-    width: 24, //24
-    height: 24, //24
+    width: 24,
+    height: 24,
   },
   centeredView: {
     flex: 1,

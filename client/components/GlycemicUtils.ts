@@ -6,7 +6,6 @@ import { TrackerContextType } from '../types/TrackerContextType'
 import UserContext, { UserContextProps } from '../state/UserContext'
 import { FoodDataType } from '../types/FoodDataType'
 import { SearchListType } from '../types/SearchListType'
-// import TimeContext from '../state/TimeContext'
 
 export const favouriteFoodItem = (
   descriptionGI: string,
@@ -23,9 +22,6 @@ export const favouriteFoodItem = (
   setTrackerItems: React.Dispatch<React.SetStateAction<TrackerItemType[]>>,
   dispatch
 ) => {
-  // console.log(
-  //   'JUST INSIDE favouriteFoodItem favFoodList:' + JSON.stringify(favFoodList)
-  // )
   // get the food facts id for updating
   const matchingFoodFact = foodData.find(
     (item) => item.foodName === descriptionGI
@@ -51,7 +47,6 @@ export const favouriteFoodItem = (
     const newFavFoods = favFoodList.filter(({ foodName }) => {
       return foodName !== matchingFoodFact?.foodName
     })
-    // setFavFoodList(newFavFoods)
     dispatch(updateFavFoodList(newFavFoods))
     const updatedTrackerItems = trackerItems.map((item) =>
       item.description === descriptionGI
@@ -70,9 +65,6 @@ export const favouriteFoodItem = (
         ...favFoodList,
         { ...matchingFoodFact, isFavourite: true },
       ]
-      // console.log(
-      //   'favouriteFoodItem, newFavFoods:' + JSON.stringify(newFavFoods)
-      // )
       dispatch(updateFavFoodList(newFavFoods))
 
       let foundTrackerMatch = false
@@ -187,9 +179,6 @@ export const getFavouriteFoods = async (userId: number | null, theme) => {
       'favouriteFoodResponse.data.data.getFavFoods.favFoodFacts:' +
         JSON.stringify(favouriteFoodResponse.data.data.getFavFoods.favFoodFacts)
     )
-    // const favFoods = [
-    //   ...favouriteFoodResponse.data.data.getFavFoods.favFoodFacts,
-    // ]
 
     const favFoods =
       await favouriteFoodResponse.data.data.getFavFoods.favFoodFacts.map(
@@ -271,37 +260,6 @@ export const getTotalCarbsForSpecificDayGU = (
 
   return carbsForDayAmt
 }
-
-// export const getTotalCarbsForSpecificDay = (selectedDate: Date ) => {
-//   const { trackerItems, setTotalCarbs } = useContext(TrackerContext)
-//   // const { selectedDate } = useContext(TimeContext)
-//   let carbsForDayAmt = 0
-//   console.log('GlycemicUtils, getTotalCarbsForSpecificDay called:')
-
-//   trackerItems.map((item) => {
-//     const itemDate = new Date(item.consumptionDate)
-
-//     if (
-//       itemDate.getFullYear() === selectedDate.getFullYear() &&
-//       itemDate.getMonth() === selectedDate.getMonth() &&
-//       itemDate.getDate() === selectedDate.getDate()
-//     ) {
-//       console.log(
-//         'getTotalCarbsForSpecificDayTrack, item.carbAmt:' +
-//           item.carbAmt +
-//           ', item.portionCount:' +
-//           item.portionCount
-//       )
-//       carbsForDayAmt = carbsForDayAmt + item.carbAmt * item.portionCount
-//       console.log('GlycemicUtils, carbsForDayAmt:' + carbsForDayAmt)
-//     }
-//   })
-//   console.log(
-//     'getTotalCarbsForSpecificDayTrack, carbsForDayAmt:' + carbsForDayAmt
-//   )
-//   setTotalCarbs(carbsForDayAmt)
-//   return carbsForDayAmt
-// }
 
 export function formatDateToISO(date: Date): string {
   return date.toISOString().split('T')[0]
