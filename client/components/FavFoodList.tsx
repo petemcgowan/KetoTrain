@@ -1,16 +1,13 @@
 import React, { useContext, memo } from 'react'
 import {
   StyleSheet,
-  TextInput,
   View,
   Dimensions,
   FlatList,
   SafeAreaView,
   Text,
-  TouchableOpacity,
 } from 'react-native'
 
-// import FavFoodContext from '../state/FavFoodContext'
 import GlycemicItem from './GlycemicItem'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { RFPercentage } from 'react-native-responsive-fontsize'
@@ -22,8 +19,6 @@ const { width } = Dimensions.get('screen')
 
 const FavFoodList = ({ searchPhraseNew }) => {
   console.log('FavFoodList is rendering')
-
-  // const { favFoodList } = useContext(FavFoodContext)
 
   const context = useContext(ThemeContext)
   if (!context) {

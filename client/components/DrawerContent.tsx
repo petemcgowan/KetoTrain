@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer'
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
 
 export function DrawerContent(props) {
   return (

@@ -9,22 +9,14 @@ import {
 } from 'react-native'
 
 import TrackerContext from '../state/TrackerContext'
-// import TimeContext from '../state/TimeContext'
 import UserContext, { UserContextProps } from '../state/UserContext'
-import { TrackerItemType } from '../types/TrackerItemType'
 import { TrackerContextType } from '../types/TrackerContextType'
-import { saveConsumptionLogs, formatDateToYYYYMMDD } from './GlycemicUtils'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { ThemeContext } from '../state/ThemeContext'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { favouriteFoodItem } from './GlycemicUtils'
-// import SearchFoodContext from '../state/SearchFoodContext'
-// import { SearchFoodContextType } from '../types/SearchFoodContextType'
-// import { TimeContextType } from '../types/TimeContextType'
 import { FoodContextType } from '../types/FoodContextType'
 import FoodContext from '../state/FoodContext'
-// import FavFoodContext from '../state/FavFoodContext'
-// import { FavFoodContextType } from '../types/FavFoodContextType'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/reducers'
 import { updateFavFoodList } from '../redux/action-creators'
@@ -34,32 +26,24 @@ const { width } = Dimensions.get('screen')
 interface GlycemicItemProps {
   descriptionGI: string
   carbAmt: number
-  // isFavourite: boolean
   carbBackgroundColor: string
 }
 
 const GlycemicItem: React.FC<GlycemicItemProps> = ({
   descriptionGI,
   carbAmt,
-  // isFavourite,
   carbBackgroundColor,
 }) => {
   const { trackerItems, setTrackerItems, setTotalCarbs } =
     useContext<TrackerContextType>(TrackerContext)
-  // console.log('GlycemicItem is rendering')
-  // const { itemsForSelectedDate, selectedDate, setItemsForSelectedDate } =
-  //   useContext<TimeContextType>(TimeContext)
   const dispatch = useDispatch()
 
   const { foodData, setFoodData } = useContext<FoodContextType>(FoodContext)
-  // const { favFoodList, setFavFoodList } =
-  //   useContext<FavFoodContextType>(FavFoodContext)
   const favFoodList = useSelector((state: RootState) => state.favFoodList) || []
   const itemIsAlreadyFavourite = favFoodList.some(
     (item) => item.foodName === descriptionGI
   )
   const [itemIsFavourite, setItemIsFavourite] = useState(itemIsAlreadyFavourite)
-  // const [itemIsFavourite, setItemIsFavourite] = useState(false)
 
   const { userId } = useContext<UserContextProps>(UserContext)
   const context = useContext(ThemeContext)
