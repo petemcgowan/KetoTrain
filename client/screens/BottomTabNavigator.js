@@ -23,7 +23,6 @@ import { RootState } from '../redux/reducers/index'
 import { useSelector } from 'react-redux'
 import { updateSearchFoodList } from '../redux/action-creators'
 
-// import SearchFoodContext from '../state/SearchFoodContext'
 const Tab = createBottomTabNavigator()
 export const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
@@ -35,7 +34,6 @@ const BottomTabNavigator = () => {
 
   const { totalCarbs, trackerItems, setTrackerItems } =
     useContext(TrackerContext)
-  // const { searchFoodList, setSearchFoodList } = useContext(SearchFoodContext)
 
   const searchFoodList = useSelector((state: RootState) => state.searchFoodList)
   const context = useContext(ThemeContext)

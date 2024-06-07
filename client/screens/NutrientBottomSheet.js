@@ -11,7 +11,6 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import NutritionItem from '../components/NutritionItem'
 import TrackerItem from '../components/TrackerItem'
 import { ThemeContext } from '../state/ThemeContext'
-// import TimeContext from '../state/TimeContext'
 
 const { width, height } = Dimensions.get('screen')
 
@@ -29,10 +28,6 @@ export default function NutrientBottomSheet({
   const { theme } = context
   const styles = getStyles(theme)
 
-  // const {
-  //   itemsForSelectedDate,
-  //   // itemsForSelectedDate,
-  // } = useContext(TimeContext)
   const currentItem: TrackerItem = itemsForSelectedDate[trackerSelected]
 
   const renderContent = () => {
@@ -132,33 +127,19 @@ const getStyles = (theme) =>
     panelContent: {
       flex: 1,
       flexDirection: 'column',
-      // flexWrap: 'wrap',
       justifyContent: 'center',
-      // justifyContent: 'space-between',
       alignItems: 'center',
     },
     closeButtonContainer: {
       width: width * 0.6,
       height: height * 0.05,
-      // flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
       backgroundColor: theme.buttonBackground,
-      // paddingBottom: 10,
       marginBottom: 10,
-      // height: height * 0.05,
-      // width: width * 0.8,
     },
     closeButton: {
-      // width: width * 0.6,
-      // height: height * 0.05,
-      // alignSelf: 'center',
-      // justifyContent: 'center',
-      // paddingTop: 10,
-      // paddingBottom: 20,
-      // alignItems: 'center',
-
       // Shadow properties for iOS
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },

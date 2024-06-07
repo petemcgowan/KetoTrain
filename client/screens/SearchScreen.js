@@ -1,12 +1,5 @@
-import React, { Fragment, useState, useContext, useEffect } from 'react'
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-} from 'react-native'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import React, { useState, useContext } from 'react'
+import { StyleSheet, SafeAreaView, View } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
 import GlycemicList from '../components/GlycemicList'
@@ -26,27 +19,6 @@ const SearchScreen = ({ route }) => {
   return (
     <View>
       <SafeAreaView style={styles.searchPageContainer}>
-        {/* <View style={styles.dateHeader}>
-          <TouchableOpacity style={styles.dateButton} onPress={handlePrevDay}>
-            <FontAwesome5
-              name="chevron-left"
-              size={RFPercentage(3.2)}
-              color={theme.buttonText}
-            />
-          </TouchableOpacity>
-          <View style={styles.dateDisplayContainer}>
-            <Text style={styles.dateDisplayText}>
-              {selectedDate.toDateString()}
-            </Text>
-          </View>
-          <TouchableOpacity style={styles.dateButton} onPress={handleNextDay}>
-            <FontAwesome5
-              name="chevron-right"
-              size={RFPercentage(3.2)}
-              color={theme.buttonText}
-            />
-          </TouchableOpacity>
-        </View> */}
         <GlycemicList searchPhrase={searchPhrase} setClicked={setClicked} />
       </SafeAreaView>
     </View>
