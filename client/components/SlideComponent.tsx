@@ -26,12 +26,6 @@ const SlideComponent = ({
   const dominantColor = 'rgb(38, 27, 21)' // Dominant colour of image
 
   return (
-    // <ScrollView
-    //   contentContainerStyle={styles.slideContainer}
-    //   // onTouchStart={onBeginScroll}
-    //   // onTouchEnd={onEndScroll}
-    //   // scrollEnabled={false}
-    // >
     <View style={styles.slideContainer}>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={image} />

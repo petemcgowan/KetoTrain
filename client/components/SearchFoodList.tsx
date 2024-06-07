@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
 } from 'react-native'
 
-// import SearchFoodContext from '../state/SearchFoodContext'
 import GlycemicItem from './GlycemicItem'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { RFPercentage } from 'react-native-responsive-fontsize'
@@ -23,7 +22,6 @@ const { width } = Dimensions.get('screen')
 const SearchFoodList = ({ searchPhraseNew }) => {
   console.log('SearchFoodList is rendering')
 
-  // const { searchFoodList } = useContext(SearchFoodContext)
   const searchFoodList = useSelector((state: RootState) => state.searchFoodList)
 
   const context = useContext(ThemeContext)
@@ -78,7 +76,6 @@ function arePropsEqual(prevProps, nextProps) {
 }
 
 export default React.memo(SearchFoodList, arePropsEqual)
-// export default SearchFoodList
 
 const getStyles = (theme) =>
   StyleSheet.create({
