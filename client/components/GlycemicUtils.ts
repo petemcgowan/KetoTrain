@@ -37,13 +37,10 @@ export const favouriteFoodItem = (
   const start = performance.now()
   saveFavouriteFoods(favouriteFoods, userId)
   const end = performance.now()
-  console.log(`saveFavouriteFoods took ${end - start}ms`)
+
   if (itemIsFavourite) {
     // it IS a favourite, so we're unfavouriting
     // remove from the local fav food list
-    console.log(
-      'REMOVING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
-    )
     const newFavFoods = favFoodList.filter(({ foodName }) => {
       return foodName !== matchingFoodFact?.foodName
     })
@@ -56,9 +53,6 @@ export const favouriteFoodItem = (
     setTrackerItems(updatedTrackerItems)
   } else {
     // add the local favourite
-    console.log(
-      'ADDING favourite, matchingFoodFact:' + JSON.stringify(matchingFoodFact)
-    )
     if (matchingFoodFact) {
       // update fav food list
       const newFavFoods = [
@@ -138,7 +132,6 @@ export const saveConsumptionLogs = async (
 
 export const getFavouriteFoods = async (userId: number | null, theme) => {
   try {
-    console.log('getFavouriteFoods, userId:' + userId)
     const favouriteFoodResponse = await axios({
       // url: 'http://192.168.68.103:4001/keto-graphql',
       // url: 'http://localhost:4001/keto-graphql',
@@ -175,11 +168,6 @@ export const getFavouriteFoods = async (userId: number | null, theme) => {
       },
     })
 
-    console.log(
-      'favouriteFoodResponse.data.data.getFavFoods.favFoodFacts:' +
-        JSON.stringify(favouriteFoodResponse.data.data.getFavFoods.favFoodFacts)
-    )
-
     const favFoods =
       await favouriteFoodResponse.data.data.getFavFoods.favFoodFacts.map(
         (item) => ({
@@ -205,12 +193,6 @@ export const saveFavouriteFoods = async (
   userId: number | null
 ) => {
   try {
-    console.log(
-      'saveFavouriteFoods, userId:' +
-        userId +
-        ', favouriteFoods:' +
-        JSON.stringify(favouriteFoods)
-    )
     const favouriteFoodResponse = await axios({
       // url: 'http://192.168.68.103:4001/keto-graphql',
       // url: 'http://localhost:4001/keto-graphql',
@@ -243,7 +225,7 @@ export const getTotalCarbsForSpecificDayGU = (
   setTotalCarbs
 ) => {
   let carbsForDayAmt = 0
-  console.log('selectedDate(KetoTracker):' + JSON.stringify(selectedDate))
+
   trackerItems.map((item) => {
     const itemDate = new Date(item.consumptionDate)
 
@@ -256,7 +238,6 @@ export const getTotalCarbsForSpecificDayGU = (
     }
   })
   setTotalCarbs(carbsForDayAmt)
-  console.log('getTotalCarbsForSpecificDayGU, carbsForDayAmt:' + carbsForDayAmt)
 
   return carbsForDayAmt
 }

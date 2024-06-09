@@ -67,67 +67,10 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
               ? theme.middlingBackground
               : theme.tableBackground,
           alignItems: 'center',
-          // width: width * 0.7,
         },
       }),
     [carbBackgroundColor, favFoodList]
   )
-
-  // const addTrackerItem = () => {
-  //   // get the food facts item for setting up tracker
-  //   const matchingFoodFact = foodData.find(
-  //     (item) => item.foodName === descriptionGI
-  //   )
-  //   console.log('matchingFoodFact:' + JSON.stringify(matchingFoodFact))
-  //   let trackerItem: TrackerItemType
-
-  //   if (matchingFoodFact) {
-  //     trackerItem = {
-  //       id: descriptionGI,
-  //       foodFactsId: matchingFoodFact.foodFactsId,
-  //       description: descriptionGI,
-  //       carbAmt: carbAmt,
-  //       fiberAmt: matchingFoodFact.totalDietaryFibre,
-  //       proteinAmt: matchingFoodFact.protein,
-  //       fatAmt: matchingFoodFact.fatTotal,
-  //       energyAmt: matchingFoodFact.energy,
-  //       sugarsAmt: matchingFoodFact.totalSugars,
-  //       sodiumAmt: matchingFoodFact.sodium,
-  //       carbBackgroundColor: carbBackgroundColor,
-  //       portionCount: 1,
-  //       consumptionDate: selectedDate,
-  //       isFavourite: matchingFoodFact.isFavourite,
-  //     }
-
-  //     if (trackerItem != null) {
-  //       setTrackerItems([...trackerItems, trackerItem])
-  //       setItemsForSelectedDate([...itemsForSelectedDate, trackerItem])
-  //       let totalCarbs = 0
-
-  //       itemsForSelectedDate.map((trackerItem: TrackerItemType) => {
-  //         totalCarbs += trackerItem.carbAmt * trackerItem.portionCount
-  //       })
-
-  //       setTotalCarbs(totalCarbs)
-
-  //       type AddItem = {
-  //         foodFactsId: number
-  //         consumptionDate: string
-  //         userId: number | null
-  //       }
-  //       const addedItems: AddItem[] = []
-
-  //       addedItems.push({
-  //         foodFactsId: trackerItem.foodFactsId,
-  //         consumptionDate: formatDateToYYYYMMDD(trackerItem.consumptionDate),
-  //         userId: userId,
-  //       })
-  //       const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
-
-  //       saveConsumptionLogs(trackerItem, addedItems, dayToUpdate, false, true)
-  //     }
-  //   }
-  // }
 
   return (
     <View style={dynamicStyles.foodRowContainer}>
@@ -154,9 +97,6 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
       <View style={styles.favIconContainer}>
         <TouchableOpacity
           onPress={() => {
-            // console.log(
-            //   'BEFORE favouriteFoodItem call, favFoodList:' + favFoodList
-            // )
             favouriteFoodItem(
               descriptionGI,
               itemIsFavourite,
@@ -191,7 +131,6 @@ function arePropsEqual(
   return prevProps.descriptionGI === nextProps.descriptionGI
 }
 export default memo(GlycemicItem, arePropsEqual)
-// export default GlycemicItem
 
 const getStyles = (theme) =>
   StyleSheet.create({

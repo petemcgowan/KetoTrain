@@ -1,12 +1,10 @@
-import React, { useContext, useState, useEffect, memo, useRef } from 'react'
+import React, { useContext, useState, useEffect, memo } from 'react'
 import {
   StyleSheet,
   TextInput,
   View,
   Dimensions,
-  FlatList,
   SafeAreaView,
-  Text,
   TouchableOpacity,
 } from 'react-native'
 import FavFoodList from './FavFoodList'
@@ -34,13 +32,7 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
   const { userId } = useContext(UserContext)
 
-  useEffect(() => {
-    console.log('GlycemicList, useEffect called')
-  }, [])
-
   const favouriteAction = async () => {
-    console.log('favouriteAction called')
-
     setShowOnlyFavorites(!showOnlyFavorites)
   }
 
@@ -67,7 +59,8 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
             <FontAwesome5
               name="heart"
               size={RFPercentage(3.9)}
-              color={showOnlyFavorites ? theme.iconFill : theme.buttonText}
+              // color={showOnlyFavorites ? theme.iconFill : theme.buttonText}
+              color={showOnlyFavorites ? 'rgb(76,187,23)' : 'rgb(76,187,23)'}
               solid={showOnlyFavorites}
             />
           </TouchableOpacity>
