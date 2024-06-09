@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useContext } from 'react'
+import React, { memo, useState, useContext } from 'react'
 import TrackerContext from '../state/TrackerContext'
 import { StyleSheet, View, Pressable } from 'react-native'
 
@@ -67,9 +67,6 @@ const PortionLayout = ({
       setPortion1BGColor('black')
       trackerClicked.portionCount--
     }
-    console.log(
-      'pressPortion1, trackerClicked:' + JSON.stringify(trackerClicked)
-    )
     setTrackerItems(trackerItems)
   }
 
@@ -84,9 +81,6 @@ const PortionLayout = ({
       trackerClicked.portionCount--
       setPortion2BGColor('black')
     }
-    console.log(
-      'pressPortion2, trackerClicked:' + JSON.stringify(trackerClicked)
-    )
     setTrackerItems(trackerItems)
   }
 
@@ -101,9 +95,6 @@ const PortionLayout = ({
       trackerClicked.portionCount--
       setPortion3BGColor('black')
     }
-    console.log(
-      'pressPortion3, trackerClicked:' + JSON.stringify(trackerClicked)
-    )
     setTrackerItems(trackerItems)
   }
 
@@ -118,9 +109,6 @@ const PortionLayout = ({
       trackerClicked.portionCount--
       setPortion4BGColor('black')
     }
-    console.log(
-      'pressPortion4, trackerClicked:' + JSON.stringify(trackerClicked)
-    )
     setTrackerItems(trackerItems)
   }
 
@@ -130,27 +118,19 @@ const PortionLayout = ({
         <Pressable
           onPress={pressPortion1}
           style={[dynamicStyles.box, { backgroundColor: portion1BGColor }]}
-        >
-          {/* <Text style={dynamicStyles.text}>{giAmt}</Text> */}
-        </Pressable>
+        ></Pressable>
         <Pressable
           onPress={pressPortion2}
           style={[dynamicStyles.box, { backgroundColor: portion2BGColor }]}
-        >
-          {/* <Text style={dynamicStyles.text}>{glAmt}</Text> */}
-        </Pressable>
+        ></Pressable>
         <Pressable
           onPress={pressPortion3}
           style={[dynamicStyles.box, { backgroundColor: portion3BGColor }]}
-        >
-          {/* <Text style={dynamicStyles.text}>{carbAmt}</Text> */}
-        </Pressable>
+        ></Pressable>
         <Pressable
           onPress={pressPortion4}
           style={[dynamicStyles.box, { backgroundColor: portion4BGColor }]}
-        >
-          {/* <Text style={dynamicStyles.text}>{carbAmt}</Text> */}
-        </Pressable>
+        ></Pressable>
       </View>
     </View>
   )

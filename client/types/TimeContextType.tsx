@@ -8,6 +8,4 @@ export type TimeContextType = {
   setItemsForSelectedDate: React.Dispatch<
     React.SetStateAction<TrackerItemType[]>
   >
-  // handlePrevDay: () => void
-  // handleNextDay: () => void
 }
