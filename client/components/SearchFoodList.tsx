@@ -1,14 +1,5 @@
-import React, { useContext, useState, useEffect, memo, useRef } from 'react'
-import {
-  StyleSheet,
-  TextInput,
-  View,
-  Dimensions,
-  FlatList,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-} from 'react-native'
+import React, { useContext } from 'react'
+import { StyleSheet, View, FlatList, SafeAreaView, Text } from 'react-native'
 
 import GlycemicItem from './GlycemicItem'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -17,11 +8,7 @@ import { ThemeContext } from '../state/ThemeContext'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/reducers/index'
 
-const { width } = Dimensions.get('screen')
-
 const SearchFoodList = ({ searchPhraseNew }) => {
-  console.log('SearchFoodList is rendering')
-
   const searchFoodList = useSelector((state: RootState) => state.searchFoodList)
 
   const context = useContext(ThemeContext)

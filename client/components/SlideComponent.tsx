@@ -7,7 +7,6 @@ import {
   Image,
   Linking,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native'
 
 import { RFPercentage } from 'react-native-responsive-fontsize'
@@ -20,11 +19,7 @@ const SlideComponent = ({
   image,
   referenceLink,
   referenceSource,
-  onBeginScroll,
-  onEndScroll,
 }) => {
-  const dominantColor = 'rgb(38, 27, 21)' // Dominant colour of image
-
   return (
     <View style={styles.slideContainer}>
       <View style={styles.imageContainer}>
@@ -55,7 +50,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    // paddingBottom: 20,
   },
   contentContainer: {
     justifyContent: 'center',
@@ -71,13 +65,10 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  titleBox: {
-    // flex: 0.08, // of slideContainer
-  },
+  titleBox: {},
   referenceView: {
     justifyContent: 'center',
     alignItems: 'center',
-    // marginBottom: 50,
   },
   textBox: {
     paddingHorizontal: 20,
@@ -95,7 +86,6 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontWeight: '600',
-    // maxWidth: width - 40,
     fontSize: RFPercentage(3.1),
     justifyContent: 'center',
     marginBottom: 10,

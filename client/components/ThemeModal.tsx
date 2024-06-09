@@ -42,7 +42,6 @@ const ThemeModal = ({ modalVisible, setModalVisible }) => {
           >
             <Text style={styles.modalText}>Complementary</Text>
           </TouchableOpacity>
-          {/* Add other themes similarly */}
           <TouchableOpacity
             style={{
               ...styles.openButton,
