@@ -40,7 +40,6 @@ const TrackerItem = ({
   itemsForSelectedDate,
   setItemsForSelectedDate,
 }: TrackerItemProps) => {
-  console.log('TrackerItem is rendering')
   const { trackerItems, setTrackerItems, setTotalCarbs, totalCarbs } =
     useContext<TrackerContextType>(TrackerContext)
   const dispatch = useDispatch()
@@ -76,13 +75,6 @@ const TrackerItem = ({
     [trackerItems] // carbBackgroundColor (not needed i assume)
   )
 
-  useEffect(() => {
-    console.log(
-      'useEffect(TrackerItem), carbBackgroundColor:' +
-        JSON.stringify(carbBackgroundColor)
-    )
-  }, [carbBackgroundColor])
-
   // const pressTrackerItem = () => {
   //   const dateBasedIndex = itemsForSelectedDate.findIndex(
   //     ({ description }) => description === item.description
@@ -99,7 +91,6 @@ const TrackerItem = ({
         item.description === mapItem.description &&
         item.consumptionDate === mapItem.consumptionDate
       ) {
-        console.log('item:' + JSON.stringify(item))
         const newItem = { ...item, portionCount: item.portionCount++ }
         return newItem
       } else {
@@ -114,7 +105,6 @@ const TrackerItem = ({
       item.portionCount
     )
     getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
-    // console.log('trackerItems:' + JSON.stringify(trackerItems))
   }
 
   const decrementPortionCount = () => {
@@ -125,7 +115,6 @@ const TrackerItem = ({
           item.description === mapItem.description &&
           item.consumptionDate === mapItem.consumptionDate
         ) {
-          console.log('item:' + JSON.stringify(item))
           const newItem = { ...item, portionCount: item.portionCount-- }
           return newItem
         } else {
@@ -134,7 +123,6 @@ const TrackerItem = ({
       })
 
       setTrackerItems(newTrackerItems)
-      // console.log('trackerItems:' + JSON.stringify(trackerItems))
       updatePortionAmountApi(
         userId,
         formatDateToISO(item.consumptionDate),
@@ -146,9 +134,6 @@ const TrackerItem = ({
   }
 
   const favouriteTrackerItem = () => {
-    console.log(
-      'TrackerItem, favouriteTrackerItem, itemIsFavourite:' + itemIsFavourite
-    )
     favouriteFoodItem(
       item.description,
       itemIsFavourite,
@@ -172,12 +157,6 @@ const TrackerItem = ({
   }
 
   const deleteTrackerItem = () => {
-    // return (
-    //   itemDate.getFullYear() === selected.getFullYear() &&
-    //   itemDate.getMonth() === selected.getMonth() &&
-    //   itemDate.getDate() === selected.getDate()
-    // )
-
     //give me all the trackeritems that aren't "today" && aren't this description
     const newTrackerItems = trackerItems.filter((trackerItem) => {
       return (
@@ -185,7 +164,6 @@ const TrackerItem = ({
         !isSameDay(trackerItem.consumptionDate, selectedDate)
       )
     })
-    // console.log('newTrackerItems:' + JSON.stringify(newTrackerItems))
     setTrackerItems(newTrackerItems)
 
     const newItemsForSelectedDate = itemsForSelectedDate.filter(
@@ -196,17 +174,8 @@ const TrackerItem = ({
         )
       }
     )
-    console.log(
-      'newItemsForSelectedDate:' + JSON.stringify(newItemsForSelectedDate)
-    )
+
     setItemsForSelectedDate(newItemsForSelectedDate)
-
-    // let totalCarbs = 0
-    // itemsForSelectedDate.forEach((trackerItem) => {
-    //   totalCarbs += trackerItem.carbAmt * trackerItem.portionCount
-    // })
-
-    // setTotalCarbs(totalCarbs)
 
     const itemsToSerialize = [
       {
@@ -217,7 +186,6 @@ const TrackerItem = ({
         portionCount: 0,
       },
     ]
-    console.log('selectedDate(TrackerItem):' + JSON.stringify(selectedDate))
     const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
 
     // save to the database (including the delete)
@@ -310,7 +278,6 @@ const getStyles = (theme) =>
       alignItems: 'center',
       fontSize: RFPercentage(3.5),
       fontWeight: '300',
-      // marginLeft: 3,
     },
     nutTrackerIcon: {
       width: width * 0.1,
