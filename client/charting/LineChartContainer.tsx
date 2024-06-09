@@ -66,7 +66,6 @@ const LineChartContainer = () => {
   const processedData = aggregateCarbAmtByDay(trackerItems)
   // Sort processedData by date in ascending order
   processedData.sort((a, b) => a.date.localeCompare(b.date))
-  console.log('processedData:' + JSON.stringify(processedData))
 
   const graphData = [makeGraph(processedData)]
 

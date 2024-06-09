@@ -71,7 +71,6 @@ const EnergyChart: React.FC<EnergyChartProps> = ({ trackerItems }) => {
   const adjustedDays = days
     .slice(firstDayOfWeek)
     .concat(days.slice(0, firstDayOfWeek))
-  console.log('EnergyChart, adjustedDays:' + JSON.stringify(adjustedDays))
 
   return (
     <ScrollView horizontal={true}>
