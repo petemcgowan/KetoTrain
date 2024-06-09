@@ -29,7 +29,6 @@ const BoxesLayout = ({
     box: {
       width: boxWidth,
       height: boxHeight,
-      // padding: 0.5,
     },
     text: {
       color: 'rgba(201, 189, 187, 1)',

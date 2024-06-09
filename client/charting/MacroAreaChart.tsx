@@ -21,7 +21,6 @@ const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
   const { theme } = context
   const styles = getStyles(theme)
 
-  console.log('MacroAreaChart is rendering')
   const today = new Date()
   const oneWeekAgo = new Date(today)
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)

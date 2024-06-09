@@ -25,9 +25,6 @@ export default function CentralNavigation() {
   const dispatch = useDispatch()
   // const { updateHasSeenIntro } = bindActionCreators(actionCreators, dispatch)
 
-  console.log(
-    'CentralNavigation will render based on hasSeenIntro:' + hasSeenIntro
-  )
   const initialRoute = hasSeenIntro ? 'LoadingScreen' : 'OnboardingDeck'
 
   return (

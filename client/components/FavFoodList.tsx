@@ -18,8 +18,6 @@ import { RootState } from '../redux/reducers'
 const { width } = Dimensions.get('screen')
 
 const FavFoodList = ({ searchPhraseNew }) => {
-  console.log('FavFoodList is rendering')
-
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')
