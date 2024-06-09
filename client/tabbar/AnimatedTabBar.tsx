@@ -17,7 +17,6 @@ export const AnimatedTabBar = ({
   navigation,
   descriptors,
 }: BottomTabBarProps) => {
-  console.log('AnimatedTabBar is rendering')
   const { bottom } = useSafeAreaInsets()
   const context = useContext(ThemeContext)
   if (!context) {
@@ -57,16 +56,16 @@ export const AnimatedTabBar = ({
   const animatedStyles = useAnimatedStyle(() => {
     return {
       // translateX to the calculated offset with a smooth transition
-      transform: [{ translateX: withTiming(xOffset.value, { duration: 250 }) }],
+      transform: [{ translateX: withTiming(xOffset.value, { duration: 180 }) }],
     }
   })
 
   return (
     <View style={[styles.tabBar, { paddingBottom: bottom }]}>
       <AnimatedSvg
-        width={110}
+        width={90}
         height={60}
-        viewBox="0 0 110 60"
+        viewBox="0 0 90 60"
         style={[styles.activeBackground, animatedStyles]}
       >
         <Path
@@ -87,6 +86,7 @@ export const AnimatedTabBar = ({
               options={options}
               onLayout={(e) => handleLayout(e, index)}
               onPress={() => navigation.navigate(route.name)}
+              label={route.name}
             />
           )
         })}
