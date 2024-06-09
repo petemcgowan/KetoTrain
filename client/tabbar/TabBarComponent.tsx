@@ -8,8 +8,8 @@ export const TabBarComponent = ({
   options,
   onLayout,
   onPress,
+  label,
 }: TabBarComponentProps) => {
-  console.log('TabBarComponent is rendering')
   const ref = useRef(null)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const TabBarComponent = ({
     return {
       transform: [
         {
-          scale: withTiming(active ? 1 : 0, { duration: 250 }),
+          scale: withTiming(active ? 1 : 0, { duration: 180 }),
         },
       ],
     }
@@ -32,12 +32,18 @@ export const TabBarComponent = ({
 
   const animatedIconContainerStyles = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(active ? 1 : 0.5, { duration: 250 }),
+      opacity: withTiming(active ? 1 : 0.5, { duration: 180 }),
     }
   })
 
   return (
-    <Pressable onPress={onPress} onLayout={onLayout} style={styles.component}>
+    <Pressable
+      onPress={() => {
+        onPress()
+      }}
+      onLayout={onLayout}
+      style={styles.component}
+    >
       <Animated.View
         style={[styles.componentCircle, animatedComponentCircleStyles]}
       />
@@ -50,7 +56,6 @@ export const TabBarComponent = ({
     </Pressable>
   )
 }
-
 const styles = StyleSheet.create({
   componentCircle: {
     flex: 1,
@@ -62,12 +67,15 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
   component: {
-    height: 60,
+    padding: 40,
     width: 60,
+    height: 60,
     marginTop: -5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })

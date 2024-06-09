@@ -350,7 +350,7 @@ export const ThemeProvider: React.FC = ({ children }) => {
   ) => {
     let nextIndex = themeIndex + 1
     if (nextIndex >= themesArray.length) nextIndex = 0
-    console.log('ThemeContext, nextIndex:' + nextIndex)
+
     setThemeIndex(nextIndex)
     setTheme(themesArray[nextIndex])
     const currentTheme = themesArray[nextIndex]
