@@ -35,11 +35,6 @@ export default function LoginBottomSheet({
 }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  console.log('LoginBottomSheet, isLoginFormVisible:' + isLoginFormVisible)
-
-  useEffect(() => {
-    // console.log('LoginBottomSheet, useEffect')
-  }, [])
 
   const renderContent = () => {
     if (isLoginFormVisible) {
@@ -94,9 +89,6 @@ export default function LoginBottomSheet({
             <View style={styles.plainButtonContainer}>
               <EmailSignInButton
                 onPress={() => {
-                  console.log(
-                    'onPress, isLoginFormVisible:' + isLoginFormVisible
-                  )
                   setIsLoginFormVisible(true)
                 }}
                 disabled={isSigninInProgress}

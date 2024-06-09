@@ -37,11 +37,9 @@ export default function LoadingScreen() {
   const { theme } = context
   const styles = getStyles(theme)
   const dispatch = useDispatch()
-  console.log('LoadingScreen, emailAddress' + emailAddress)
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      console.log('LoadingScreen, useEffect')
       // if (emailAddress) {
       console.log(`User ID is ${emailAddress}`)
       // }
@@ -148,12 +146,6 @@ export default function LoadingScreen() {
           )
           dispatch(initFavFoodList(favFoodList))
           // Create favourites view array
-          console.log(
-            'userDashboardDataResponse.data.data.getUserDashboardData.user:' +
-              JSON.stringify(
-                userDashboardDataResponse.data.data.getUserDashboardData.user
-              )
-          )
 
           setUserId(
             parseInt(
@@ -189,10 +181,6 @@ export default function LoadingScreen() {
 
           // set Tracker items (for tracker screen)
           if (Array.isArray(updatedConsumptionLogWithFoodFacts)) {
-            // console.log(
-            //   'updatedConsumptionLogWithFoodFacts:' +
-            //     JSON.stringify(updatedConsumptionLogWithFoodFacts)
-            // )
             setTrackerItems(
               updatedConsumptionLogWithFoodFacts.map((item) => {
                 return {
@@ -221,15 +209,6 @@ export default function LoadingScreen() {
                 }
               })
             )
-
-            trackerItems.forEach((trackerItem) => {
-              console.log(
-                '***LoadingScreen, trackerItem.carbAmt:' +
-                  trackerItem.carbAmt +
-                  ', totalCarbs:' +
-                  totalCarbs
-              )
-            })
 
             getTotalCarbsForSpecificDayGU(
               trackerItems,
@@ -292,17 +271,13 @@ export default function LoadingScreen() {
     </View>
   )
 }
-// rgb(16, 7, 159) dark blue
-// rgb(1, 179, 136) light green
-// rgb(91 194 231) pale blue
-// rgb(255, 191, 63) yellow
 
 const getStyles = (theme) =>
   StyleSheet.create({
     container: {
       flex: 1,
       flexDirection: 'column',
-      backgroundColor: theme.viewBackground, //  '#F5F5DC', // '#D8EAD2' alt colour green
+      backgroundColor: theme.viewBackground,
       alignItems: 'center',
       justifyContent: 'center',
     },

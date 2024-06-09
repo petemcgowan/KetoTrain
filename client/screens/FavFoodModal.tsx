@@ -96,7 +96,6 @@ const FavFoodModal: React.FC<{
             <TouchableOpacity
               onPress={() => {
                 handleSave()
-                console.log('after handleSave')
                 setSelectedFoods(new Set())
               }}
               style={styles.buttonTouchable}
