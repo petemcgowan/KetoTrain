@@ -44,7 +44,6 @@ const KetoTrackerScreen = () => {
   const { trackerItems, totalCarbs, setTotalCarbs, setTrackerItems } =
     useContext<TrackerContextType>(TrackerContext)
   const [modalVisible, setModalVisible] = useState(false)
-  console.log('KetoTrackerScreen is rendering, totalCarbs' + totalCarbs)
 
   const [trackerSelected, setTrackerSelected] = useState(0)
   const sheetRef = useRef<BottomSheet>(null)
@@ -59,8 +58,6 @@ const KetoTrackerScreen = () => {
   const styles = getStyles(theme)
 
   const handleSave = (selectedFoods: FoodDataType[]) => {
-    console.log('handleSave, selectedFoods' + JSON.stringify(selectedFoods))
-
     const updatedItemsForSelectedDate = [...itemsForSelectedDate]
     const newTrackerItems: TrackerItemType[] = []
 
@@ -74,11 +71,9 @@ const KetoTrackerScreen = () => {
 
       if (existingItemIndex > -1) {
         // Increment the portionCount of the existing item
-        console.log('update portion count for foodFactsId:' + food.foodFactsId)
         updatedItemsForSelectedDate[existingItemIndex].portionCount++
       } else {
         // Create a new tracker item for the food
-        console.log('Item does NOT exist foodFactsId:' + food.foodFactsId)
         const newItem = {
           id: Date.now().toString(),
           foodFactsId: food.foodFactsId,
@@ -126,8 +121,6 @@ const KetoTrackerScreen = () => {
 
     saveConsumptionLogs(addedItems, dayToUpdate, true, true)
 
-    console.log('****addedItems:' + JSON.stringify(addedItems))
-
     getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
   }
 
@@ -149,41 +142,24 @@ const KetoTrackerScreen = () => {
   }
 
   const handleNextDayTrack = () => {
-    console.log(
-      '****handleNextDayTrack, selectedDate BEFORE:' +
-        JSON.stringify(selectedDate)
-    )
     setSelectedDate(
       (prevDate) => new Date(prevDate.setDate(prevDate.getDate() + 1))
     )
     getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
-    console.log(
-      '****handleNextDayTrack, selectedDate AFTER:' +
-        JSON.stringify(selectedDate)
-    )
   }
 
   const handlePrevDayTrack = () => {
-    console.log(
-      '****handlePrevDayTrack, selectedDate BEFORE:' +
-        JSON.stringify(selectedDate)
-    )
     setSelectedDate(
       (prevDate) => new Date(prevDate.setDate(prevDate.getDate() - 1))
     )
     getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
-    console.log(
-      '****handlePrevDayTrack, selectedDate AFTER:' +
-        JSON.stringify(selectedDate)
-    )
   }
 
   const clickNutrientPanel = (item: TrackerItemType, index: number) => {
-    console.log('clickNutrientPanel, index:' + index)
     if (index > -1) {
       setTrackerSelected(index)
     }
-    console.log('clickNutrientPanel, item.carbAmt:' + item.carbAmt)
+
     if (isSheetOpen) {
       sheetRef.current?.snapTo(0)
     } else {
@@ -193,7 +169,6 @@ const KetoTrackerScreen = () => {
   }
 
   useEffect(() => {
-    console.log('KetoTrackerScreen, useEffect, totalCarbs:' + totalCarbs)
     const unsubscribeFocus = navigation.addListener('focus', () => {
       setFocused(true)
     })
@@ -201,7 +176,6 @@ const KetoTrackerScreen = () => {
       setFocused(false)
     })
 
-    console.log('selectedDate BEFORE' + JSON.stringify(selectedDate))
     setItemsForSelectedDate(
       trackerItems.filter((item) => {
         const itemDate = new Date(item.consumptionDate)

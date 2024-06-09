@@ -20,7 +20,6 @@ export default function NutrientBottomSheet({
   trackerSelected,
   itemsForSelectedDate,
 }) {
-  console.log('NutrientBottomSheet is rendering')
   const context = useContext(ThemeContext)
   if (!context) {
     throw new Error('useContext was used outside of the theme provider')

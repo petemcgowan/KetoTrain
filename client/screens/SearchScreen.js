@@ -6,7 +6,6 @@ import GlycemicList from '../components/GlycemicList'
 import { ThemeContext } from '../state/ThemeContext'
 
 const SearchScreen = ({ route }) => {
-  console.log('SearchScreen is rendering')
   const [searchPhrase, setSearchPhrase] = useState('')
   const [clicked, setClicked] = useState(false)
   const context = useContext(ThemeContext)
