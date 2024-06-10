@@ -7,7 +7,6 @@ import { ThemeContext } from '../state/ThemeContext'
 import { getTotalCarbsForSpecificDayGU } from '../components/GlycemicUtils'
 
 export default function CarbCircleChart({ focused, selectedDate, totalCarbs }) {
-  console.log('CarbCircleChart is rendering')
   const { trackerItems, setTotalCarbs } = useContext(TrackerContext)
   const context = useContext(ThemeContext)
   if (!context) {

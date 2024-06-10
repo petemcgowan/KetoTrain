@@ -37,7 +37,6 @@ const getStyles = (theme) =>
       marginBottom: 10,
     },
     nutNameContainer: {
-      // marginHorizontal: 10,
       marginBottom: 10,
     },
     nutValueContainer: {
