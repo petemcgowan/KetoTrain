@@ -16,7 +16,7 @@ const slides = [
   {
     component: SlideComponent,
     title: 'Keto Basics',
-    description: `The ketogenic diet involves consuming high fats, moderate proteins, and low carbs. \n\nThis dietary shift prompts the liver to produce ketones, a type of fatty acid, which becomes the main energy source for the body.\n\n`,
+    description: `The ketogenic diet involves consuming high fats, moderate proteins, and low carbs. \n\nThis dietary shift prompts the liver to produce ketones, a type of fatty acid, which becomes the main energy source for the body .\n\n`,
     //In ketosis, the body efficiently burns fat for energy, reducing the reliance on glucose from carbohydrates.  Over time, this can lead to weight loss and improved metabolic health. \n\nThe diet also tends to suppress appetite, leading to fewer calorie intakes without much effort. \n\nIt's essential, however, to consult with a healthcare provider before starting to ensure it's the right fit.
     referenceLink: 'https://www.healthline.com/nutrition/ketogenic-diet-101',
     referenceSource: 'Source: Healthline',
@@ -158,10 +158,6 @@ const LearnDeck = () => {
     horizontalScrollRef.current &&
       horizontalScrollRef.current.setNativeProps({ scrollEnabled: true })
   }
-
-  useEffect(() => {
-    console.log('useEffect, LearnDeck')
-  }, [])
 
   return (
     <SafeAreaView style={styles.container}>

@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { AnimatedTabBar } from '../tabbar/AnimatedTabBar'
-import { StyleSheet, TouchableOpacity, View, Text, Modal } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Svg from 'react-native-svg'
 import Animated from 'react-native-reanimated'
@@ -18,7 +18,7 @@ import SearchScreen from './SearchScreen'
 import KetoTrackerScreen from './KetoTrackerScreen'
 import ChartsScreen from './ChartsScreen'
 import LearnDeck from './LearnDeck'
-import { ThemeContext, themes } from '../state/ThemeContext'
+import { ThemeContext } from '../state/ThemeContext'
 import { RootState } from '../redux/reducers/index'
 import { useSelector } from 'react-redux'
 import { updateSearchFoodList } from '../redux/action-creators'
@@ -27,7 +27,6 @@ const Tab = createBottomTabNavigator()
 export const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
 const BottomTabNavigator = () => {
-  const [modalVisible, setModalVisible] = useState(false)
   const { setTheme, setNextTheme } = useContext(ThemeContext)
   const dispatch = useDispatch()
   const { updateHasSeenIntro } = bindActionCreators(actionCreators, dispatch)

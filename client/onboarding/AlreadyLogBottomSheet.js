@@ -22,10 +22,6 @@ export default function AlreadyLogBottomSheet({
   handleGoogleLogin,
   isSigninInProgress,
 }) {
-  useEffect(() => {
-    console.log('LoginBottomSheet, useEffect')
-  }, [])
-
   const renderContent = () => {
     return (
       <View style={styles.panel}>
