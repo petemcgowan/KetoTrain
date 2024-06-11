@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React from 'react'
-import { memo, useEffect, useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import { View, TextInput, Button, Keyboard, StyleSheet } from 'react-native'
 
 const SearchBar = memo(

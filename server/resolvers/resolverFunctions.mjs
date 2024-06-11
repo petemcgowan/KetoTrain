@@ -65,13 +65,6 @@ export async function getUserInfo(emailAddress) {
 
 export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
   try {
-    // console.log(
-    //   'getConsumptionLogWithFoodFacts, consumptionDate:' +
-    //     consumptionDate +
-    //     ', userId:' +
-    //     userId
-    // )
-
     const consumptionLogs = await ConsumptionLogs.findAll({
       where: {
         // consumption_date: consumptionDate,
@@ -103,11 +96,6 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
       ],
     })
 
-    // console.log(
-    //   'getConsumptionLogWithFoodFacts, consumptionLogs:' +
-    //     JSON.stringify(consumptionLogs)
-    // )
-
     const result = consumptionLogs.map((log) => {
       return {
         consumption_log_id: log.consumption_log_id,
@@ -127,10 +115,6 @@ export async function getConsumptionLogWithFoodFacts(consumptionDate, userId) {
         portion_count: log.portion_count,
       }
     })
-
-    // console.log(
-    //   'getConsumptionLogWithFoodFacts, result:' + JSON.stringify(result)
-    // )
 
     return result
   } catch (error) {
@@ -353,18 +337,11 @@ export async function replaceConsumptionLogs(
 ) {
   let t
   try {
-    // console.log(
-    //   'replaceConsumptionLogs called, addedItems: ',
-    //   JSON.stringify(addedItems)
-    // )
-    // console.log('replaceConsumptionLogs called, toBeDeleted: ', toBeDeleted)
-
     t = await ConsumptionLogs.sequelize.transaction()
 
     // Delete records if needed/specified
     if (toBeDeleted) {
       const foodFactsIdsToDelete = addedItems.map((log) => log.foodFactsId)
-      console.log('foodFactsIdsToDelete:' + foodFactsIdsToDelete)
 
       await ConsumptionLogs.destroy({
         where: {
@@ -454,9 +431,6 @@ export async function setFavouriteFoodsDB(favouriteFoods, userId) {
         transaction,
       })
 
-      console.log(
-        'favouriteFoods[0].is_favourite:' + favouriteFoods[0].isFavourite
-      )
       if (favouriteFoods[0].isFavourite) {
         console.log('Preparing new record:')
         // Prepare new record

@@ -24,8 +24,6 @@ export default function LoadingScreen() {
   const { setTrackerItems, trackerItems, setTotalCarbs, totalCarbs } =
     useContext(TrackerContext)
   const { setFoodData } = useContext(FoodContext)
-  // const { setSearchFoodList } = useContext(SearchFoodContext)
-  // const { setFavFoodList } = useContext(FavFoodContext)
   const { /*emailAddress,*/ consumptionDate, setUserId } =
     useContext(UserContext)
   const emailAddress = useSelector((state: RootState) => state.emailAddress)
