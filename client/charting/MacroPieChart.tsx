@@ -3,9 +3,10 @@ import { VictoryPie } from 'victory-native'
 import { ThemeContext } from '../state/ThemeContext'
 import { TrackerItemType } from '../types/TrackerItemType'
 import { StyleSheet, View } from 'react-native'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
 type Props = {
-  trackerItems: TrackerItemType[],
+  trackerItems: TrackerItemType[]
 }
 
 const MacroPieChart: React.FC<Props> = ({ trackerItems }) => {
@@ -50,7 +51,13 @@ const MacroPieChart: React.FC<Props> = ({ trackerItems }) => {
         data={pieData}
         colorScale={['#E38627', '#C13C37', '#6A2135']}
         labelRadius={60}
-        style={{ labels: { fill: 'white', fontSize: 12, fontWeight: 'bold' } }}
+        style={{
+          labels: {
+            fill: 'white',
+            fontSize: RFPercentage(1.7),
+            fontWeight: 'bold',
+          },
+        }}
         animate={{ duration: 500 }}
       />
       <View style={styles.whiteSeparator} />

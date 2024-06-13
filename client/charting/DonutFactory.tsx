@@ -32,16 +32,6 @@ export default function DonutFactory() {
           max1={50}
           max2={50}
         />
-        {/* <Donut
-          key={2}
-          percentage={totalGILoadCapped}
-          percentage1={totalGILoadCapped}
-          percentage2={totalGILoadCapped}
-          color={colorOfGILoadChart}
-          max={100}
-          max1={100}
-          max2={100}
-        /> */}
       </View>
     </SafeAreaView>
   )

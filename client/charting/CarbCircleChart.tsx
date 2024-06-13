@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { useEffect, useContext } from 'react'
-import { View, SafeAreaView, StyleSheet } from 'react-native'
+import { View, SafeAreaView, StyleSheet, Dimensions } from 'react-native'
 import CarbDonut from './CarbDonut'
 import TrackerContext from '../state/TrackerContext'
 import { ThemeContext } from '../state/ThemeContext'
 import { getTotalCarbsForSpecificDayGU } from '../components/GlycemicUtils'
+
+const { width } = Dimensions.get('screen')
 
 export default function CarbCircleChart({ focused, selectedDate, totalCarbs }) {
   const { trackerItems, setTotalCarbs } = useContext(TrackerContext)
@@ -44,9 +46,11 @@ export default function CarbCircleChart({ focused, selectedDate, totalCarbs }) {
           percentage={totalCarbs}
           color={colorOfCarbChart}
           max={120}
-          // max1={100}
-          // max2={100}
+          radius={width * 0.3}
           focused={focused}
+          strokeWidth={15}
+          duration={720}
+          textColor={theme.buttonText}
         />
       </View>
     </SafeAreaView>
