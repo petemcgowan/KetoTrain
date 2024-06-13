@@ -7,10 +7,7 @@ import UserContext from '../state/UserContext'
 import axios from 'axios'
 import { ThemeContext } from '../state/ThemeContext'
 import FoodContext from '../state/FoodContext'
-// import SearchFoodContext from '../state/SearchFoodContext'
-// import FavFoodContext from '../state/FavFoodContext'
 import { useDispatch, useSelector } from 'react-redux'
-// import { SearchFoodListAction } from '../redux/actions/index'
 import { initSearchFoodList, initFavFoodList } from '../redux/action-creators'
 import { PURGE } from 'redux-persist'
 import { store } from '../redux/store'
@@ -21,7 +18,7 @@ const { height, width } = Dimensions.get('screen')
 
 export default function LoadingScreen() {
   const navigation = useNavigation()
-  const { setTrackerItems, trackerItems, setTotalCarbs, totalCarbs } =
+  const { setTrackerItems, trackerItems, setTotalCarbs } =
     useContext(TrackerContext)
   const { setFoodData } = useContext(FoodContext)
   const { /*emailAddress,*/ consumptionDate, setUserId } =

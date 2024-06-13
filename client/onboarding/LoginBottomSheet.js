@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -7,11 +7,8 @@ import {
   Dimensions,
   Image,
   Platform,
-  TextInput,
-  Button,
 } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
-// import { AppleButton } from '@invertase/react-native-apple-authentication'
 import BottomSheet from 'reanimated-bottom-sheet'
 import hands_logging_in from '../assets/images/login_hands_logging_in_2.png'
 import AppleSignInButton from './AppleSignInButton'
@@ -46,9 +43,6 @@ export default function LoginBottomSheet({
               <Text style={styles.xButtonText}>X</Text>
             </TouchableOpacity>
           </View>
-          {/* <View style={styles.imageContainer}>
-            <Image style={styles.image} source={hands_logging_in}></Image>
-          </View> */}
           <EmailLoginComponent
             email={email}
             setEmail={setEmail}
@@ -85,7 +79,6 @@ export default function LoginBottomSheet({
                 disabled={isSigninInProgress}
               />
             </View>
-            {/* {Platform.OS === 'android' && ( */}
             <View style={styles.plainButtonContainer}>
               <EmailSignInButton
                 onPress={() => {
@@ -94,7 +87,6 @@ export default function LoginBottomSheet({
                 disabled={isSigninInProgress}
               />
             </View>
-            {/* )} */}
           </View>
         </View>
       )
@@ -116,7 +108,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(32, 32, 32)',
     height: height * 0.6,
     padding: 10,
-    // justifyContent: 'space-between',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },
@@ -127,7 +118,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   plainButtonContainer: {
-    // backgroundColor: 'white',
     width: '80%',
     flexDirection: 'column',
     alignItems: 'center',

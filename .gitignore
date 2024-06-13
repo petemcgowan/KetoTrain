@@ -114,3 +114,7 @@ client/android/app/src/release copy/google-services.json
 client/auth/apple/AuthKey_NNKKAAYFN2.p8
 design/design ideas
 client/android/app/src/main/assets/index.android.bundle
+client/android/app/release/app-release/universal.apk
+client/android/app/release/app-release/toc.pb
+client/android/app/release/bundletool.jar
+client/android/app/release/app-release.apks
