@@ -1,19 +1,11 @@
 import React, { useContext, useState, useEffect, useRef } from 'react'
-import {
-  Easing,
-  TextInput,
-  Animated,
-  View,
-  StyleSheet,
-  Dimensions,
-} from 'react-native'
+import { Easing, TextInput, Animated, View, StyleSheet } from 'react-native'
 import Svg, { G, Circle } from 'react-native-svg'
 import TrackerContext from '../state/TrackerContext'
 import { ThemeContext } from '../state/ThemeContext'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
-const { width } = Dimensions.get('screen')
 
 interface DonutProps {
   percentage: number
@@ -28,11 +20,11 @@ interface DonutProps {
 
 export default function CarbDonut({
   percentage,
-  radius = width * 0.3,
-  strokeWidth = 15,
-  duration = 720,
+  radius,
+  strokeWidth,
+  duration,
   color,
-  max = 100,
+  max,
   textColor,
   focused,
 }: DonutProps) {
@@ -108,7 +100,6 @@ export default function CarbDonut({
             cx="50%"
             cy="50%"
             r={radius}
-            // fill="transparent"
             stroke={color}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
@@ -119,8 +110,6 @@ export default function CarbDonut({
             cx="50%"
             cy="50%"
             r={radius}
-            // fill="transparent"
-            // stroke={color}
             stroke={'white'}
             strokeWidth={strokeWidth}
             strokeLinejoin="round"

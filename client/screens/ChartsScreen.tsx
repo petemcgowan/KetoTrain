@@ -3,7 +3,7 @@ import { StyleSheet, View, SafeAreaView, Text, ScrollView } from 'react-native'
 import { ThemeContext } from '../state/ThemeContext'
 import EnergyChart from '../charting/EnergyChart'
 import TrackerContext from '../state/TrackerContext'
-import MacroPieChart from '../charting/ConsumptionChart'
+import MacroPieChart from '../charting/MacroPieChart.tsx'
 import MacroAreaChart from '../charting/MacroAreaChart'
 
 const ChartsScreen = () => {
