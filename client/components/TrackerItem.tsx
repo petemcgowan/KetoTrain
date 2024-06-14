@@ -72,65 +72,66 @@ const TrackerItem = ({
               : theme.tableBackground,
         },
       }),
-    [trackerItems] // carbBackgroundColor (not needed i assume)
+    [trackerItems]
   )
 
-  // const pressTrackerItem = () => {
-  //   const dateBasedIndex = itemsForSelectedDate.findIndex(
-  //     ({ description }) => description === item.description
-  //   )
-  //   if (dateBasedIndex > -1) {
-  //     setTrackerSelected(dateBasedIndex)
-  //   }
-  // }
-
   const incrementPortionCount = () => {
-    const newTrackerItems = [...trackerItems]
-    trackerItems.map((mapItem, index) => {
+    const newTrackerItems = trackerItems.map((mapItem) => {
       if (
         item.description === mapItem.description &&
         item.consumptionDate === mapItem.consumptionDate
       ) {
-        const newItem = { ...item, portionCount: item.portionCount++ }
-        return newItem
+        return { ...item, portionCount: item.portionCount + 1 }
       } else {
         return mapItem
       }
     })
-    setTrackerItems(newTrackerItems)
-    updatePortionAmountApi(
-      userId,
-      formatDateToISO(item.consumptionDate),
-      item.foodFactsId,
-      item.portionCount
-    )
-    getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
-  }
-
-  const decrementPortionCount = () => {
-    if (item.portionCount > 1) {
-      const newTrackerItems = [...trackerItems]
-      trackerItems.map((mapItem, index) => {
-        if (
-          item.description === mapItem.description &&
-          item.consumptionDate === mapItem.consumptionDate
-        ) {
-          const newItem = { ...item, portionCount: item.portionCount-- }
-          return newItem
-        } else {
-          return mapItem
-        }
-      })
-
-      setTrackerItems(newTrackerItems)
+    setTrackerItems((prevTrackerItems) => {
       updatePortionAmountApi(
         userId,
         formatDateToISO(item.consumptionDate),
         item.foodFactsId,
         item.portionCount
       )
+      getTotalCarbsForSpecificDayGU(
+        newTrackerItems,
+        selectedDate,
+        setTotalCarbs
+      )
+
+      return newTrackerItems
+    })
+  }
+
+  const decrementPortionCount = () => {
+    if (item.portionCount > 1) {
+      const newTrackerItems = trackerItems.map((mapItem) => {
+        if (
+          item.description === mapItem.description &&
+          item.consumptionDate === mapItem.consumptionDate
+        ) {
+          return { ...item, portionCount: item.portionCount - 1 }
+        } else {
+          return mapItem
+        }
+      })
+      setTrackerItems((prevTrackerItems) => {
+        updatePortionAmountApi(
+          userId,
+          formatDateToISO(item.consumptionDate),
+          item.foodFactsId,
+          item.portionCount
+        )
+        getTotalCarbsForSpecificDayGU(
+          newTrackerItems,
+          selectedDate,
+          setTotalCarbs
+        )
+        return newTrackerItems
+      })
+    } else if (item.portionCount === 1) {
+      deleteTrackerItem()
     }
-    getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
   }
 
   const favouriteTrackerItem = () => {
@@ -157,15 +158,29 @@ const TrackerItem = ({
   }
 
   const deleteTrackerItem = () => {
-    //give me all the trackeritems that aren't "today" && aren't this description
+    // Filter out the item to be deleted from trackerItems
     const newTrackerItems = trackerItems.filter((trackerItem) => {
       return (
         trackerItem.description !== item.description ||
         !isSameDay(trackerItem.consumptionDate, selectedDate)
       )
     })
-    setTrackerItems(newTrackerItems)
 
+    // Update trackerItems with a callback to ensure the latest state
+    setTrackerItems((prevTrackerItems) => {
+      const updatedTrackerItems = newTrackerItems
+
+      // Update totalCarbs after updating trackerItems
+      getTotalCarbsForSpecificDayGU(
+        updatedTrackerItems,
+        selectedDate,
+        setTotalCarbs
+      )
+
+      return updatedTrackerItems
+    })
+
+    // Filter out the item to be deleted from itemsForSelectedDate
     const newItemsForSelectedDate = itemsForSelectedDate.filter(
       (selectedItem) => {
         return (
@@ -175,8 +190,10 @@ const TrackerItem = ({
       }
     )
 
+    // Update itemsForSelectedDate
     setItemsForSelectedDate(newItemsForSelectedDate)
 
+    // Prepare the item to be deleted for saving to the database
     const itemsToSerialize = [
       {
         foodFactsId: Number(item.foodFactsId),
@@ -188,9 +205,8 @@ const TrackerItem = ({
     ]
     const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
 
-    // save to the database (including the delete)
+    // Save to the database (including the delete)
     saveConsumptionLogs(itemsToSerialize, dayToUpdate, true, false)
-    getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
   }
 
   return (
@@ -219,9 +235,7 @@ const TrackerItem = ({
         </TouchableOpacity>
       </View>
       <View style={styles.foodDescriptionContainer}>
-        {/* <TouchableOpacity onPress={pressTrackerItem}> */}
         <Text style={styles.foodDescriptionText}>{item.description}</Text>
-        {/* </TouchableOpacity> */}
       </View>
       <View style={styles.nutTrackerIcon}>
         <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>

@@ -102,8 +102,22 @@ const KetoTrackerScreen = () => {
       (item) => !existingFoodFactsIds.includes(item.foodFactsId)
     )
 
-    // Update trackerItems
-    setTrackerItems([...trackerItems, ...uniqueNewTrackerItems])
+    // Update trackerItems with a callback to ensure the latest state
+    setTrackerItems((prevTrackerItems) => {
+      const updatedTrackerItems = [
+        ...prevTrackerItems,
+        ...uniqueNewTrackerItems,
+      ]
+
+      // Update totalCarbs after updating trackerItems
+      getTotalCarbsForSpecificDayGU(
+        updatedTrackerItems,
+        selectedDate,
+        setTotalCarbs
+      )
+
+      return updatedTrackerItems
+    })
 
     // Update itemsForSelectedDate
     setItemsForSelectedDate([...itemsForSelectedDate, ...uniqueNewTrackerItems])
@@ -120,8 +134,6 @@ const KetoTrackerScreen = () => {
     const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
 
     saveConsumptionLogs(addedItems, dayToUpdate, true, true)
-
-    getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
   }
 
   const renderTrackerItem = ({ item, index }: TrackerItemProps) => {
