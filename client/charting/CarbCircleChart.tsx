@@ -26,10 +26,15 @@ export default function CarbCircleChart({ focused, selectedDate, totalCarbs }) {
   }
 
   useEffect(() => {
-    if (trackerItems && trackerItems.length > 0) {
-      getTotalCarbsForSpecificDayGU(trackerItems, new Date(), setTotalCarbs)
-    }
-  }, [trackerItems])
+    // if (trackerItems && trackerItems.length > 0) {
+    //   getTotalCarbsForSpecificDayGU(
+    //     trackerItems,
+    //     new Date(),
+    //     setTotalCarbs,
+    //     totalCarbs
+    //   )
+    // }
+  }, [trackerItems, totalCarbs])
 
   return (
     <SafeAreaView style={styles.container}>

@@ -101,7 +101,6 @@ export const saveConsumptionLogs = async (
 ) => {
   try {
     const consumptionResponse = await axios({
-      // url: 'http://109.76.67.82:4001/keto-graphql',
       // url: 'http://localhost:4001/keto-graphql',
       url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
       method: 'post',
@@ -226,7 +225,7 @@ export const getTotalCarbsForSpecificDayGU = (
 ) => {
   let carbsForDayAmt = 0
 
-  trackerItems.map((item) => {
+  trackerItems.forEach((item) => {
     const itemDate = new Date(item.consumptionDate)
 
     if (
@@ -234,11 +233,11 @@ export const getTotalCarbsForSpecificDayGU = (
       itemDate.getMonth() === selectedDate.getMonth() &&
       itemDate.getDate() === selectedDate.getDate()
     ) {
-      carbsForDayAmt = carbsForDayAmt + item.carbAmt * item.portionCount
+      carbsForDayAmt += item.carbAmt * item.portionCount
     }
   })
-  setTotalCarbs(carbsForDayAmt)
 
+  setTotalCarbs(carbsForDayAmt)
   return carbsForDayAmt
 }
 

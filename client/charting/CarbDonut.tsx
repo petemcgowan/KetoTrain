@@ -62,12 +62,6 @@ export default function CarbDonut({
   }
 
   useEffect(() => {
-    console.log(
-      'CarbDonut, useEffect, trackerItems:' +
-        trackerItems.length +
-        ', totalCarbs:' +
-        totalCarbs
-    )
     if (focused) {
       animation(percentage) // Run the animation
     } else {
