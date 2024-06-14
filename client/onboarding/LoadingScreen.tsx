@@ -18,7 +18,7 @@ const { height, width } = Dimensions.get('screen')
 
 export default function LoadingScreen() {
   const navigation = useNavigation()
-  const { setTrackerItems, trackerItems, setTotalCarbs } =
+  const { setTrackerItems, trackerItems, setTotalCarbs, totalCarbs } =
     useContext(TrackerContext)
   const { setFoodData } = useContext(FoodContext)
   const { /*emailAddress,*/ consumptionDate, setUserId } =
@@ -41,7 +41,7 @@ export default function LoadingScreen() {
       console.log(`Consumption date is ${consumptionDate}`)
 
       // ************
-      // Temporary kill the Redux store dispatch
+      // Redux store dispatch purge
       store.dispatch({
         type: PURGE,
         key: 'root',
@@ -51,7 +51,6 @@ export default function LoadingScreen() {
       const getUserDashboardData = async () => {
         try {
           const userDashboardDataResponse = await axios({
-            // url: 'http://192.168.68.103:4001/keto-graphql',
             // url: 'http://localhost:4001/keto-graphql',
             url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
             method: 'post',

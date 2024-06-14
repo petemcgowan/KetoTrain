@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import {
   View,
   StyleSheet,
-  // Dimensions,
   TextInput,
   TouchableOpacity,
   Text,
 } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
-// import { AppleButton } from '@invertase/react-native-apple-authentication'
-// import hands_logging_in from '../assets/images/login_hands_logging_in_2.png'
-
-// const { height, width } = Dimensions.get('screen')
 
 const EmailLoginComponent = ({
   email,
@@ -102,7 +97,6 @@ const styles = StyleSheet.create({
 
   forgotButton: {
     width: '90%',
-    // backgroundColor: '#4285F4',
     backgroundColor: 'darkblue',
     borderRadius: 30,
     height: 50,
@@ -113,7 +107,6 @@ const styles = StyleSheet.create({
   signupButton: {
     width: '90%',
     backgroundColor: 'darkgreen',
-    // backgroundColor: '#4285F4',
     borderRadius: 30,
     marginBottom: 10,
     height: 50,
