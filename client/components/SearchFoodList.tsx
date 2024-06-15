@@ -40,6 +40,7 @@ const SearchFoodList = ({ searchPhraseNew }) => {
         <FlatList
           data={searchFoodList}
           renderItem={renderItem}
+          initialNumToRender={20}
           keyExtractor={(item) => item.publicFoodKey}
         />
       )}

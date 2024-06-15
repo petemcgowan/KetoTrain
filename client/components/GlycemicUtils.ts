@@ -6,6 +6,7 @@ import { TrackerContextType } from '../types/TrackerContextType'
 import UserContext, { UserContextProps } from '../state/UserContext'
 import { FoodDataType } from '../types/FoodDataType'
 import { SearchListType } from '../types/SearchListType'
+import { normalizeDate } from '../utils/DateUtils'
 
 export const favouriteFoodItem = (
   descriptionGI: string,
@@ -75,13 +76,6 @@ export const favouriteFoodItem = (
       }
     }
   }
-}
-
-export function formatDateToYYYYMMDD(date: Date): string {
-  const year = date.getFullYear()
-  const month = (date.getMonth() + 1).toString().padStart(2, '0')
-  const day = date.getDate().toString().padStart(2, '0')
-  return `${year}-${month}-${day}`
 }
 
 export type DataPoint = {
@@ -223,16 +217,13 @@ export const getTotalCarbsForSpecificDayGU = (
   selectedDate,
   setTotalCarbs
 ) => {
+  const normalizedSelectedDate = normalizeDate(selectedDate)
   let carbsForDayAmt = 0
 
   trackerItems.forEach((item) => {
-    const itemDate = new Date(item.consumptionDate)
+    const itemDate = normalizeDate(new Date(item.consumptionDate))
 
-    if (
-      itemDate.getFullYear() === selectedDate.getFullYear() &&
-      itemDate.getMonth() === selectedDate.getMonth() &&
-      itemDate.getDate() === selectedDate.getDate()
-    ) {
+    if (itemDate.getTime() === normalizedSelectedDate.getTime()) {
       carbsForDayAmt += item.carbAmt * item.portionCount
     }
   })

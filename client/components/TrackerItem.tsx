@@ -15,17 +15,22 @@ import { updatePortionAmountApi } from './updatePortionAmount'
 import { TrackerItemProps } from '../types/ItemTypes'
 import {
   saveConsumptionLogs,
-  formatDateToYYYYMMDD,
   formatDateToISO,
   favouriteFoodItem,
   getTotalCarbsForSpecificDayGU,
 } from './GlycemicUtils'
 import { TrackerContextType } from '../types/TrackerContextType'
+
 import FoodContext from '../state/FoodContext'
 import { FoodContextType } from '../types/FoodContextType'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateFavFoodList } from '../redux/action-creators'
 import { RootState } from '../redux/reducers'
+import {
+  normalizeDate,
+  isSameDay,
+  formatDateToYYYYMMDD,
+} from '../utils/DateUtils'
 
 const { width } = Dimensions.get('screen')
 
@@ -79,20 +84,30 @@ const TrackerItem = ({
     const newTrackerItems = trackerItems.map((mapItem) => {
       if (
         item.description === mapItem.description &&
-        item.consumptionDate === mapItem.consumptionDate
+        isSameDay(
+          new Date(mapItem.consumptionDate),
+          new Date(item.consumptionDate)
+        )
       ) {
-        return { ...item, portionCount: item.portionCount + 1 }
+        // Increment the portionCount here
+        const updatedItem = { ...item, portionCount: item.portionCount + 1 }
+
+        // Update the portion amount in the database
+        updatePortionAmountApi(
+          userId,
+          formatDateToISO(new Date(item.consumptionDate)),
+          item.foodFactsId,
+          updatedItem.portionCount
+        )
+
+        return updatedItem
       } else {
         return mapItem
       }
     })
+    // Update state with newTrackerItems
     setTrackerItems((prevTrackerItems) => {
-      updatePortionAmountApi(
-        userId,
-        formatDateToISO(item.consumptionDate),
-        item.foodFactsId,
-        item.portionCount
-      )
+      // Update totalCarbs after updating trackerItems
       getTotalCarbsForSpecificDayGU(
         newTrackerItems,
         selectedDate,
@@ -105,28 +120,41 @@ const TrackerItem = ({
 
   const decrementPortionCount = () => {
     if (item.portionCount > 1) {
+      // Map over trackerItems and update the portionCount for the matching item
       const newTrackerItems = trackerItems.map((mapItem) => {
         if (
           item.description === mapItem.description &&
-          item.consumptionDate === mapItem.consumptionDate
+          isSameDay(
+            new Date(mapItem.consumptionDate),
+            new Date(item.consumptionDate)
+          )
         ) {
-          return { ...item, portionCount: item.portionCount - 1 }
+          // Decrement the portionCount here
+          const updatedItem = { ...item, portionCount: item.portionCount - 1 }
+
+          // Update the portion amount in the database
+          updatePortionAmountApi(
+            userId,
+            formatDateToISO(new Date(item.consumptionDate)),
+            item.foodFactsId,
+            updatedItem.portionCount
+          )
+
+          return updatedItem
         } else {
           return mapItem
         }
       })
+
+      // Update state with newTrackerItems
       setTrackerItems((prevTrackerItems) => {
-        updatePortionAmountApi(
-          userId,
-          formatDateToISO(item.consumptionDate),
-          item.foodFactsId,
-          item.portionCount
-        )
+        // Update totalCarbs after updating trackerItems
         getTotalCarbsForSpecificDayGU(
           newTrackerItems,
           selectedDate,
           setTotalCarbs
         )
+
         return newTrackerItems
       })
     } else if (item.portionCount === 1) {
@@ -149,20 +177,26 @@ const TrackerItem = ({
     )
   }
 
-  const isSameDay = (date1: Date, date2: Date) => {
-    return (
-      date1.getFullYear() === date2.getFullYear() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getDate() === date2.getDate()
-    )
-  }
+  // const isSameDay = (date1: Date, date2: Date) => {
+  //   return (
+  //     date1.getFullYear() === date2.getFullYear() &&
+  //     date1.getMonth() === date2.getMonth() &&
+  //     date1.getDate() === date2.getDate()
+  //   )
+  // }
 
   const deleteTrackerItem = () => {
+    const normalizedSelectedDate = normalizeDate(selectedDate)
+
     // Filter out the item to be deleted from trackerItems
     const newTrackerItems = trackerItems.filter((trackerItem) => {
+      const normalizedTrackerItemDate = normalizeDate(
+        new Date(trackerItem.consumptionDate)
+      )
+
       return (
         trackerItem.description !== item.description ||
-        !isSameDay(trackerItem.consumptionDate, selectedDate)
+        !isSameDay(normalizedTrackerItemDate, normalizedSelectedDate)
       )
     })
 
@@ -173,7 +207,7 @@ const TrackerItem = ({
       // Update totalCarbs after updating trackerItems
       getTotalCarbsForSpecificDayGU(
         updatedTrackerItems,
-        selectedDate,
+        normalizedSelectedDate,
         setTotalCarbs
       )
 
@@ -183,9 +217,12 @@ const TrackerItem = ({
     // Filter out the item to be deleted from itemsForSelectedDate
     const newItemsForSelectedDate = itemsForSelectedDate.filter(
       (selectedItem) => {
+        const normalizedSelectedItemDate = normalizeDate(
+          new Date(selectedItem.consumptionDate)
+        )
         return (
           selectedItem.description !== item.description &&
-          !isSameDay(selectedItem.consumptionDate, selectedDate)
+          !isSameDay(normalizedSelectedItemDate, normalizedSelectedDate)
         )
       }
     )
@@ -197,14 +234,16 @@ const TrackerItem = ({
     const itemsToSerialize = [
       {
         foodFactsId: Number(item.foodFactsId),
-        consumptionDate: formatDateToYYYYMMDD(item.consumptionDate),
+        consumptionDate: formatDateToYYYYMMDD(
+          normalizeDate(new Date(item.consumptionDate))
+        ),
         userId: userId,
         defaultFl: false,
         portionCount: 0,
       },
     ]
     const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
-
+    console.log('dayToUpdate:' + dayToUpdate)
     // Save to the database (including the delete)
     saveConsumptionLogs(itemsToSerialize, dayToUpdate, true, false)
   }
