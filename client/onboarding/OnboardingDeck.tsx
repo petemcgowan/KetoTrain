@@ -4,6 +4,7 @@ import {
   Dimensions,
   StyleSheet,
   View,
+  Button,
   Text,
   SafeAreaView,
   TouchableOpacity,
@@ -18,6 +19,8 @@ import LoginBottomSheet from './LoginBottomSheet'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import UserContext, { UserContextProps } from '../state/UserContext'
 import { appleAuth } from '@invertase/react-native-apple-authentication'
+import * as Sentry from '@sentry/react-native'
+import Config from 'react-native-config'
 
 // firebase vanilla auth
 import auth from '@react-native-firebase/auth'
@@ -94,7 +97,6 @@ const OnboardingDeck = () => {
         console.log('Slides end reached')
       } else {
         setBackgroundColor(slides[slide].color)
-        console.log('slides[slide].color:' + slides[slide].color)
       }
     }
   }
@@ -105,17 +107,27 @@ const OnboardingDeck = () => {
       const hasPlayServices = await GoogleSignin.hasPlayServices()
       console.log('hasPlayServices:' + hasPlayServices)
       const userInfo = await GoogleSignin.signIn().catch((error) => {
-        console.log('Error during Google Sign In:', error)
+        Sentry.captureException('Error during GoogleSignin.signIn: ', error)
+        console.error('Error during Google Sign In:', error)
       })
-      console.log('userInfo:' + JSON.stringify(userInfo))
+      console.log(
+        'Google User has logged in successfully:' + JSON.stringify(userInfo)
+      )
+      Sentry.captureMessage(
+        'Google User has logged in successfully' + JSON.stringify(userInfo)
+      )
       updateEmailAddress(userInfo.user.email)
       navigation.navigate('LoadingScreen')
       sheetRef.current?.snapTo(1)
-      console.log('sheet closed snapping to 1')
+
       setIsSheetOpen(false)
       setSigninInProgress(false)
     } catch (error) {
-      console.log('Error in handleGoogleLogin:' + error)
+      Sentry.captureException(
+        'Error signing up, signupCreateUser/createUserWithEmailAndPassword: ',
+        error
+      )
+      console.error('Error in handleGoogleLogin:' + error)
     }
   }
 
@@ -162,6 +174,9 @@ const OnboardingDeck = () => {
       const user = userCredential.user
       updateEmailAddress(user.email)
       console.log('User account created & signed in!' + JSON.stringify(user))
+      Sentry.captureMessage(
+        'User account created & signed in' + JSON.stringify(user)
+      )
       Alert.alert('Info', 'User account created & signed in!')
       navigation.navigate('LoadingScreen')
       // remove the bottom sheet?  (while navigating)
@@ -169,7 +184,11 @@ const OnboardingDeck = () => {
       setIsSheetOpen(false)
       setSigninInProgress(false)
     } catch (error) {
-      console.error('Error signing up: ', error)
+      Sentry.captureException(
+        'Error signing up, signupCreateUser/createUserWithEmailAndPassword: ',
+        error
+      )
+      console.error('Error signing up, signupCreateUser: ', error)
     }
   }
 
@@ -184,13 +203,20 @@ const OnboardingDeck = () => {
       const user = userCredential.user
       updateEmailAddress(user.email)
       console.log('User signed in!' + JSON.stringify(user))
+      Sentry.captureMessage(
+        'Vanilla User has logged in successfully' + JSON.stringify(user)
+      )
 
       navigation.navigate('LoadingScreen')
       sheetRef.current?.snapTo(1)
       setIsSheetOpen(false)
       setSigninInProgress(false)
     } catch (error) {
-      console.error('Error signing in: ', error)
+      Sentry.captureException(
+        'Error signing in, handleEmailLogin/signInWithEmailAndPassword:',
+        error
+      )
+      console.error('Error signing in, handleEmailLogin: ', error)
     }
   }
 
@@ -226,6 +252,10 @@ const OnboardingDeck = () => {
         )
         console.log('No account exists with this email address, email:' + email)
       } else {
+        Sentry.captureException(
+          'Failed to reset password, email:' + email,
+          error
+        )
         Alert.alert('Error', 'Failed to reset password. Please try again.')
         console.log('Failed to reset password, email:' + email)
         console.error('Error resetting password: ', error)
@@ -243,20 +273,15 @@ const OnboardingDeck = () => {
   async function onAppleButtonPress() {
     try {
       setSigninInProgress(true)
-      console.log('handleAppleLogin')
 
       const appleAuthRequestResponse = await appleAuth.performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
         requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
       })
-      console.log(
-        'appleAuthRequestResponse:' + JSON.stringify(appleAuthRequestResponse)
-      )
 
       const credentialState = await appleAuth.getCredentialStateForUser(
         appleAuthRequestResponse.user
       )
-      console.log('credentialState:' + JSON.stringify(credentialState))
 
       if (credentialState === appleAuth.State.AUTHORIZED) {
         // User is authenticated with Apple. Handle accordingly.
@@ -270,39 +295,43 @@ const OnboardingDeck = () => {
         } else {
           updateEmailAddress(appleAuthRequestResponse.user) // for anonymized users, this is our uniqueness
         }
+        Sentry.captureMessage(
+          'Apple User has logged in successfully' +
+            appleAuthRequestResponse.email
+        )
+
         navigation.navigate('LoadingScreen')
       } else {
+        Sentry.captureException(
+          "I'm not expecting this control flow, the user has not been authorized by Apple, appleAuthRequestResponse.email:" +
+            appleAuthRequestResponse.email
+        )
         console.error(
           "I'm not expecting this control flow, the user has not been authorized by Apple, appleAuthRequestResponse.email:",
           appleAuthRequestResponse.email
         )
       }
       sheetRef.current?.snapTo(1)
-      console.log('sheet closed snapping to 1')
       setIsSheetOpen(false)
 
       setSigninInProgress(false)
     } catch (error) {
-      console.log('Error in handleAppleLogin:', error)
+      Sentry.captureException('Error in handleAppleLogin:', error)
+      console.error('Error in handleAppleLogin:', error)
     }
   }
 
   const onStartNowPress = () => {
-    console.log('onStartNowPress,isLoginFormVisible:' + isLoginFormVisible)
-
     if (isLoginFormVisible) {
       setIsLoginFormVisible(false) // hide email login form
       sheetRef.current?.snapTo(0) // close bottom sheet
-      console.log('email form visible, snapping to 0')
       setIsSheetOpen(false)
     } else {
       if (isSheetOpen) {
         sheetRef.current?.snapTo(0) // close
-        console.log('sheet open snapping to 0')
         setIsSheetOpen(false)
       } else {
         sheetRef.current?.snapTo(1) // open
-        console.log('sheet closed snapping to 1')
         setIsSheetOpen(true)
       }
     }
@@ -319,10 +348,10 @@ const OnboardingDeck = () => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      androidClientId:
-        '534592509466-r0b52u6k67qqluglvd7eo6sptlsf1eqr.apps.googleusercontent.com',
-      iosClientId:
-        '534592509466-emk8vddvuarhkrqhdv1qlp5rg5ddtagi.apps.googleusercontent.com',
+      androidClientId: Config.ANDROID_CLIENT_ID,
+      /*'534592509466-r0b52u6k67qqluglvd7eo6sptlsf1eqr.apps.googleusercontent.com'*/ iosClientId:
+        Config.IOS_CLIENT_ID,
+      /*'534592509466-emk8vddvuarhkrqhdv1qlp5rg5ddtagi.apps.googleusercontent.com'*/
     })
   }, [])
 
@@ -369,10 +398,6 @@ const OnboardingDeck = () => {
         <TouchableOpacity style={styles.button} onPress={onStartNowPress}>
           <Text style={styles.buttonText}>Start Now</Text>
         </TouchableOpacity>
-
-        {/* <TouchableOpacity style={styles.link} onPress={onLinkPress}>
-          <Text style={styles.linkText}>Already have an account?</Text>
-        </TouchableOpacity> */}
       </View>
       <View
         style={
@@ -471,7 +496,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFF',
     fontSize: RFPercentage(2.7),
-    // textAlign: 'center',
   },
   link: {
     marginBottom: 10,
