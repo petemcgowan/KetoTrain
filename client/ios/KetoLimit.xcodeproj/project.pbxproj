@@ -13,6 +13,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		161C8CF703BD43FEA78F43D4 /* Modesta-Script.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8169BBBD2E084FE585493086 /* Modesta-Script.ttf */; };
+		2C2EA8E42C196D5C00B0796B /* GoogleService-InfoRelease.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C2EA8E32C196D5A00B0796B /* GoogleService-InfoRelease.plist */; };
 		2C9B38122AAEA22200128DB4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C9B38112AAEA22200128DB4 /* GoogleService-Info.plist */; };
 		2C9B38132AAEA22200128DB4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C9B38112AAEA22200128DB4 /* GoogleService-Info.plist */; };
 		2FCEDB2294C84FDCA2CC87E2 /* CircularStd-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 18BDFD36680441BFB97A48B5 /* CircularStd-Bold.otf */; };
@@ -51,6 +52,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = KetoLimit/main.m; sourceTree = "<group>"; };
 		18BDFD36680441BFB97A48B5 /* CircularStd-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "CircularStd-Bold.otf"; path = "../assets/fonts/CircularStd-Bold.otf"; sourceTree = "<group>"; };
 		20FB27F2C28F471886FF9564 /* CircularStd-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "CircularStd-Book.otf"; path = "../assets/fonts/CircularStd-Book.otf"; sourceTree = "<group>"; };
+		2C2EA8E32C196D5A00B0796B /* GoogleService-InfoRelease.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-InfoRelease.plist"; path = "KetoLimit/GoogleService-InfoRelease.plist"; sourceTree = "<group>"; };
 		2C93713D2A96325300186D57 /* KetoLimit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = KetoLimit.entitlements; path = KetoLimit/KetoLimit.entitlements; sourceTree = "<group>"; };
 		2C9B38112AAEA22200128DB4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "KetoLimit/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2F6F9772E0084AEBA9700D1C /* FontAwesome5Free-Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "FontAwesome5Free-Solid.ttf"; path = "../assets/fonts/FontAwesome5Free-Solid.ttf"; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				2C9B38112AAEA22200128DB4 /* GoogleService-Info.plist */,
+				2C2EA8E32C196D5A00B0796B /* GoogleService-InfoRelease.plist */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -230,6 +233,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				F7BCE903BF082E3B06E3706F /* [CP] Copy Pods Resources */,
 				3FB45433574D45E4689849C3 /* [CP-User] [RNFB] Core Configuration */,
+				15D1095611054E768583715E /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -303,6 +307,7 @@
 				6C728E793B3D4FD58EA412AC /* fa-regular-400.ttf in Resources */,
 				A5C9B36874324A1E8D76334F /* fa-solid-900.ttf in Resources */,
 				2C9B38122AAEA22200128DB4 /* GoogleService-Info.plist in Resources */,
+				2C2EA8E42C196D5C00B0796B /* GoogleService-InfoRelease.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,7 +328,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT \\\"/bin/sh ../node_modules/@sentry/react-native/scripts/sentry-xcode.sh $REACT_NATIVE_XCODE\\\"\"\n";
+		};
+		15D1095611054E768583715E /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh ../node_modules/@sentry/react-native/scripts/sentry-xcode-debug-files.sh";
 		};
 		32E5E5046A191F230847A8AA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -528,7 +547,7 @@
 				CODE_SIGN_ENTITLEMENTS = KetoLimit/KetoLimit.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = P42X2655GH;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = KetoLimit/Info.plist;
@@ -538,7 +557,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.05;
+				MARKETING_VERSION = 1.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -562,7 +581,7 @@
 				CODE_SIGN_ENTITLEMENTS = KetoLimit/KetoLimit.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = P42X2655GH;
 				INFOPLIST_FILE = KetoLimit/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Keto Train";
@@ -571,7 +590,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.05;
+				MARKETING_VERSION = 1.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
