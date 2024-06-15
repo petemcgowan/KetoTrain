@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   View,
+  ScrollView,
   Text,
   Dimensions,
   StyleSheet,
@@ -21,7 +22,7 @@ const SlideComponent = ({
   referenceSource,
 }) => {
   return (
-    <View style={styles.slideContainer}>
+    <ScrollView style={styles.slideContainer}>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={image} />
       </View>
@@ -38,7 +39,7 @@ const SlideComponent = ({
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -47,9 +48,10 @@ export default SlideComponent
 const styles = StyleSheet.create({
   slideContainer: {
     width: width,
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    // padding: 20,
+    //flex: 1,
+    // flexDirection: 'column',
+    // justifyContent: 'space-between',
   },
   contentContainer: {
     justifyContent: 'center',
@@ -58,14 +60,14 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: height * 0.4,
     alignSelf: 'center',
-    paddingVertical: 10,
+    paddingTop: height * 0.072,
   },
   image: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
   },
-  titleBox: {},
+  titleBox: { paddingTop: height * 0.027 },
   referenceView: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -78,7 +80,7 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     textAlign: 'center',
-    fontSize: RFPercentage(2.5),
+    fontSize: RFPercentage(2.4),
     maxWidth: width - 40,
     justifyContent: 'center',
   },
