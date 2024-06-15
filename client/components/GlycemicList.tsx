@@ -59,7 +59,6 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
             <FontAwesome5
               name="heart"
               size={RFPercentage(3.9)}
-              // color={showOnlyFavorites ? theme.iconFill : theme.buttonText}
               color={showOnlyFavorites ? 'rgb(76,187,23)' : 'rgb(76,187,23)'}
               solid={showOnlyFavorites}
             />

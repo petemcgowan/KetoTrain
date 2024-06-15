@@ -23,11 +23,15 @@ import { TrackerContextType } from '../types/TrackerContextType'
 import { FoodDataType } from '../types/FoodDataType'
 import FavFoodModal from './FavFoodModal'
 import {
-  formatDateToYYYYMMDD,
   saveConsumptionLogs,
   getTotalCarbsForSpecificDayGU,
 } from '../components/GlycemicUtils'
 import UserContext, { UserContextProps } from '../state/UserContext'
+import {
+  normalizeDate,
+  isSameDay,
+  formatDateToYYYYMMDD,
+} from '../utils/DateUtils'
 
 type TrackerItemProps = {
   item: TrackerItemType
@@ -60,15 +64,16 @@ const KetoTrackerScreen = () => {
   const handleSave = (selectedFoods: FoodDataType[]) => {
     const updatedItemsForSelectedDate = [...itemsForSelectedDate]
     const newTrackerItems: TrackerItemType[] = []
+    const normalizedSelectedDate = normalizeDate(selectedDate)
 
     selectedFoods.forEach((food) => {
       // Check if the food is already in itemsForSelectedDate for the selected date
       const existingItemIndex = updatedItemsForSelectedDate.findIndex(
         (item) =>
           item.foodFactsId === food.foodFactsId &&
-          item.consumptionDate === selectedDate
+          normalizeDate(new Date(item.consumptionDate)).getTime() ===
+            normalizedSelectedDate.getTime()
       )
-
       if (existingItemIndex > -1) {
         // Increment the portionCount of the existing item
         updatedItemsForSelectedDate[existingItemIndex].portionCount++
@@ -87,7 +92,7 @@ const KetoTrackerScreen = () => {
           sodiumAmt: food.sodium,
           carbBackgroundColor: theme.tableBackground,
           portionCount: 1,
-          consumptionDate: selectedDate,
+          consumptionDate: normalizedSelectedDate,
           isFavourite: food.isFavourite,
         }
         newTrackerItems.push(newItem)
@@ -101,7 +106,6 @@ const KetoTrackerScreen = () => {
     const uniqueNewTrackerItems = newTrackerItems.filter(
       (item) => !existingFoodFactsIds.includes(item.foodFactsId)
     )
-
     // Update trackerItems with a callback to ensure the latest state
     setTrackerItems((prevTrackerItems) => {
       const updatedTrackerItems = [
@@ -112,7 +116,7 @@ const KetoTrackerScreen = () => {
       // Update totalCarbs after updating trackerItems
       getTotalCarbsForSpecificDayGU(
         updatedTrackerItems,
-        selectedDate,
+        normalizedSelectedDate,
         setTotalCarbs
       )
 
@@ -153,18 +157,43 @@ const KetoTrackerScreen = () => {
     )
   }
 
-  const handleNextDayTrack = () => {
-    setSelectedDate(
-      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() + 1))
-    )
-    getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
+  const handlePrevDayTrack = () => {
+    setSelectedDate((prevDate) => {
+      const newDate = new Date(prevDate)
+      newDate.setDate(prevDate.getDate() - 1)
+      const normalizedNewDate = normalizeDate(newDate)
+
+      console.log('Previous Date:', prevDate)
+      console.log('Selected Date (Previous Day):', normalizedNewDate)
+
+      getTotalCarbsForSpecificDayGU(
+        trackerItems,
+        normalizedNewDate,
+        setTotalCarbs
+      )
+
+      return normalizedNewDate
+    })
   }
 
-  const handlePrevDayTrack = () => {
-    setSelectedDate(
-      (prevDate) => new Date(prevDate.setDate(prevDate.getDate() - 1))
-    )
-    getTotalCarbsForSpecificDayGU(trackerItems, selectedDate, setTotalCarbs)
+  const handleNextDayTrack = () => {
+    console.log('trackerItems:' + JSON.stringify(trackerItems))
+    setSelectedDate((prevDate) => {
+      const newDate = new Date(prevDate)
+      newDate.setDate(prevDate.getDate() + 1)
+      const normalizedNewDate = normalizeDate(newDate)
+
+      console.log('Previous Date:', prevDate)
+      console.log('Selected Date (Next Day):', normalizedNewDate)
+
+      getTotalCarbsForSpecificDayGU(
+        trackerItems,
+        normalizedNewDate,
+        setTotalCarbs
+      )
+
+      return normalizedNewDate
+    })
   }
 
   const clickNutrientPanel = (item: TrackerItemType, index: number) => {
@@ -188,17 +217,39 @@ const KetoTrackerScreen = () => {
       setFocused(false)
     })
 
+    // Normalize selected date before comparison
+    const normalizedSelectedDate = normalizeDate(selectedDate)
+    console.log('Normalized Selected Date:', normalizedSelectedDate)
+
+    trackerItems.forEach((item, index) => {
+      const itemDate = new Date(item.consumptionDate)
+      const normalizedItemDate = normalizeDate(itemDate)
+      console.log(`Tracker Item ${index}:`, {
+        description: item.description,
+        originalDate: item.consumptionDate,
+        normalizedDate: normalizedItemDate,
+      })
+    })
+
+    // Update items for selected date
     setItemsForSelectedDate(
       trackerItems.filter((item) => {
-        const itemDate = new Date(item.consumptionDate)
-        const selected = new Date(selectedDate)
-        return (
-          itemDate.getFullYear() === selected.getFullYear() &&
-          itemDate.getMonth() === selected.getMonth() &&
-          itemDate.getDate() === selected.getDate()
-        )
+        const itemDate = normalizeDate(new Date(item.consumptionDate))
+        return isSameDay(itemDate, normalizedSelectedDate)
       })
     )
+
+    // setItemsForSelectedDate(
+    //   trackerItems.filter((item) => {
+    //     const itemDate = new Date(item.consumptionDate)
+    //     const selected = new Date(selectedDate)
+    //     return (
+    //       itemDate.getFullYear() === selected.getFullYear() &&
+    //       itemDate.getMonth() === selected.getMonth() &&
+    //       itemDate.getDate() === selected.getDate()
+    //     )
+    //   })
+    // )
 
     return () => {
       unsubscribeFocus()
@@ -221,7 +272,7 @@ const KetoTrackerScreen = () => {
         </TouchableOpacity>
         <View style={styles.dateDisplayContainer}>
           <Text style={styles.dateDisplayText}>
-            {selectedDate.toDateString()}
+            {selectedDate.toUTCString().split(' ').slice(0, 4).join(' ')}
           </Text>
         </View>
         <TouchableOpacity

@@ -9,6 +9,12 @@ export async function updatePortionAmountApi(
   portionAmount: number
 ): Promise<boolean> {
   try {
+    console.log(
+      'updatePortionAmountApi, consumptionDate:' +
+        consumptionDate +
+        ', portionAmount:' +
+        portionAmount
+    )
     const response = /*await*/ axios({
       url: `${REACT_APP_BACKEND_HOST}:${REACT_APP_BACKEND_PORT}/keto-graphql`,
       method: 'post',
