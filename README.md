@@ -2,7 +2,7 @@
 
 ## Main vs design/release project versions
 
-This is the main code project for Keto Train. You can find its design/release project here:
+This is the main code project for Keto Train. You can find the separate design/release project for Keto Train here:
 https://github.com/petemcgowan/KetoTrain_Design_Release
 
 
@@ -27,6 +27,41 @@ Keto Train is a full-stack React Native / TypeScript app that provides tools and
 | ![Image 4](/img/projects/KL_4_Learn_iPhone_13.jpeg) | ![Image 5](/img/projects/KL_5_Achieve_iPhone_13.jpeg) |
 |:---:|:---:|
 
+## Videos
+
+
+<table>
+  <tr>
+    <td>
+      <h3>Onboarding & Sign-in</h3>
+      <img src="gifs/Onboarding_Signin500.gif" alt="Onboarding Sign-in" style="width: 100%;">
+    </td>
+    <td>
+      <h3>Progress & Learn</h3>
+      <img src="gifs/Progress,Learn500.gif" alt="Progress Learn" style="width: 100%;">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h3>Tracking</h3>
+      <img src="gifs/Tracking500.gif" alt="Tracking" style="width: 100%;">
+    </td>
+    <td>
+      <h3>Nutrition Deletion</h3>
+      <img src="gifs/Nutrition,_Deletion500.gif" alt="Nutrition Deletion" style="width: 100%;">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h3>Search & Favourite</h3>
+      <img src="gifs/Search_Favourite500.gif" alt="Search Favourite" style="width: 100%;">
+    </td>
+    <td>
+      <h3>Keto Train Advertisement</h3>
+      <img src="gifs/KetoTrainAd1highermp4OrigText500.gif" alt="Keto Train Ad 1" style="width: 100%;">
+    </td>
+  </tr>
+</table>
 
 ## Architecture
 ![Keto Arch Diagram 2](https://github.com/petemcgowan/KetoTrain/assets/43282635/00d741cc-ef80-499f-a49d-7228066db1b4)
