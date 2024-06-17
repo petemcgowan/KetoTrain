@@ -3,7 +3,7 @@
 ## Main vs design/release project versions
 
 This is the main code project for Keto Train. You can find its design/release project here:
-https://github.com/petemcgowan/KetoTrain
+https://github.com/petemcgowan/KetoTrain_Design_Release
 
 
 <div align="center">
@@ -29,4 +29,17 @@ Keto Train is a full-stack React Native / TypeScript app that provides tools and
 
 
 ## Architecture
+![Keto Arch Diagram 2](https://github.com/petemcgowan/KetoTrain/assets/43282635/00d741cc-ef80-499f-a49d-7228066db1b4)
+
+
+## Keto Train API Architecture
+![Keto Train API diagram](https://github.com/petemcgowan/KetoTrain/assets/43282635/8b46dda3-9338-4bb4-be98-668d20cd8c6a)
+
+
+## Keto Train earlier architecture with pretty icons
 ![Keto Train Architecture](/img/presentation/027slide_KetoLimitRepalce.jpeg)
+
+
+## Keto Train front end main function breakdown per screen
+![Keto Train Front End diagram](https://github.com/petemcgowan/KetoTrain/assets/43282635/5913c62e-f5e8-4528-adc2-4460b3ae0273)
+
