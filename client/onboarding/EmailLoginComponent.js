@@ -16,7 +16,7 @@ const EmailLoginComponent = ({
   setPassword,
   handleEmailLogin,
   signupCreateUser,
-  handleForgotPassword,
+  handleForgotPasswordPress,
   isLoginFormVisible,
 }) => {
   return (
@@ -51,7 +51,7 @@ const EmailLoginComponent = ({
             <Text style={styles.text}>Signup</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleForgotPassword(email)}
+            onPress={() => handleForgotPasswordPress(email)}
             style={styles.forgotButton}
           >
             <Text style={styles.forgotText}>Forgot password?</Text>

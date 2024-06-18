@@ -142,27 +142,34 @@ const OnboardingDeck = () => {
   }
 
   const validateLoginDetails = async (email, password) => {
-    if (!email) {
+    if (email.trim() === '') {
       Alert.alert('Error', 'Please enter an email address.')
-      return
+      return false
     }
     if (!email.includes('@')) {
       Alert.alert('Error', 'Please enter a valid email address.')
-      return
+      return false
     }
-    if (!password) {
+    if (password.trim() === '') {
       Alert.alert('Error', 'Please enter a password.')
-      return
+      return false
     }
     if (password.length < 8) {
       Alert.alert('Error', 'Password should be at least 8 characters long.')
-      return
+      return false
     }
+    return true
   }
 
   // this is a "new function" to handle email Login, that I pulled from the button press one.  This actually logs in and then navigates.  No validation.  createUserWithEmailAndPassword
   const signupCreateUser = async (email, password) => {
-    validateLoginDetails(email, password)
+    const isValid = await validateLoginDetails(email, password)
+    console.log('signupCreateUser, isValid:' + JSON.stringify(isValid))
+    if (!isValid) {
+      console.log('signupCreateUser, Apparently returning')
+      return
+    }
+    console.log('signupCreateUser, Apparently NOT returning too!')
 
     try {
       setSigninInProgress(true)
@@ -194,7 +201,11 @@ const OnboardingDeck = () => {
 
   // validate user input.  Also calls Firebase to authenticate.  Then navigates. signInWithEmailAndPassword
   const handleEmailLogin = async (email, password) => {
-    validateLoginDetails(email, password)
+    const isValid = await validateLoginDetails(email, password)
+    if (!isValid) {
+      return
+    }
+
     try {
       const userCredential = await auth().signInWithEmailAndPassword(
         email,
@@ -212,11 +223,25 @@ const OnboardingDeck = () => {
       setIsSheetOpen(false)
       setSigninInProgress(false)
     } catch (error) {
-      Sentry.captureException(
-        'Error signing in, handleEmailLogin/signInWithEmailAndPassword:',
-        error
-      )
-      console.error('Error signing in, handleEmailLogin: ', error)
+      if (error.code === 'auth/wrong-password') {
+        Alert.alert(
+          'Info',
+          "That's the wrong password! Please enter a valid password."
+        )
+        console.log('Wrong password entered for email:' + email)
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert(
+          'Info',
+          'This email address is badly formatted. Please enter a valid email address!'
+        )
+        console.log('This email address is badly formatted, email:' + email)
+      } else {
+        Sentry.captureException(
+          'Error signing in, handleEmailLogin/signInWithEmailAndPassword:',
+          error
+        )
+        console.error('Error signing in, handleEmailLogin: ', error)
+      }
     }
   }
 
@@ -231,13 +256,14 @@ const OnboardingDeck = () => {
 
   // password reset
   const handleForgotPassword = async (email) => {
-    if (!email) {
+    console.log(email + email)
+    if (email.trim() === '') {
       Alert.alert('Error', 'Please enter an email address.')
-      return
+      return false
     }
     if (!email.includes('@')) {
       Alert.alert('Error', 'Please enter a valid email address.')
-      return
+      return false
     }
 
     try {
@@ -251,6 +277,12 @@ const OnboardingDeck = () => {
           'No account exists with this email address. Please enter a valid email address.'
         )
         console.log('No account exists with this email address, email:' + email)
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert(
+          'Error',
+          'This email address is badly formatted. Please enter a valid email address!'
+        )
+        console.log('This email address is badly formatted, email:' + email)
       } else {
         Sentry.captureException(
           'Failed to reset password, email:' + email,
@@ -261,6 +293,11 @@ const OnboardingDeck = () => {
         console.error('Error resetting password: ', error)
       }
     }
+    return true
+  }
+
+  const handleForgotPasswordPress = async (email) => {
+    await handleForgotPassword(email)
   }
 
   useEffect(() => {
@@ -412,7 +449,7 @@ const OnboardingDeck = () => {
           isSigninInProgress={isSigninInProgress}
           handleEmailLogin={handleEmailLogin}
           signupCreateUser={signupCreateUser}
-          handleForgotPassword={handleForgotPassword}
+          handleForgotPasswordPress={handleForgotPasswordPress}
           setIsLoginFormVisible={setIsLoginFormVisible}
           isLoginFormVisible={isLoginFormVisible}
         />

@@ -26,7 +26,7 @@ export default function LoginBottomSheet({
   isSigninInProgress,
   handleEmailLogin,
   signupCreateUser,
-  handleForgotPassword,
+  handleForgotPasswordPress,
   setIsLoginFormVisible,
   isLoginFormVisible,
 }) {
@@ -50,7 +50,7 @@ export default function LoginBottomSheet({
             setPassword={setPassword}
             handleEmailLogin={handleEmailLogin}
             signupCreateUser={signupCreateUser}
-            handleForgotPassword={handleForgotPassword}
+            handleForgotPasswordPress={handleForgotPasswordPress}
             isLoginFormVisible={isLoginFormVisible}
           />
         </View>
