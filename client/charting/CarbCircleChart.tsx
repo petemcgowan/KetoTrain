@@ -5,6 +5,7 @@ import CarbDonut from './CarbDonut'
 import TrackerContext from '../state/TrackerContext'
 import { ThemeContext } from '../state/ThemeContext'
 import { getTotalCarbsForSpecificDayGU } from '../components/GlycemicUtils'
+import { normalizeDate } from '../utils/DateUtils'
 
 const { width } = Dimensions.get('screen')
 
@@ -26,14 +27,21 @@ export default function CarbCircleChart({ focused, selectedDate, totalCarbs }) {
   }
 
   useEffect(() => {
-    // if (trackerItems && trackerItems.length > 0) {
-    //   getTotalCarbsForSpecificDayGU(
-    //     trackerItems,
-    //     new Date(),
-    //     setTotalCarbs,
-    //     totalCarbs
-    //   )
-    // }
+    console.log(
+      'totalCarbs:' +
+        totalCarbs +
+        ', trackerItems.length:' +
+        trackerItems.length
+    )
+    if (trackerItems && trackerItems.length > 0) {
+      console.log('Calling now')
+      const normalizedNewDate = normalizeDate(selectedDate)
+      getTotalCarbsForSpecificDayGU(
+        trackerItems,
+        normalizedNewDate,
+        setTotalCarbs
+      )
+    }
   }, [trackerItems, totalCarbs])
 
   return (

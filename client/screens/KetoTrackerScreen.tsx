@@ -221,15 +221,15 @@ const KetoTrackerScreen = () => {
     const normalizedSelectedDate = normalizeDate(selectedDate)
     console.log('Normalized Selected Date:', normalizedSelectedDate)
 
-    trackerItems.forEach((item, index) => {
-      const itemDate = new Date(item.consumptionDate)
-      const normalizedItemDate = normalizeDate(itemDate)
-      console.log(`Tracker Item ${index}:`, {
-        description: item.description,
-        originalDate: item.consumptionDate,
-        normalizedDate: normalizedItemDate,
-      })
-    })
+    // trackerItems.forEach((item, index) => {
+    //   const itemDate = new Date(item.consumptionDate)
+    //   const normalizedItemDate = normalizeDate(itemDate)
+    //   console.log(`Tracker Item ${index}:`, {
+    //     description: item.description,
+    //     originalDate: item.consumptionDate,
+    //     normalizedDate: normalizedItemDate,
+    //   })
+    // })
 
     // Update items for selected date
     setItemsForSelectedDate(
