@@ -19,8 +19,9 @@
   },
   "scripts": {
     "start": "react-native start",
-    "ios": "npx react-native run-ios --configuration Debug",
-    "ios-Release": "npx react-native run-ios --configuration Release",
+    "ios": "npx react-native run-ios --configuration KetoLimitDebug",
+    "ios-ReleaseiPhone15": "npx react-native run-ios --configuration KetoLimitRelease --simulator='iPhone 15'",
+    "ios-ReleaseiPhone15Pro": "npx react-native run-ios --configuration KetoLimitRelease --simulator='iPhone 15 Pro'",
     "android": "npx react-native run-android",
     "android-logs": "adb -s b8e614c1f5e5 logcat *:V | grep \"com.buachaillmaith\"",
     "androidRelease": "react-native run-android --variant=release",

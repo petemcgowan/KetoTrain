@@ -156,8 +156,8 @@ android {
         applicationId "com.buachaillmaith.ketolimit"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName "1.7"
+        versionCode 11
+        versionName "1.73"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
 
