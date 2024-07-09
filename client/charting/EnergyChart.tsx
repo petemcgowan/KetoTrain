@@ -81,7 +81,7 @@ const EnergyChart: React.FC<EnergyChartProps> = ({ trackerItems }) => {
       >
         <VictoryAxis dependentAxis tickFormat={(tick) => `${tick}`} />
         <VictoryAxis
-          tickValues={chartData.map((data) => data.x)} // Specify which ticks to display
+          tickValues={chartData.map((data) => data.x)} //  which ticks to display
           tickFormat={(tick) => days[tick]}
         />
         <VictoryBar

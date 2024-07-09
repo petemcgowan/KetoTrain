@@ -2,8 +2,10 @@ import React, { useContext } from 'react'
 import { VictoryPie } from 'victory-native'
 import { ThemeContext } from '../state/ThemeContext'
 import { TrackerItemType } from '../types/TrackerItemType'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Text, Dimensions } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
+
+const { width, height } = Dimensions.get('screen')
 
 type Props = {
   trackerItems: TrackerItemType[]

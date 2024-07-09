@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, Dimensions } from 'react-native'
 import {
   VictoryChart,
   VictoryStack,
@@ -8,10 +8,13 @@ import {
 } from 'victory-native'
 import { ThemeContext } from '../state/ThemeContext'
 import { TrackerItemType } from '../types/TrackerItemType'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
 type Props = {
   trackerItems: TrackerItemType[]
 }
+
+const { width, height } = Dimensions.get('screen')
 
 const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
   const context = useContext(ThemeContext)
@@ -67,28 +70,30 @@ const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
   const data = Object.values(dataMap)
 
   return (
-    <VictoryChart theme={VictoryTheme.material}>
-      <VictoryStack>
-        <VictoryArea
-          data={data}
-          x="date"
-          y="protein"
-          style={{ data: { fill: '#E38627' } }} // Color for Protein
-        />
-        <VictoryArea
-          data={data}
-          x="date"
-          y="carb"
-          style={{ data: { fill: '#C13C37' } }} // Color for Carbs
-        />
-        <VictoryArea
-          data={data}
-          x="date"
-          y="fat"
-          style={{ data: { fill: '#6A2135' } }} // Color for Fats
-        />
-      </VictoryStack>
-    </VictoryChart>
+    <View>
+      <VictoryChart theme={VictoryTheme.material}>
+        <VictoryStack>
+          <VictoryArea
+            data={data}
+            x="date"
+            y="protein"
+            style={{ data: { fill: '#E38627' } }} // Color for Protein
+          />
+          <VictoryArea
+            data={data}
+            x="date"
+            y="carb"
+            style={{ data: { fill: '#C13C37' } }} // Color for Carbs
+          />
+          <VictoryArea
+            data={data}
+            x="date"
+            y="fat"
+            style={{ data: { fill: '#6A2135' } }} // Color for Fats
+          />
+        </VictoryStack>
+      </VictoryChart>
+    </View>
   )
 }
 
