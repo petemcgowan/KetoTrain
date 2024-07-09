@@ -1,4 +1,4 @@
-import React, { useState, memo, useContext, useMemo, useEffect } from 'react'
+import React, { useState, useContext, useMemo, useEffect } from 'react'
 
 import {
   StyleSheet,
@@ -74,11 +74,9 @@ const GlycemicItem: React.FC<GlycemicItemProps> = ({
 
   return (
     <View style={dynamicStyles.foodRowContainer}>
-      {/* <TouchableOpacity onPress={addTrackerItem}> */}
       <View style={styles.foodContainer}>
         <Text style={styles.foodText}>{descriptionGI}</Text>
       </View>
-      {/* </TouchableOpacity> */}
       <View
         style={[
           styles.carbAmtContainer,
@@ -130,7 +128,7 @@ function arePropsEqual(
 ): boolean {
   return prevProps.descriptionGI === nextProps.descriptionGI
 }
-export default memo(GlycemicItem, arePropsEqual)
+export default React.memo(GlycemicItem, arePropsEqual)
 
 const getStyles = (theme) =>
   StyleSheet.create({
@@ -156,7 +154,7 @@ const getStyles = (theme) =>
       alignItems: 'center',
     },
     foodText: {
-      fontSize: RFPercentage(3.5),
+      fontSize: RFPercentage(3.0),
       fontWeight: '300',
       marginLeft: 3,
       color: theme.buttonText,

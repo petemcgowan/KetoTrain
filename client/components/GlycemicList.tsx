@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import FavFoodList from './FavFoodList'
-import SearchFoodList from './SearchFoodList'
+import SearchBar from './SearchBar'
+// import SearchFoodList from './SearchFoodList'
+import SearchFoodFlatlistFilter from './SearchFoodFlatlistFilter'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { ThemeContext } from '../state/ThemeContext'
@@ -40,18 +42,11 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
     <SafeAreaView style={styles.searchAndList_container}>
       <View style={styles.searchAndFavourite}>
         <View style={styles.searchContainer}>
-          <TextInput
-            placeholder="Search"
-            style={[
-              styles.searchInput,
-              !searchPhraseNew ? styles.italic : null,
-            ]}
-            placeholderTextColor={theme.buttonText}
-            value={searchPhraseNew}
-            selectionColor={'white'}
-            onChangeText={(text) => {
-              setSearchPhraseNew(text)
-            }}
+          <SearchBar
+            searchPhrase={searchPhraseNew}
+            setSearchPhrase={setSearchPhraseNew}
+            clicked={showOnlyFavorites}
+            setClicked={setClicked}
           />
         </View>
         <View style={styles.favButton}>
@@ -67,7 +62,7 @@ const GlycemicList = ({ searchPhrase, setClicked }: GlycemicListProps) => {
       </View>
       {showOnlyFavorites && <FavFoodList searchPhraseNew={searchPhraseNew} />}
       {!showOnlyFavorites && (
-        <SearchFoodList searchPhraseNew={searchPhraseNew} />
+        <SearchFoodFlatlistFilter searchPhraseNew={searchPhraseNew} />
       )}
     </SafeAreaView>
   )
@@ -84,8 +79,8 @@ const getStyles = (theme) =>
     searchAndList_container: {
       backgroundColor: theme.viewBackground,
     },
-    italic: {
-      fontStyle: 'italic',
+    searchAndFavourite: {
+      flexDirection: 'row',
     },
     searchContainer: {
       width: width * 0.85,
@@ -97,33 +92,11 @@ const getStyles = (theme) =>
       borderColor: theme.tableLineColor,
       borderWidth: 2,
       marginLeft: 10,
-      marginVertical: 5,
-    },
-    searchAndFavourite: {
-      flexDirection: 'row',
     },
     favButton: {
       flex: 1, // puts fav icons in line with each other
       alignItems: 'center',
       justifyContent: 'center',
       width: width * 0.15,
-    },
-    searchInput: {
-      paddingTop: 5,
-      fontSize: RFPercentage(3.5),
-      color: theme.buttonText,
-      marginLeft: 2,
-    },
-    errorContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-    },
-    errorText: {
-      fontSize: RFPercentage(2.8),
-      color: 'grey',
-      textAlign: 'center',
-      marginTop: 10,
     },
   })
