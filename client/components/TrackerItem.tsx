@@ -322,7 +322,7 @@ const getStyles = (theme) =>
     foodDescriptionText: {
       color: theme.buttonText,
       alignItems: 'center',
-      fontSize: RFPercentage(3.5),
+      fontSize: RFPercentage(3.0),
       fontWeight: '300',
       marginLeft: 3,
     },
