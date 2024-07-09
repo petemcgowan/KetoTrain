@@ -20,6 +20,7 @@
   "scripts": {
     "start": "react-native start",
     "ios": "npx react-native run-ios --configuration KetoLimitDebug",
+    "ios-DebugiPhone15": "npx react-native run-ios --configuration KetoLimitDebug --simulator='iPhone 15'",
     "ios-ReleaseiPhone15": "npx react-native run-ios --configuration KetoLimitRelease --simulator='iPhone 15'",
     "ios-ReleaseiPhone15Pro": "npx react-native run-ios --configuration KetoLimitRelease --simulator='iPhone 15 Pro'",
     "android": "npx react-native run-android",
@@ -52,6 +53,7 @@
     "d3": "^7.3.0",
     "firebase": "^10.3.1",
     "graphql": "^16.8.0",
+    "lodash": "^4.17.21",
     "lottie-react-native": "^5.1.4",
     "react": "18.0.0",
     "react-dom": "^18.0.0",
