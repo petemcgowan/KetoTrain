@@ -1,6 +1,5 @@
-import React, { useContext, useCallback } from 'react'
+import React, { useContext, useCallback, useState, useEffect } from 'react'
 import { StyleSheet, View, FlatList, SafeAreaView, Text } from 'react-native'
-
 import GlycemicItem from './GlycemicItem'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { RFPercentage } from 'react-native-responsive-fontsize'
@@ -8,8 +7,9 @@ import { ThemeContext } from '../state/ThemeContext'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/reducers/index'
 
-const SearchFoodList = ({ searchPhraseNew }) => {
+const SearchFoodListFlatlistFilter = ({ searchPhraseNew }) => {
   const searchFoodList = useSelector((state: RootState) => state.searchFoodList)
+  const [filteredList, setFilteredList] = useState(searchFoodList)
 
   const context = useContext(ThemeContext)
   if (!context) {
@@ -18,56 +18,59 @@ const SearchFoodList = ({ searchPhraseNew }) => {
   const { theme } = context
   const styles = getStyles(theme)
 
-  const renderItem = useCallback(
-    ({ item }) => {
-      const shouldRender = item.foodName
+  const renderItem = useCallback(({ item }) => {
+    // console.log(`Rendering item: ${item.foodName}`)
+    return (
+      <GlycemicItem
+        descriptionGI={item.foodName}
+        carbAmt={item.carbohydrates}
+        carbBackgroundColor={item.carbBackgroundColor}
+      />
+    )
+  }, [])
+
+  const filterItem = useCallback(
+    (item) => {
+      const result = item.foodName
         .toUpperCase()
         .includes(searchPhraseNew.toUpperCase())
-
-      return shouldRender ? (
-        <GlycemicItem
-          key={item.publicFoodKey}
-          descriptionGI={item.foodName}
-          carbAmt={item.carbohydrates}
-          carbBackgroundColor={item.carbBackgroundColor}
-        />
-      ) : (
-        <View style={{ height: 0 }}></View>
-      )
+      // console.log(`Filtering item: ${item.foodName}, result: ${result}`)
+      return result
     },
     [searchPhraseNew]
   )
 
+  useEffect(() => {
+    // console.log(`searchPhraseNew changed: ${searchPhraseNew}`)
+    const newFilteredList = searchFoodList.filter(filterItem)
+    // console.log(`Filtered list length: ${newFilteredList.length}`)
+    setFilteredList(newFilteredList)
+  }, [searchFoodList, searchPhraseNew, filterItem])
+
   return (
     <SafeAreaView style={styles.searchAndList_container}>
-      {searchFoodList && (
+      {filteredList.length > 0 ? (
         <FlatList
-          data={searchFoodList}
+          data={filteredList}
           renderItem={renderItem}
-          initialNumToRender={20}
           keyExtractor={(item) => item.publicFoodKey}
+          initialNumToRender={15}
+          maxToRenderPerBatch={15}
+          updateCellsBatchingPeriod={50}
+          windowSize={21}
+          removeClippedSubviews={true}
         />
-      )}
-      {(!searchFoodList || searchFoodList.length === 0) && (
+      ) : (
         <View style={styles.errorContainer}>
           <FontAwesome5 name="frown" size={RFPercentage(4.9)} color="grey" />
-          <Text style={styles.errorText}>
-            Oh no! We couldn't load your foods.
-          </Text>
-          <Text style={styles.errorText}>
-            Please check your internet connection and try again.
-          </Text>
+          <Text style={styles.errorText}>No matching foods found.</Text>
         </View>
       )}
     </SafeAreaView>
   )
 }
 
-function arePropsEqual(prevProps, nextProps) {
-  return prevProps.searchPhraseNew === nextProps.searchPhraseNew
-}
-
-export default React.memo(SearchFoodList, arePropsEqual)
+export default SearchFoodListFlatlistFilter
 
 const getStyles = (theme) =>
   StyleSheet.create({
