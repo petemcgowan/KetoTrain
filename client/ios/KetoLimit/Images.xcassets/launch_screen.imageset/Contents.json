@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "splashScreenKetoPicnic1.jpg",
+      "filename" : "ForestPartySplashWithTitleNoPhone.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "splashScreenKetoPicnic1@2x.jpg",
+      "filename" : "ForestPartySplashWithTitleNoPhone@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "splashScreenKetoPicnic1@3x.jpg",
+      "filename" : "ForestPartySplashWithTitleNoPhone@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
