@@ -1,4 +1,4 @@
-import React, { useContext, memo } from 'react'
+import React, { useContext, useCallback, useState, useEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -26,36 +26,51 @@ const FavFoodList = ({ searchPhraseNew }) => {
   const styles = getStyles(theme)
 
   const favFoodList = useSelector((state: RootState) => state.favFoodList)
-  const renderItem = ({ item }) => {
-    const shouldRender = item.foodName
-      .toUpperCase()
-      .includes(searchPhraseNew.toUpperCase())
+  const [filteredList, setFilteredList] = useState(favFoodList)
 
-    return shouldRender ? (
+  const renderItem = useCallback(({ item }) => {
+    return (
       <GlycemicItem
+        key={item.publicFoodKey}
         descriptionGI={item.foodName}
         carbAmt={item.carbohydrates}
         carbBackgroundColor={item.carbBackgroundColor}
       />
-    ) : (
-      <View style={{ height: 0 }}></View>
     )
-  }
+  }, [])
+
+  const filterItem = useCallback(
+    (item) => {
+      const result = item.foodName
+        .toUpperCase()
+        .includes(searchPhraseNew.toUpperCase())
+      return result
+    },
+    [searchPhraseNew]
+  )
+
+  useEffect(() => {
+    const newFilteredList = favFoodList.filter(filterItem)
+    setFilteredList(newFilteredList)
+  }, [favFoodList, searchPhraseNew, filterItem])
 
   return (
     <SafeAreaView style={styles.searchAndList_container}>
-      {favFoodList && (
+      {filteredList.length > 0 ? (
         <FlatList
-          data={favFoodList}
+          data={filteredList}
           renderItem={renderItem}
           keyExtractor={(item) => item.publicFoodKey}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
         />
-      )}
-      {(!favFoodList || favFoodList.length === 0) && (
+      ) : (
         <View style={styles.errorContainer}>
           <FontAwesome5 name="frown" size={RFPercentage(4.9)} color="grey" />
           <Text style={styles.errorText}>
-            Oh no! We couldn't load your favorite foods.
+            {searchPhraseNew
+              ? 'No matching favorite foods found.'
+              : "You haven't added any favorite foods yet."}
           </Text>
         </View>
       )}
@@ -63,11 +78,11 @@ const FavFoodList = ({ searchPhraseNew }) => {
   )
 }
 
-function arePropsEqual(prevProps, nextProps) {
-  return prevProps.searchPhraseNew === nextProps.searchPhraseNew
-}
-
-export default memo(FavFoodList, arePropsEqual)
+export default React.memo(
+  FavFoodList,
+  (prevProps, nextProps) =>
+    prevProps.searchPhraseNew === nextProps.searchPhraseNew
+)
 
 const getStyles = (theme) =>
   StyleSheet.create({
