@@ -325,7 +325,13 @@ const OnboardingDeck = () => {
         // You can now set their email or other details and navigate them to your app's main screen.
         console.log(
           'credentialState authorized, appleAuthRequestResponse.email:' +
-            appleAuthRequestResponse.email
+            appleAuthRequestResponse.email +
+            ', user:' +
+            appleAuthRequestResponse.user
+        )
+        console.log(
+          'credentialState authorized, appleAuthRequestResponse:' +
+            JSON.stringify(appleAuthRequestResponse)
         )
         if (appleAuthRequestResponse.email) {
           updateEmailAddress(appleAuthRequestResponse.email)
