@@ -18,7 +18,10 @@ import BottomSheet from 'reanimated-bottom-sheet'
 import LoginBottomSheet from './LoginBottomSheet'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import UserContext, { UserContextProps } from '../state/UserContext'
-import { appleAuth } from '@invertase/react-native-apple-authentication'
+import {
+  appleAuth,
+  AppleRequestResponse,
+} from '@invertase/react-native-apple-authentication'
 import * as Sentry from '@sentry/react-native'
 import Config from 'react-native-config'
 
@@ -104,11 +107,47 @@ const OnboardingDeck = () => {
   const handleGoogleLogin = async () => {
     try {
       setSigninInProgress(true)
-      const hasPlayServices = await GoogleSignin.hasPlayServices()
-      console.log('hasPlayServices:' + hasPlayServices)
-      const userInfo = await GoogleSignin.signIn().catch((error) => {
-        Sentry.captureException('Error during GoogleSignin.signIn: ', error)
-        console.error('Error during Google Sign In:', error)
+      try {
+        const hasPlayServices = await GoogleSignin.hasPlayServices()
+        console.log('hasPlayServices:' + hasPlayServices)
+        if (!hasPlayServices) {
+          Alert.alert(
+            'Error',
+            'In order to use Google Sign In, please install Google Play Services'
+          )
+          return
+        }
+      } catch (error) {
+        Sentry.captureMessage(error)
+        Alert.alert(
+          'Error',
+          'In order to use Google Sign In, please install Google Play Services'
+        )
+        console.log(
+          'There is a problem checking Google Play Services installation:',
+          error
+        )
+        return
+      }
+
+      const userInfo = await GoogleSignin.signIn().catch((signInError) => {
+        const enhancedSignInError = new Error(
+          `Error during Google Sign In: ${signInError.message}`
+        )
+        enhancedSignInError.stack = signInError.stack // Preserve the stack trace
+        Sentry.withScope((scope) => {
+          scope.setContext('Apple Auth Request', {
+            message: 'Error during Google Sign In',
+            additionalData: '',
+          })
+          Sentry.captureException(enhancedSignInError)
+        })
+        Alert.alert(
+          'Error',
+          'Error during Google Sign In, check your details or Android setup'
+        )
+        console.error('Error during Google Sign In:', enhancedSignInError)
+        return // Exit function since error is handled
       })
       console.log(
         'Google User has logged in successfully:' + JSON.stringify(userInfo)
@@ -121,13 +160,11 @@ const OnboardingDeck = () => {
       sheetRef.current?.snapTo(1)
 
       setIsSheetOpen(false)
-      setSigninInProgress(false)
     } catch (error) {
-      Sentry.captureException(
-        'Error signing up, signupCreateUser/createUserWithEmailAndPassword: ',
-        error
-      )
+      Sentry.captureException(error)
       console.error('Error in handleGoogleLogin:' + error)
+    } finally {
+      setSigninInProgress(false)
     }
   }
 
@@ -308,59 +345,110 @@ const OnboardingDeck = () => {
   }, [])
 
   async function onAppleButtonPress() {
+    let appleAuthRequestResponse: AppleRequestResponse | null = null
     try {
       setSigninInProgress(true)
 
-      const appleAuthRequestResponse = await appleAuth.performRequest({
-        requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
-      })
-
-      const credentialState = await appleAuth.getCredentialStateForUser(
-        appleAuthRequestResponse.user
-      )
-
-      if (credentialState === appleAuth.State.AUTHORIZED) {
-        // User is authenticated with Apple. Handle accordingly.
-        // You can now set their email or other details and navigate them to your app's main screen.
-        console.log(
-          'credentialState authorized, appleAuthRequestResponse.email:' +
-            appleAuthRequestResponse.email +
-            ', user:' +
-            appleAuthRequestResponse.user
-        )
-        console.log(
-          'credentialState authorized, appleAuthRequestResponse:' +
-            JSON.stringify(appleAuthRequestResponse)
-        )
-        if (appleAuthRequestResponse.email) {
-          updateEmailAddress(appleAuthRequestResponse.email)
+      // Apple Auth Request
+      try {
+        appleAuthRequestResponse = await appleAuth.performRequest({
+          requestedOperation: appleAuth.Operation.LOGIN,
+          requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+        })
+      } catch (requestError) {
+        if (requestError.code === '1000') {
+          // Handle the specific case where the user is redirected to Settings
+          console.log(
+            'User redirected to Settings to sign in. Please try again.'
+          )
+          Sentry.captureMessage('User redirected to Settings to sign in.')
+          return // User will need to sign in again
         } else {
-          updateEmailAddress(appleAuthRequestResponse.user) // for anonymized users, this is our uniqueness
+          const enhancedRequestError = new Error(
+            `Apple Auth Request Error: ${requestError.message}`
+          )
+          enhancedRequestError.stack = requestError.stack // Preserve the stack trace
+          Sentry.withScope((scope) => {
+            scope.setContext('Apple Auth Request', {
+              message: 'Error during Apple Auth Request',
+              additionalData: '',
+            })
+            Sentry.captureException(enhancedRequestError)
+          })
+          console.error('Apple Auth Request Error:', enhancedRequestError)
+          return // Exit function since error is handled
         }
-        Sentry.captureMessage(
-          'Apple User has logged in successfully' +
-            appleAuthRequestResponse.email
-        )
-
-        navigation.navigate('LoadingScreen')
-      } else {
-        Sentry.captureException(
-          "I'm not expecting this control flow, the user has not been authorized by Apple, appleAuthRequestResponse.email:" +
-            appleAuthRequestResponse.email
-        )
-        console.error(
-          "I'm not expecting this control flow, the user has not been authorized by Apple, appleAuthRequestResponse.email:",
-          appleAuthRequestResponse.email
-        )
       }
+
+      // Get Credential State
+      try {
+        if (appleAuthRequestResponse) {
+          const credentialState = await appleAuth.getCredentialStateForUser(
+            appleAuthRequestResponse.user
+          )
+          if (credentialState === appleAuth.State.AUTHORIZED) {
+            // User is authenticated with Apple.
+            // Setting their email etc. and navigating to app's main screen.
+            console.log(
+              'credentialState authorized, appleAuthRequestResponse.email:' +
+                appleAuthRequestResponse.email +
+                ', user:' +
+                appleAuthRequestResponse.user
+            )
+            console.log(
+              'credentialState authorized, appleAuthRequestResponse:' +
+                JSON.stringify(appleAuthRequestResponse)
+            )
+            if (appleAuthRequestResponse.email) {
+              updateEmailAddress(appleAuthRequestResponse.email)
+            } else {
+              updateEmailAddress(appleAuthRequestResponse.user) // for anonymized users, this is our uniqueness
+            }
+            Sentry.captureMessage(
+              'Apple User has logged in successfully' +
+                appleAuthRequestResponse.email
+            )
+            navigation.navigate('LoadingScreen')
+          }
+        } else {
+          const unauthorizedMessage = 'User not authorized by Apple'
+          Sentry.captureMessage(unauthorizedMessage)
+          console.log(unauthorizedMessage, appleAuthRequestResponse)
+          Alert.alert('Authorization Error', 'You are not authorized by Apple.')
+        }
+      } catch (credentialError) {
+        const enhancedCredentialError = new Error(
+          `Apple Credential State Error: ${credentialError.message}`
+        )
+        enhancedCredentialError.stack = credentialError.stack // Preserve the stack trace
+        Sentry.withScope((scope) => {
+          scope.setContext('Apple Auth', {
+            message: 'Error getting credential state',
+            user: appleAuthRequestResponse.user,
+          })
+          Sentry.captureException(enhancedCredentialError)
+        })
+        console.error('Apple Credential State Error:', enhancedCredentialError)
+        return // Exit function since error is handled
+      }
+
+      // Close the sheet
       sheetRef.current?.snapTo(1)
       setIsSheetOpen(false)
-
-      setSigninInProgress(false)
     } catch (error) {
-      Sentry.captureException('Error in handleAppleLogin:', error)
-      console.error('Error in handleAppleLogin:', error)
+      console.log('error.code:' + error.code)
+      console.log('error:' + JSON.stringify(error))
+      if (error.code === '1000') {
+        // Handle the specific case where the user is redirected to Settings
+        console.log('User redirected to Settings to sign in. Please try again.')
+        Sentry.captureMessage('User redirected to Settings to sign in.')
+      } else {
+        Sentry.captureException(error)
+        console.error('Error in handleAppleLogin:', error)
+      }
+    } finally {
+      // always reset logging in state
+      setSigninInProgress(false)
     }
   }
 
