@@ -26,7 +26,7 @@ import * as Sentry from '@sentry/react-native'
 import Config from 'react-native-config'
 
 // firebase vanilla auth
-import auth from '@react-native-firebase/auth'
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
 import { actionCreators } from '../redux/index'
 import { useDispatch } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -112,18 +112,18 @@ const OnboardingDeck = () => {
         console.log('hasPlayServices:' + hasPlayServices)
         if (!hasPlayServices) {
           Alert.alert(
-            'Error',
+            'Info',
             'In order to use Google Sign In, please install Google Play Services'
           )
           return
         }
       } catch (error) {
-        Sentry.captureMessage(error)
+        // Sentry.captureMessage(error)
         Alert.alert(
-          'Error',
+          'Info',
           'In order to use Google Sign In, please install Google Play Services'
         )
-        console.log(
+        console.error(
           'There is a problem checking Google Play Services installation:',
           error
         )
@@ -136,7 +136,7 @@ const OnboardingDeck = () => {
         )
         enhancedSignInError.stack = signInError.stack // Preserve the stack trace
         Sentry.withScope((scope) => {
-          scope.setContext('Apple Auth Request', {
+          scope.setContext('Google Login sign in Request', {
             message: 'Error during Google Sign In',
             additionalData: '',
           })
@@ -198,15 +198,14 @@ const OnboardingDeck = () => {
     return true
   }
 
-  // this is a "new function" to handle email Login, that I pulled from the button press one.  This actually logs in and then navigates.  No validation.  createUserWithEmailAndPassword
+  // this is a "new function" to handle email Login, that I pulled from the button press one.  This actually logs in and then navigates.  No validation.
   const signupCreateUser = async (email, password) => {
     const isValid = await validateLoginDetails(email, password)
     console.log('signupCreateUser, isValid:' + JSON.stringify(isValid))
     if (!isValid) {
-      console.log('signupCreateUser, Apparently returning')
+      console.log('signupCreateUser, Returning due to invalid login details')
       return
     }
-    console.log('signupCreateUser, Apparently NOT returning too!')
 
     try {
       setSigninInProgress(true)
@@ -223,31 +222,81 @@ const OnboardingDeck = () => {
       )
       Alert.alert('Info', 'User account created & signed in!')
       navigation.navigate('LoadingScreen')
-      // remove the bottom sheet?  (while navigating)
+      // remove the bottom sheet (while navigating)
       sheetRef.current?.snapTo(1)
       setIsSheetOpen(false)
-      setSigninInProgress(false)
     } catch (error) {
-      Sentry.captureException(
-        'Error signing up, signupCreateUser/createUserWithEmailAndPassword: ',
-        error
-      )
-      console.error('Error signing up, signupCreateUser: ', error)
+      if (error.code === 'auth/email-already-in-use') {
+        Alert.alert(
+          'Info',
+          'This email address is already in use. Either choose login or use a new email address to sign up please!'
+        )
+        console.log('This email address is already in use, email:' + email)
+      } else {
+        console.error('Error signing up, signupCreateUser: ', error)
+        Sentry.captureException(
+          'Error signing up, signupCreateUser/createUserWithEmailAndPassword: ',
+          error
+        )
+      }
+    } finally {
+      setSigninInProgress(false)
     }
   }
 
-  // validate user input.  Also calls Firebase to authenticate.  Then navigates. signInWithEmailAndPassword
+  // validate user input.  Then authenticate.  Then navigate.
   const handleEmailLogin = async (email, password) => {
     const isValid = await validateLoginDetails(email, password)
     if (!isValid) {
       return
     }
+    let userCredential: FirebaseAuthTypes.UserCredential | undefined
 
     try {
-      const userCredential = await auth().signInWithEmailAndPassword(
-        email,
-        password
-      )
+      try {
+        userCredential = await auth().signInWithEmailAndPassword(
+          email,
+          password
+        )
+      } catch (error) {
+        console.log(`TEMP1:error code:${error.code}`)
+        if (error.code === 'auth/wrong-password') {
+          Alert.alert(
+            'Info',
+            "That's the wrong password! Please enter a valid password."
+          )
+          console.log('Wrong password entered for email:' + email)
+        } else if (error.code === 'auth/invalid-email') {
+          Alert.alert(
+            'Info',
+            'This email address is badly formatted. Please enter a valid email address!'
+          )
+          console.log('This email address is badly formatted, email:' + email)
+        } else if (error.code === 'auth/user-not-found') {
+          Alert.alert(
+            'Info',
+            'The user entered was not found in the system - try again!'
+          )
+          console.log(
+            'The user entered was not found in the system - try again!:' + email
+          )
+        } else {
+          Sentry.captureException(
+            'Error signing in, handleEmailLogin/signInWithEmailAndPassword:',
+            error
+          )
+          console.error('Error signing in, handleEmailLogin: ', error)
+        }
+        return
+      }
+      if (!userCredential) {
+        Sentry.captureException(
+          'No user credential object, handleEmailLogin/signInWithEmailAndPassword'
+        )
+        console.error('Error signing in, handleEmailLogin')
+        return
+      }
+
       const user = userCredential.user
       updateEmailAddress(user.email)
       console.log('User signed in!' + JSON.stringify(user))
@@ -258,27 +307,37 @@ const OnboardingDeck = () => {
       navigation.navigate('LoadingScreen')
       sheetRef.current?.snapTo(1)
       setIsSheetOpen(false)
-      setSigninInProgress(false)
     } catch (error) {
-      if (error.code === 'auth/wrong-password') {
-        Alert.alert(
-          'Info',
-          "That's the wrong password! Please enter a valid password."
-        )
-        console.log('Wrong password entered for email:' + email)
-      } else if (error.code === 'auth/invalid-email') {
-        Alert.alert(
-          'Info',
-          'This email address is badly formatted. Please enter a valid email address!'
-        )
-        console.log('This email address is badly formatted, email:' + email)
-      } else {
-        Sentry.captureException(
-          'Error signing in, handleEmailLogin/signInWithEmailAndPassword:',
-          error
-        )
-        console.error('Error signing in, handleEmailLogin: ', error)
-      }
+      console.log(`TEMP2:error code:${error.code}`)
+      // if (error.code === 'auth/wrong-password') {
+      //   Alert.alert(
+      //     'Info',
+      //     "That's the wrong password! Please enter a valid password."
+      //   )
+      //   console.log('Wrong password entered for email:' + email)
+      // } else if (error.code === 'auth/invalid-email') {
+      //   Alert.alert(
+      //     'Info',
+      //     'This email address is badly formatted. Please enter a valid email address!'
+      //   )
+      //   console.log('This email address is badly formatted, email:' + email)
+      // } else if (error.code === 'auth/user-not-found') {
+      //   Alert.alert(
+      //     'Info',
+      //     'The user entered was not found in the system - try again!'
+      //   )
+      //   console.log(
+      //     'The user entered was not found in the system - try again!:' + email
+      //   )
+      // } else {
+      Sentry.captureException(
+        'Error signing in, handleEmailLogin/signInWithEmailAndPassword:',
+        error
+      )
+      console.error('Error signing in, handleEmailLogin: ', error)
+      // }
+    } finally {
+      setSigninInProgress(false)
     }
   }
 
@@ -293,7 +352,6 @@ const OnboardingDeck = () => {
 
   // password reset
   const handleForgotPassword = async (email) => {
-    console.log(email + email)
     if (email.trim() === '') {
       Alert.alert('Error', 'Please enter an email address.')
       return false
