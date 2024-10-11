@@ -64,6 +64,7 @@ const SearchBar = memo(
               value={searchPhrase}
               onChangeText={handleChangeText}
               onFocus={handleFocus}
+              autoCapitalize="none"
             />
           </View>
         </TouchableWithoutFeedback>
