@@ -156,8 +156,8 @@ android {
         applicationId "com.buachaillmaith.ketolimit"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 13
-        versionName "1.75"
+        versionCode 18
+        versionName "2.01"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
 
@@ -344,7 +344,7 @@ android {
 dependencies {
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-
+    implementation 'com.facebook.soloader:soloader:0.10.4+'
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

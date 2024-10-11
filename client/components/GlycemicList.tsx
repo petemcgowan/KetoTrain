@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect, memo } from 'react'
 import {
   StyleSheet,
-  TextInput,
   View,
   Dimensions,
   SafeAreaView,

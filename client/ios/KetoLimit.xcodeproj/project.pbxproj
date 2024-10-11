@@ -547,7 +547,7 @@
 				CODE_SIGN_ENTITLEMENTS = KetoLimit/KetoLimit.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = P42X2655GH;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = KetoLimit/Info.plist;
@@ -557,7 +557,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.77;
+				MARKETING_VERSION = 1.78;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -581,7 +581,7 @@
 				CODE_SIGN_ENTITLEMENTS = KetoLimit/KetoLimit.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = P42X2655GH;
 				INFOPLIST_FILE = KetoLimit/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Keto Train";
@@ -590,7 +590,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.77;
+				MARKETING_VERSION = 1.78;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
