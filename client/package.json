@@ -19,8 +19,8 @@
   },
   "scripts": {
     "start": "react-native start",
-    "ios": "npx react-native run-ios --configuration Debug --scheme KetoLimitDebug",
-    "ios-DebugiPhone15": "npx react-native run-ios --configuration Debug --scheme KetoLimitDebug --simulator='iPhone 15'",
+    "ios": "npx react-native run-ios --configuration Debug --scheme KetoLimitDebug --simulator='iPhone 15 Pro'",
+    "ios-DebugiPhone15Pro": "npx react-native run-ios --configuration Debug --scheme KetoLimitDebug --simulator='iPhone 15 Pro'",
     "ios-ReleaseiPhone15": "npx react-native run-ios --configuration Release --scheme KetoLimitRelease --simulator='iPhone 15'",
     "ios-ReleaseiPhone15Pro": "npx react-native run-ios --configuration Release --scheme KetoLimitRelease --simulator='iPhone 15 Pro'",
     "android": "npx react-native run-android",
