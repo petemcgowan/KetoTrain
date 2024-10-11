@@ -14,6 +14,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import android.util.Log;
 
+// PMG: API 34 Broadcast Receiver changes
+import android.content.Intent;
+import org.jetbrains.annotations.Nullable;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
+import android.os.Build;
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
@@ -57,6 +64,16 @@ public class MainApplication extends Application implements ReactApplication {
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+  }
+
+  // PMG: API 34 Broadcast Receiver changes
+  @Override
+      public Intent registerReceiver(@Nullable BroadcastReceiver receiver, IntentFilter filter) {
+    if (Build.VERSION.SDK_INT >= 34 && getApplicationInfo().targetSdkVersion >= 34) {
+        return super.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED);
+    } else {
+        return super.registerReceiver(receiver, filter);
+    }
   }
 
   /**
