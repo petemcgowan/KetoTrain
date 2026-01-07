@@ -86,3 +86,4 @@ KetoTrainAI.code-workspace
 client/.env.debug
 .gitignore
 client/.env.release
+client/android/sentry.properties

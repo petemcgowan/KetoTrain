@@ -3,5 +3,5 @@ module.exports = {
     ios: {},
     android: {},
   },
-  assets: ['./assets/fonts/'],
-}
+  assets: ['./assets/fonts/'], // <--- Points to your copied fonts
+};
