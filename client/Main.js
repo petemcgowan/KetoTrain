@@ -1,11 +1,11 @@
-import React from 'react'
-import firebase from '@react-native-firebase/app'
-import { UserProvider } from './state/UserContext'
-import App from './App'
-import Config from 'react-native-config'
-import { Platform } from 'react-native'
+import React from 'react';
+import firebase from '@react-native-firebase/app';
 
-import { getAnalytics } from '@react-native-firebase/analytics'
+import App from './App';
+import Config from 'react-native-config';
+import { Platform } from 'react-native';
+
+import { getAnalytics } from '@react-native-firebase/analytics';
 
 // if (Platform.OS === 'android') {
 // let getAnalytics
@@ -19,20 +19,16 @@ const firebaseConfig = {
   messagingSenderId: Config.FIREBASE_MESSAGING_SENDER_ID,
   appId: Config.FIREBASE_APP_ID,
   measurementId: Config.FIREBASE_MEASUREMENT_ID,
-}
-let app = null
+};
+let app = null;
 if (!firebase.apps.length) {
-  app = firebase.initializeApp(firebaseConfig)
+  app = firebase.initializeApp(firebaseConfig);
 }
-const analytics = getAnalytics(app)
+const analytics = getAnalytics(app);
 // }
 
 export const Main: React.FC = () => {
-  return (
-    <UserProvider>
-      <App />
-    </UserProvider>
-  )
-}
+  return <App />;
+};
 
-export default Main
+export default Main;

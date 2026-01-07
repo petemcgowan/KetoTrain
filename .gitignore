@@ -20,8 +20,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-ios/.xcode.env.local
-client/ios/.xcode.env.local
+**/.xcode.env.local
 
 # Android/IntelliJ
 #
@@ -31,20 +30,16 @@ build/
 local.properties
 *.iml
 *.hprof
+.cxx/
+*.keystore
+!debug.keystore
+.kotlin/
 
 # node.js
 #
-client/node_modules/
-server/node_modules/
 node_modules/
 npm-debug.log
 yarn-error.log
-
-# BUCK
-buck-out/
-\.buckd/
-*.keystore
-!debug.keystore
 
 # fastlane
 #
@@ -62,59 +57,32 @@ buck-out/
 *.jsbundle
 
 # Ruby / CocoaPods
-/client/ios/Pods/
-client/ios/Pods/
+**/Pods/
 /client/vendor/bundle/
-/vendor/bundle/
 
-# macOS
-.DS_Store
-keto_limit.code-workspace
+# Temporary files created by Metro to check the health of the file watcher
+.metro-health-check*
+
+# testing
+/coverage
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 notesdraft
-Glycemic Index_ What It Is and How to Use It_files
-design/logo/design ideas
-KetoLimit.code-workspace
-server/connection.json
+firebase
+client/ios/GoogleService-Info.plist
+
+client/ios/GoogleService-InfoRelease.plist
+client/auth
+
+KetoTrainAI.code-workspace
 .env
 client/.env.debug
+.gitignore
 client/.env.release
-KetoTrain.code-workspace
-client/auth/android/debug/google-services.json
-client/auth/android/debug .dev/google-services.json
-client/auth/android/release/google-services.json
-client/auth/android/release .release/google-services.json
-client/auth/client_534592509466-6jf73c1nq7qj3i24i9259ejuedb7jd9b.apps.googleusercontent.com.plist
-client/auth/client_534592509466-emk8vddvuarhkrqhdv1qlp5rg5ddtagi.apps.googleusercontent.com.plist
-client/auth/client_secret_534592509466-3v4edkbk66kelpart53633gvqfccfmrp.apps.googleusercontent.com.json
-client/auth/client_secret_534592509466-mla9cae97f60gjl773k5h79r5m1m51n5.apps.googleusercontent.com.json
-client/auth/client_secret_534592509466-n718suf9ep50hn8vm4p4fuc5ib48ep1t.apps.googleusercontent.com (1).json
-client/auth/client_secret_534592509466-n718suf9ep50hn8vm4p4fuc5ib48ep1t.apps.googleusercontent.com.json
-client/auth/client_secret_534592509466-r0b52u6k67qqluglvd7eo6sptlsf1eqr.apps.googleusercontent.com.json
-client/auth/client_secret_534592509466-tfde9rsgmmeahtknghht7rbjt14e0m0c.apps.googleusercontent.com.json
-client/auth/ios/debug/GoogleService-Info-Debug.plist
-client/auth/ios/debug/GoogleService-Info-Release.plist
-client/auth/ios/debug/GoogleService-Info.plist
-client/auth/ios/release/GoogleService-Info.plist
-client/ios/KetoLimit/GoogleService-Info-Debug.plist
-client/ios/KetoLimit/GoogleService-Info-Release.plist
-client/ios/KetoLimit/GoogleService-Info.plist
-client/android/app/src/main/res/values/strings.xml
-client/android/app/src/dev/debug/google-services.json
-client/android/app/src/dev/release/google-services.json
-client/android/app/src/prod/debug/google-services.json
-client/android/app/src/prod/release/google-services.json
-client/auth/google-services.json
-client/auth/Keto Limit Auth Release worksheet.md
-firebase/android/google-services.json
-release/mockups/Keto Train with images.mockup
-client/android/app/release/app-release.aab
-client/android/app/src/debug/google-services.json
-client/android/app/src/release/google-services.json
-client/android/app/src/release copy/google-services.json
-client/auth/apple/AuthKey_NNKKAAYFN2.p8
-design/design ideas
-client/android/app/src/main/assets/index.android.bundle
-client/android/app/release/app-release/universal.apk
-client/android/app/release/app-release/toc.pb
-client/android/app/release/bundletool.jar
-client/android/app/release/app-release.apks
