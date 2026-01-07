@@ -87,3 +87,6 @@ client/.env.debug
 client/.env.release
 client/android/sentry.properties
 client/android/app/google-services.json
+client/ios/KetoTrainAI/GoogleService-Info.plist
+client/ios/sentry.properties
+client/ios/KetoTrainAI/GoogleService-InfoRelease.plist
