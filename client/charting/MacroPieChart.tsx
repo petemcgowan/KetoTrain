@@ -1,81 +1,82 @@
-import React, { useContext } from 'react'
-import { VictoryPie } from 'victory-native'
-import { ThemeContext } from '../state/ThemeContext'
-import { TrackerItemType } from '../types/TrackerItemType'
-import { StyleSheet, View, Text, Dimensions } from 'react-native'
-import { RFPercentage } from 'react-native-responsive-fontsize'
+import React, { useContext } from 'react';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { PolarChart, Pie } from 'victory-native';
+import { useFont } from '@shopify/react-native-skia';
+import { ThemeContext } from '../state/ThemeContext';
+import { TrackerItemType } from '../types/TrackerItemType';
 
-const { width, height } = Dimensions.get('screen')
+// We need a font for labels (even if we don't show many)
+const karlaFont = require('../assets/fonts/Karla-Light.ttf');
+const { width } = Dimensions.get('window');
 
 type Props = {
-  trackerItems: TrackerItemType[]
-}
+  trackerItems: TrackerItemType[];
+};
 
 const MacroPieChart: React.FC<Props> = ({ trackerItems }) => {
-  const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useContext was used outside of the theme provider')
-  }
-  const { theme } = context
-  const styles = getStyles(theme)
+  const { theme } = useContext(ThemeContext)!;
+  const font = useFont(karlaFont, 12);
 
-  const today = new Date()
-  const oneWeekAgo = new Date(today)
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+  const today = new Date();
+  const oneWeekAgo = new Date(today);
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  const filteredItems = trackerItems.filter(
-    (item) => new Date(item.consumptionDate) >= oneWeekAgo
-  )
+  // 1. Filter Data
+  const filteredItems = trackerItems.filter(item => {
+    const d = new Date(item.consumptionDate);
+    return !isNaN(d.getTime()) && d >= oneWeekAgo;
+  });
 
+  // 2. Sum Totals
   const totals = filteredItems.reduce(
     (acc, item) => {
-      acc.protein += item.proteinAmt * item.portionCount
-      acc.carb += item.carbAmt * item.portionCount
-      acc.fat += item.fatAmt * item.portionCount
-      return acc
+      acc.protein += item.proteinAmt * item.portionCount;
+      acc.carb += item.carbAmt * item.portionCount;
+      acc.fat += item.fatAmt * item.portionCount;
+      return acc;
     },
-    {
-      protein: 0,
-      carb: 0,
-      fat: 0,
-    }
-  )
+    { protein: 0, carb: 0, fat: 0 },
+  );
 
+  // 3. Format for Victory Skia
   const pieData = [
-    { x: 'Protein', y: totals.protein },
-    { x: 'Carbs', y: totals.carb },
-    { x: 'Fats', y: totals.fat },
-  ]
+    { label: 'Protein', value: totals.protein, color: '#E38627' }, // Orange
+    { label: 'Carbs', value: totals.carb, color: '#C13C37' }, // Red
+    { label: 'Fats', value: totals.fat, color: '#6A2135' }, // Dark Red/Brown
+  ].filter(d => d.value > 0);
+
+  if (pieData.length === 0) {
+    return (
+      <View style={[styles.chartContainer, { justifyContent: 'center' }]}>
+        <Text style={{ color: theme.buttonText, textAlign: 'center' }}>
+          No data for this week
+        </Text>
+      </View>
+    );
+  }
 
   return (
-    <View>
-      <VictoryPie
+    <View style={styles.chartContainer}>
+      <PolarChart
         data={pieData}
-        colorScale={['#E38627', '#C13C37', '#6A2135']}
-        labelRadius={60}
-        style={{
-          labels: {
-            fill: 'white',
-            fontSize: RFPercentage(1.7),
-            fontWeight: 'bold',
-          },
-        }}
-        animate={{ duration: 500 }}
-      />
-      <View style={styles.whiteSeparator} />
+        labelKey="label"
+        valueKey="value"
+        colorKey="color"
+      >
+        <Pie.Chart>{({ slice }) => <Pie.Slice />}</Pie.Chart>
+      </PolarChart>
     </View>
-  )
-}
+  );
+};
 
-export default MacroPieChart
+export default MacroPieChart;
 
-const getStyles = (theme) =>
-  StyleSheet.create({
-    whiteSeparator: {
-      height: 2,
-      backgroundColor: 'white',
-      marginVertical: 20,
-      width: '90%',
-      alignSelf: 'center',
-    },
-  })
+const styles = StyleSheet.create({
+  chartContainer: {
+    height: 250,
+    width: width * 0.8,
+    alignSelf: 'center',
+    marginVertical: 10,
+    justifyContent: 'center',
+  },
+});

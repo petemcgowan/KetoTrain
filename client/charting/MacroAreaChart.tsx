@@ -1,111 +1,139 @@
-import React, { useEffect, useContext } from 'react'
-import { View, StyleSheet, Text, Dimensions } from 'react-native'
-import {
-  VictoryChart,
-  VictoryStack,
-  VictoryArea,
-  VictoryTheme,
-} from 'victory-native'
-import { ThemeContext } from '../state/ThemeContext'
-import { TrackerItemType } from '../types/TrackerItemType'
-import { RFPercentage } from 'react-native-responsive-fontsize'
+import React, { useContext } from 'react';
+import { View, StyleSheet, Text, Dimensions } from 'react-native';
+import { CartesianChart, Area } from 'victory-native';
+import { useFont } from '@shopify/react-native-skia';
+import { ThemeContext } from '../state/ThemeContext';
+import { TrackerItemType } from '../types/TrackerItemType';
+
+const karlaFont = require('../assets/fonts/Karla-Light.ttf');
+const { width } = Dimensions.get('window');
 
 type Props = {
-  trackerItems: TrackerItemType[]
-}
-
-const { width, height } = Dimensions.get('screen')
+  trackerItems: TrackerItemType[];
+};
 
 const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
-  const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useContext was used outside of the theme provider')
-  }
-  const { theme } = context
-  const styles = getStyles(theme)
+  const { theme } = useContext(ThemeContext)!;
+  const font = useFont(karlaFont, 12);
 
-  const today = new Date()
-  const oneWeekAgo = new Date(today)
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+  const today = new Date();
+  const oneWeekAgo = new Date(today);
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
+  // 1. Data Prep
   const initializeEmptyData = () => {
-    const data: {
-      [key: string]: {
-        date: string
-        protein: number
-        carb: number
-        fat: number
-        dateString: string
-      }
-    } = {}
+    const data: any = {};
     for (let i = 0; i < 7; i++) {
-      const currentDay = new Date(oneWeekAgo)
-      currentDay.setDate(currentDay.getDate() + i)
-
-      const dayString = currentDay.toLocaleString('en-US', { weekday: 'short' })
-      const dateString = currentDay.toISOString().split('T')[0]
+      const currentDay = new Date(oneWeekAgo);
+      currentDay.setDate(currentDay.getDate() + i);
+      const dateString = currentDay.toISOString().split('T')[0];
+      const dayLabel = currentDay.toLocaleString('en-US', { weekday: 'short' });
 
       data[dateString] = {
-        date: dayString,
-        protein: 0,
-        carb: 0,
-        fat: 0,
-        dateString: dateString,
-      }
+        date: dayLabel,
+        rawProtein: 0,
+        rawCarb: 0,
+        rawFat: 0,
+        xIndex: i,
+      };
     }
-    return data
-  }
+    return data;
+  };
 
-  const dataMap = initializeEmptyData()
+  const dataMap = initializeEmptyData();
 
-  trackerItems.forEach((item) => {
-    const dateString = item.consumptionDate.toISOString().split('T')[0]
+  // 2. Aggregate
+  trackerItems.forEach(item => {
+    const d = new Date(item.consumptionDate);
+    if (isNaN(d.getTime())) return;
+    const dateString = d.toISOString().split('T')[0];
+
     if (dataMap[dateString]) {
-      dataMap[dateString].protein += item.proteinAmt * item.portionCount
-      dataMap[dateString].carb += item.carbAmt * item.portionCount
-      dataMap[dateString].fat += item.fatAmt * item.portionCount
+      dataMap[dateString].rawProtein += item.proteinAmt * item.portionCount;
+      dataMap[dateString].rawCarb += item.carbAmt * item.portionCount;
+      dataMap[dateString].rawFat += item.fatAmt * item.portionCount;
     }
-  })
+  });
 
-  const data = Object.values(dataMap)
+  // 3. Stack Data (Cumulative for Area overlap)
+  const chartData = Object.values(dataMap)
+    .map((d: any) => {
+      const fat = d.rawFat;
+      const carbStack = d.rawFat + d.rawCarb;
+      const proteinStack = d.rawFat + d.rawCarb + d.rawProtein;
+
+      return {
+        date: d.date,
+        xIndex: d.xIndex,
+        fat,
+        carbStack,
+        proteinStack,
+      };
+    })
+    .sort((a: any, b: any) => a.xIndex - b.xIndex);
+
+  if (!font)
+    return (
+      <View style={{ height: 250 }}>
+        <Text style={{ color: 'white' }}>Loading...</Text>
+      </View>
+    );
 
   return (
-    <View>
-      <VictoryChart theme={VictoryTheme.material}>
-        <VictoryStack>
-          <VictoryArea
-            data={data}
-            x="date"
-            y="protein"
-            style={{ data: { fill: '#E38627' } }} // Color for Protein
-          />
-          <VictoryArea
-            data={data}
-            x="date"
-            y="carb"
-            style={{ data: { fill: '#C13C37' } }} // Color for Carbs
-          />
-          <VictoryArea
-            data={data}
-            x="date"
-            y="fat"
-            style={{ data: { fill: '#6A2135' } }} // Color for Fats
-          />
-        </VictoryStack>
-      </VictoryChart>
+    <View style={styles.chartContainer}>
+      <CartesianChart
+        data={chartData}
+        xKey="xIndex"
+        yKeys={['proteinStack', 'carbStack', 'fat']}
+        domainPadding={{ top: 20, left: 10, right: 10 }}
+        axisOptions={{
+          font,
+          lineColor: theme.buttonText,
+          labelColor: theme.buttonText,
+          tickCount: 7,
+          formatXLabel: value => {
+            const index = Math.round(value);
+            return chartData[index]?.date || '';
+          },
+        }}
+      >
+        {({ points, chartBounds }) => (
+          <>
+            {/* Protein (Total) - Orange */}
+            <Area
+              points={points.proteinStack}
+              y0={chartBounds.bottom}
+              color="#E38627"
+              animate={{ type: 'spring' }}
+            />
+            {/* Carb (Fat + Carb) - Red */}
+            <Area
+              points={points.carbStack}
+              y0={chartBounds.bottom}
+              color="#C13C37"
+              animate={{ type: 'spring' }}
+            />
+            {/* Fat (Bottom) - Dark Red/Brown */}
+            <Area
+              points={points.fat}
+              y0={chartBounds.bottom}
+              color="#6A2135"
+              animate={{ type: 'spring' }}
+            />
+          </>
+        )}
+      </CartesianChart>
     </View>
-  )
-}
+  );
+};
 
-export default MacroAreaChart
+export default MacroAreaChart;
 
-const getStyles = (theme) =>
-  StyleSheet.create({
-    whiteSeparator: {
-      height: 140,
-      backgroundColor: 'white',
-      marginVertical: 20,
-      width: '90%',
-      alignSelf: 'center',
-    },
-  })
+const styles = StyleSheet.create({
+  chartContainer: {
+    height: 250,
+    width: width * 0.85,
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+});

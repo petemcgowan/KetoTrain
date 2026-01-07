@@ -1,111 +1,100 @@
-import React, { useContext } from 'react'
-import { ScrollView, View, StyleSheet, Text } from 'react-native'
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryTheme,
-  VictoryAxis,
-} from 'victory-native'
+import React, { useContext } from 'react';
+import { ScrollView, View, StyleSheet, Text, Dimensions } from 'react-native';
+import { CartesianChart, Bar } from 'victory-native';
+import { useFont } from '@shopify/react-native-skia';
+import { ThemeContext } from '../state/ThemeContext';
+import { TrackerItemType } from '../types/TrackerItemType';
 
-import { TrackerItemType } from '../types/TrackerItemType'
-import { ThemeContext } from '../state/ThemeContext'
+const karlaFont = require('../assets/fonts/Karla-Light.ttf');
+const { width } = Dimensions.get('window');
 
-type EnergyChartProps = {
-  trackerItems: TrackerItemType[]
-}
+type Props = {
+  trackerItems: TrackerItemType[];
+};
 
-type ChartDataType = {
-  x: number
-  y: number
-}
+const EnergyChart: React.FC<Props> = ({ trackerItems }) => {
+  const { theme } = useContext(ThemeContext)!;
+  const font = useFont(karlaFont, 12);
 
-const EnergyChart: React.FC<EnergyChartProps> = ({ trackerItems }) => {
-  const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useContext was used outside of the theme provider')
-  }
-  const { theme } = context
-  const styles = getStyles(theme)
-
-  // Get date without time for grouping
   function getDateString(date: Date): string {
-    return date.toISOString().split('T')[0]
+    return date.toISOString().split('T')[0];
   }
 
   // Group by consumptionDate
-  const groupedByDate: { [date: string]: number } = {}
-  trackerItems.forEach((item) => {
-    const dateStr = getDateString(new Date(item.consumptionDate))
-    if (!groupedByDate[dateStr]) {
-      groupedByDate[dateStr] = 0
+  const groupedByDate: { [date: string]: number } = {};
+  trackerItems.forEach(item => {
+    const d = new Date(item.consumptionDate);
+    if (!isNaN(d.getTime())) {
+      const dateStr = getDateString(d);
+      if (!groupedByDate[dateStr]) groupedByDate[dateStr] = 0;
+      groupedByDate[dateStr] += item.energyAmt;
     }
-    groupedByDate[dateStr] += item.energyAmt
-  })
+  });
 
-  // Get the last 7 days of data
-  const last7Dates: string[] = []
+  // Get last 7 days
+  const last7DaysData: any[] = [];
+  const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
   for (let i = 6; i >= 0; i--) {
-    const d = new Date()
-    d.setDate(d.getDate() - i)
-    last7Dates.push(getDateString(d))
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const dateStr = getDateString(d);
+    const dayName = dayLabels[d.getDay()];
+
+    last7DaysData.push({
+      xIndex: 6 - i, // 0 to 6
+      y: groupedByDate[dateStr] || 0,
+      label: dayName,
+    });
   }
 
-  const lastWeekItems = last7Dates.map((dateStr) => {
-    return {
-      consumptionDate: dateStr,
-      energyAmt: groupedByDate[dateStr] || 0, // default to 0 if no data for that day
-    }
-  })
-
-  // Prepare data for chart
-  const chartData: ChartDataType[] = lastWeekItems.map((item) => ({
-    x: new Date(item.consumptionDate).getDay(), // Use the day of the week as x
-    y: item.energyAmt,
-  }))
-
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-
-  // Start with the correct day of the week
-  const firstDayOfWeek = new Date(lastWeekItems[0].consumptionDate).getDay()
-
-  const adjustedDays = days
-    .slice(firstDayOfWeek)
-    .concat(days.slice(0, firstDayOfWeek))
+  if (!font)
+    return (
+      <View style={{ height: 250 }}>
+        <Text style={{ color: 'white' }}>Loading Chart...</Text>
+      </View>
+    );
 
   return (
-    <ScrollView horizontal={true}>
-      <VictoryChart
-        theme={VictoryTheme.material}
-        domainPadding={{ x: 10, y: 5 }}
-        width={420} // Width of the chart
+    <View style={styles.chartContainer}>
+      <CartesianChart
+        data={last7DaysData}
+        xKey="xIndex"
+        yKeys={['y']}
+        domainPadding={{ left: 20, right: 20, top: 20 }}
+        axisOptions={{
+          font,
+          lineColor: theme.buttonText,
+          labelColor: theme.buttonText,
+          tickCount: 7,
+          formatXLabel: value => {
+            const index = Math.round(value);
+            return last7DaysData[index]?.label || '';
+          },
+        }}
       >
-        <VictoryAxis dependentAxis tickFormat={(tick) => `${tick}`} />
-        <VictoryAxis
-          tickValues={chartData.map((data) => data.x)} //  which ticks to display
-          tickFormat={(tick) => days[tick]}
-        />
-        <VictoryBar
-          data={chartData}
-          barWidth={30} // Width of each bar
-          style={{ data: { fill: '#c43a31' } }} // Color of the bars
-        />
-      </VictoryChart>
-      <View style={styles.whiteSeparator}>
-        <Text>Test</Text>
-      </View>
-    </ScrollView>
-  )
-}
+        {({ points, chartBounds }) => (
+          <Bar
+            points={points.y}
+            chartBounds={chartBounds}
+            color="#c43a31"
+            roundedCorners={{ topLeft: 6, topRight: 6 }}
+            barWidth={25}
+            animate={{ type: 'spring' }}
+          />
+        )}
+      </CartesianChart>
+    </View>
+  );
+};
 
-export default EnergyChart
+export default EnergyChart;
 
-const getStyles = (theme) =>
-  StyleSheet.create({
-    whiteSeparator: {
-      height: 140,
-      backgroundColor: 'white',
-      marginVertical: 20,
-      width: '90%',
-      alignSelf: 'center',
-    },
-  })
+const styles = StyleSheet.create({
+  chartContainer: {
+    height: 250,
+    width: width * 0.85, // Responsive Width
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+});
