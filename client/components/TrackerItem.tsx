@@ -8,7 +8,8 @@ import {
 } from 'react-native'
 import TrackerContext from '../state/TrackerContext'
 import UserContext from '../state/UserContext'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
+
 import { ThemeContext } from '../state/ThemeContext'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { updatePortionAmountApi } from './updatePortionAmount'
@@ -177,14 +178,6 @@ const TrackerItem = ({
     )
   }
 
-  // const isSameDay = (date1: Date, date2: Date) => {
-  //   return (
-  //     date1.getFullYear() === date2.getFullYear() &&
-  //     date1.getMonth() === date2.getMonth() &&
-  //     date1.getDate() === date2.getDate()
-  //   )
-  // }
-
   const deleteTrackerItem = () => {
     const normalizedSelectedDate = normalizeDate(selectedDate)
 
@@ -227,7 +220,6 @@ const TrackerItem = ({
       }
     )
 
-    // Update itemsForSelectedDate
     setItemsForSelectedDate(newItemsForSelectedDate)
 
     // Prepare the item to be deleted for saving to the database
@@ -252,11 +244,11 @@ const TrackerItem = ({
     <View style={dynamicStyles.trackerRowContainer}>
       <View style={styles.portionTrackerIcon}>
         <TouchableOpacity onPress={incrementPortionCount}>
-          <FontAwesome5
+          <FontAwesome6
             name="plus"
             size={RFPercentage(3.3)}
             color={theme.iconFill}
-            solid={itemIsFavourite ? true : false}
+            iconStyle="solid"
           />
         </TouchableOpacity>
       </View>
@@ -265,11 +257,11 @@ const TrackerItem = ({
       </View>
       <View style={styles.portionTrackerIcon}>
         <TouchableOpacity onPress={decrementPortionCount}>
-          <FontAwesome5
+          <FontAwesome6
             name="minus"
             size={RFPercentage(3.3)}
             color={theme.iconFill}
-            solid={itemIsFavourite ? true : false}
+            iconStyle="solid"
           />
         </TouchableOpacity>
       </View>
@@ -278,30 +270,33 @@ const TrackerItem = ({
       </View>
       <View style={styles.nutTrackerIcon}>
         <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>
-          <FontAwesome5
-            name="info-circle"
+          <FontAwesome6
+            name="circle-info"
             size={RFPercentage(3.9)}
             color={theme.iconFill}
+            iconStyle="solid"
           />
         </TouchableOpacity>
       </View>
       <View style={styles.favTrackerIcon}>
         <TouchableOpacity onPress={favouriteTrackerItem}>
-          <FontAwesome5
+          <FontAwesome6
             name="heart"
             size={RFPercentage(3.9)}
             color={theme.iconFill}
-            solid={itemIsFavourite ? true : false}
+            // solid={itemIsFavourite ? true : false}
+            iconStyle={itemIsFavourite ? 'solid' : 'regular'}
           />
         </TouchableOpacity>
       </View>
 
       <View style={styles.deleteTrackerIcon}>
         <TouchableOpacity onPress={deleteTrackerItem}>
-          <FontAwesome5
-            name="trash"
+          <FontAwesome6
+            name="trash-can"
             size={RFPercentage(3.9)}
             color={theme.iconFill}
+            iconStyle="solid"
           />
         </TouchableOpacity>
       </View>

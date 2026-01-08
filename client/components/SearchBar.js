@@ -1,47 +1,51 @@
-/* eslint-disable react/display-name */
 import React, { memo, useCallback, useContext, useRef } from 'react'
 import {
   View,
   TextInput,
   StyleSheet,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native'
 import { debounce } from 'lodash'
 import { ThemeContext } from '../state/ThemeContext'
 import { RFPercentage } from 'react-native-responsive-fontsize'
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
+
+interface SearchBarProps {
+  searchPhrase: string;
+  setSearchPhrase: (text: string) => void;
+  clicked: boolean;
+  setClicked: (clicked: boolean) => void;
+  placeholderColor?: string;
+}
 
 const SearchBar = memo(
-  ({ searchPhrase, setSearchPhrase, clicked, setClicked }) => {
+  ({
+    searchPhrase,
+    setSearchPhrase,
+    clicked,
+    setClicked,
+    placeholderColor,
+  }: SearchBarProps) => {
     const context = useContext(ThemeContext)
     if (!context) {
       throw new Error('useContext was used outside of the theme provider')
     }
     const { theme } = context
     const styles = getStyles(theme)
-    const searchInput = useRef(null)
+    const searchInput = useRef < TextInput > null
 
-    const debouncedSetSearchPhrase = useCallback(
-      debounce((text) => {
+    const handleChangeText = useCallback(
+      (text: string) => {
         setSearchPhrase(text)
-      }, 300),
+      },
       [setSearchPhrase]
     )
 
-    const handleChangeText = useCallback(
-      (text) => {
-        setSearchPhrase(text) // Update immediately for responsive typing
-        debouncedSetSearchPhrase(text) // Debounced update for expensive operations
-      },
-      [setSearchPhrase, debouncedSetSearchPhrase]
-    )
-
-    // basic set for testing (nodebounce)
-    // const handleChangeText = useCallback(
-    //   (text) => {
-    //     setSearchPhrase(text)
-    //   },
-    //   [setSearchPhrase]
-    // )
+    const handleClear = useCallback(() => {
+      setSearchPhrase('')
+      searchInput.current?.focus()
+    }, [setSearchPhrase])
 
     const handleFocus = useCallback(() => {
       setClicked(true)
@@ -57,15 +61,42 @@ const SearchBar = memo(
       <View style={styles.container}>
         <TouchableWithoutFeedback onPress={handleSearchBarPress}>
           <View style={styles.searchBar__unclicked}>
+            {/* Search Icon (Optional, adds context) */}
+            <View style={{ paddingLeft: 10 }}>
+              <FontAwesome6
+                name="magnifying-glass"
+                size={RFPercentage(2)}
+                color={theme.buttonText}
+                style={{ opacity: 0.5 }}
+                iconStyle="solid"
+              />
+            </View>
+
             <TextInput
               ref={searchInput}
               style={styles.searchInput}
               placeholder="Search"
+              placeholderTextColor={placeholderColor || 'grey'}
               value={searchPhrase}
               onChangeText={handleChangeText}
               onFocus={handleFocus}
-              autoCapitalize="none"
             />
+
+            {/* Clear Button - Only show if text exists */}
+            {searchPhrase.length > 0 && (
+              <TouchableOpacity
+                onPress={handleClear}
+                style={styles.clearButton}
+              >
+                <FontAwesome6
+                  name="circle-xmark"
+                  size={RFPercentage(2.2)}
+                  color={theme.buttonText}
+                  iconStyle="solid"
+                  style={{ opacity: 0.7 }}
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </TouchableWithoutFeedback>
       </View>
@@ -75,27 +106,29 @@ const SearchBar = memo(
 
 export default SearchBar
 
-const getStyles = (theme) =>
+const getStyles = (theme: any) =>
   StyleSheet.create({
     container: {
-      margin: 5,
-      justifyContent: 'flex-start',
+      flex: 1,
+      justifyContent: 'center',
       alignItems: 'center',
-      flexDirection: 'row',
-      width: '100%',
     },
     searchBar__unclicked: {
-      padding: 5,
       flexDirection: 'row',
       width: '100%',
-      borderRadius: 15,
       alignItems: 'center',
     },
     searchInput: {
-      paddingTop: 5,
-      fontSize: RFPercentage(3.3),
+      flex: 1,
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      fontSize: RFPercentage(2.5),
       color: theme.buttonText,
-      marginLeft: 2,
-      width: '90%',
+    },
+    clearButton: {
+      padding: 5,
+      marginRight: 5,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   })
