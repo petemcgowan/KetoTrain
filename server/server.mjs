@@ -40,6 +40,6 @@ graphQLApp.use(
   })
 )
 
-graphQLApp.listen(4001, () => {
+graphQLApp.listen(4001, '0.0.0.0', () => {
   console.log('Running a GraphQL API server at $server$:4001/graphql')
 })
