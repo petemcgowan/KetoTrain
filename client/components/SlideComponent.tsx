@@ -8,13 +8,22 @@ import {
   Image,
   Linking,
   TouchableOpacity,
+  ImageSourcePropType,
 } from 'react-native'
 
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
 const { width, height } = Dimensions.get('window')
 
-const SlideComponent = ({
+interface SlideComponentProps {
+  title: string
+  description: string
+  image: ImageSourcePropType
+  referenceLink?: string
+  referenceSource?: string
+}
+
+const SlideComponent: React.FC<SlideComponentProps> = ({
   title,
   description,
   image,
@@ -22,16 +31,23 @@ const SlideComponent = ({
   referenceSource,
 }) => {
   return (
-    <ScrollView style={styles.slideContainer}>
+    <ScrollView
+      style={styles.slideContainer}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={image} />
       </View>
+
       <View style={styles.titleBox}>
         <Text style={styles.titleText}>{title}</Text>
       </View>
+
       <View style={styles.textBox}>
         <Text style={styles.text}>{description}</Text>
       </View>
+
       {referenceLink && (
         <View style={styles.referenceView}>
           <TouchableOpacity onPress={() => Linking.openURL(referenceLink)}>
@@ -48,52 +64,52 @@ export default SlideComponent
 const styles = StyleSheet.create({
   slideContainer: {
     width: width,
-    // padding: 20,
-    //flex: 1,
-    // flexDirection: 'column',
-    // justifyContent: 'space-between',
   },
   contentContainer: {
-    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 20,
   },
   imageContainer: {
     width: width * 0.9,
     height: height * 0.4,
     alignSelf: 'center',
-    paddingTop: height * 0.072,
+    marginTop: height * 0.05,
+    marginBottom: height * 0.02,
   },
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
+    resizeMode: 'contain',
   },
-  titleBox: { paddingTop: height * 0.027 },
-  referenceView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textBox: {
+  titleBox: {
     paddingHorizontal: 20,
-    alignItems: 'center',
-    paddingVertical: 15,
-  },
-  text: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: RFPercentage(2.4),
-    maxWidth: width - 40,
-    justifyContent: 'center',
+    marginBottom: 10,
   },
   titleText: {
     color: 'white',
     textAlign: 'center',
-    fontWeight: '600',
-    fontSize: RFPercentage(3.1),
+    fontWeight: '700',
+    fontSize: RFPercentage(3.2),
+  },
+  textBox: {
+    paddingHorizontal: 25,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  text: {
+    color: 'rgb(240, 240, 240)', // Slightly off-white for readability
+    textAlign: 'center',
+    fontSize: RFPercentage(2.4),
+    lineHeight: RFPercentage(3.2),
+  },
+  referenceView: {
     justifyContent: 'center',
-    marginBottom: 10,
+    alignItems: 'center',
+    marginTop: 5,
   },
   linkText: {
-    color: 'blue',
+    color: 'rgb(44, 207, 157)',
     textDecorationLine: 'underline',
+    fontSize: RFPercentage(2.2),
   },
 })
