@@ -7,7 +7,6 @@ const searchFoodListReducer = (state = initialState, action) => {
     case ActionType.UPDATE_SEARCH_FOOD_LIST:
       return action.payload
     case ActionType.INIT_SEARCH_FOOD_LIST:
-      // return [...state, action.payload];
       return action.payload
     default:
       return state

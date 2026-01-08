@@ -20,10 +20,6 @@ interface UpdateEmailAddressAction {
   payload: string | null
 }
 
-// export type IntroAction = HasSeenIntroAction
-// export type SearchFoodListAction = searchFoodListReducer
-// export type FavFoodListAction = favFoodListReducer
-// export type EmailAddressAction = UpdateEmailAddressAction
 export type Action =
   | HasSeenIntroAction
   | searchFoodListReducer
