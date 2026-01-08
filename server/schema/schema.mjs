@@ -1,6 +1,13 @@
 import { buildSchema } from 'graphql'
 
 export const schema = buildSchema(`
+  type BioAnalysis {
+    safeForFasting: Boolean
+    insulinSpike: Int
+    ketosisImpact: String
+    verdict: String
+    icon: String
+  }
 
   type UserInfo {
     user_id: ID!
@@ -114,6 +121,7 @@ export const schema = buildSchema(`
     isFavourite: Boolean!
   }
   type Query {
+    hello: String
     test: String
     allFoodFacts(userId: Int!): [FoodFacts]
     getFavFoods(favFoodsInput: FavFoodsInput!): FavFoodsData
@@ -121,6 +129,7 @@ export const schema = buildSchema(`
     consumptionLogWithFoodFacts(consumptioninput: ConsumptionLogFoodFactsInput!): [ConsumptionLogWithFoodFacts]
   }
   type Mutation {
+    analyzeSubstance(query: String!): BioAnalysis
     fillFoodFacts: [FoodFacts]
     replaceConsumptionLogs(addedItems: [ConsumptionLogInput]!, dayToUpdate: String!, toBeDeleted: Boolean!, toBeInserted: Boolean! ): [ConsumptionLogs]
     setFavouriteFoods(favouriteFoods: [FavouriteFoodsInput]!, userId: Int!): FavouriteFoods

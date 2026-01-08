@@ -15,8 +15,12 @@ import {
   // getWeightLogs,
   getUserInfo,
 } from './resolverFunctions.mjs'
+import { analyzeBioItem } from '../services/geminiService.mjs'
 
 export const resolvers = {
+  analyzeSubstance: async ({ query }) => {
+    return await analyzeBioItem(query)
+  },
   test: () => {
     console.log('Keto resolver invoked')
     return 'Keto Test successful'
