@@ -33,12 +33,11 @@ Sentry.init({
 })
 
 function App() {
-  // --- RESTORED STATE LOGIC ---
   const [trackerItems, setTrackerItems] = useState([])
   const [totalCarbs, setTotalCarbs] = useState(0)
   const [foodData, setFoodData] = useState()
 
-  // Optimized Provider Values
+  //  Provider Values
   const trackerProviderValue = useMemo(
     () => ({
       trackerItems,
@@ -86,11 +85,9 @@ function App() {
               persistor={persistor}
             >
               <ThemeProvider>
-                {/* UserProvider moved here (inside Redux/Theme, outside Nav) */}
                 <UserProvider>
                   <TrackerProvider value={trackerProviderValue}>
                     <FoodProvider value={foodProviderValue}>
-                      {/* The Main App Navigation */}
                       <CentralNavigation />
                     </FoodProvider>
                   </TrackerProvider>
