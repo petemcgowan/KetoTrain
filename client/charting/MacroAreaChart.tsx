@@ -1,33 +1,33 @@
-import React, { useContext } from 'react';
-import { View, StyleSheet, Text, Dimensions } from 'react-native';
-import { CartesianChart, Area } from 'victory-native';
-import { useFont } from '@shopify/react-native-skia';
-import { ThemeContext } from '../state/ThemeContext';
-import { TrackerItemType } from '../types/TrackerItemType';
+import React, { useContext } from 'react'
+import { View, StyleSheet, Text, Dimensions } from 'react-native'
+import { CartesianChart, Area } from 'victory-native'
+import { useFont } from '@shopify/react-native-skia'
+import { ThemeContext } from '../state/ThemeContext'
+import { TrackerItemType } from '../types/TrackerItemType'
 
-const karlaFont = require('../assets/fonts/Karla-Light.ttf');
-const { width } = Dimensions.get('window');
+const karlaFont = require('../assets/fonts/Karla-Light.ttf')
+const { width } = Dimensions.get('window')
 
 type Props = {
-  trackerItems: TrackerItemType[];
-};
+  trackerItems: TrackerItemType[]
+}
 
 const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
-  const { theme } = useContext(ThemeContext)!;
-  const font = useFont(karlaFont, 12);
+  const { theme } = useContext(ThemeContext)!
+  const font = useFont(karlaFont, 12)
 
-  const today = new Date();
-  const oneWeekAgo = new Date(today);
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const today = new Date()
+  const oneWeekAgo = new Date(today)
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
 
-  // 1. Data Prep
+  // Data Prep
   const initializeEmptyData = () => {
-    const data: any = {};
+    const data: any = {}
     for (let i = 0; i < 7; i++) {
-      const currentDay = new Date(oneWeekAgo);
-      currentDay.setDate(currentDay.getDate() + i);
-      const dateString = currentDay.toISOString().split('T')[0];
-      const dayLabel = currentDay.toLocaleString('en-US', { weekday: 'short' });
+      const currentDay = new Date(oneWeekAgo)
+      currentDay.setDate(currentDay.getDate() + i)
+      const dateString = currentDay.toISOString().split('T')[0]
+      const dayLabel = currentDay.toLocaleString('en-US', { weekday: 'short' })
 
       data[dateString] = {
         date: dayLabel,
@@ -35,32 +35,32 @@ const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
         rawCarb: 0,
         rawFat: 0,
         xIndex: i,
-      };
+      }
     }
-    return data;
-  };
+    return data
+  }
 
-  const dataMap = initializeEmptyData();
+  const dataMap = initializeEmptyData()
 
-  // 2. Aggregate
-  trackerItems.forEach(item => {
-    const d = new Date(item.consumptionDate);
-    if (isNaN(d.getTime())) return;
-    const dateString = d.toISOString().split('T')[0];
+  // Aggregate
+  trackerItems.forEach((item) => {
+    const d = new Date(item.consumptionDate)
+    if (isNaN(d.getTime())) return
+    const dateString = d.toISOString().split('T')[0]
 
     if (dataMap[dateString]) {
-      dataMap[dateString].rawProtein += item.proteinAmt * item.portionCount;
-      dataMap[dateString].rawCarb += item.carbAmt * item.portionCount;
-      dataMap[dateString].rawFat += item.fatAmt * item.portionCount;
+      dataMap[dateString].rawProtein += item.proteinAmt * item.portionCount
+      dataMap[dateString].rawCarb += item.carbAmt * item.portionCount
+      dataMap[dateString].rawFat += item.fatAmt * item.portionCount
     }
-  });
+  })
 
-  // 3. Stack Data (Cumulative for Area overlap)
+  // Stack Data (Cumulative for Area overlap)
   const chartData = Object.values(dataMap)
     .map((d: any) => {
-      const fat = d.rawFat;
-      const carbStack = d.rawFat + d.rawCarb;
-      const proteinStack = d.rawFat + d.rawCarb + d.rawProtein;
+      const fat = d.rawFat
+      const carbStack = d.rawFat + d.rawCarb
+      const proteinStack = d.rawFat + d.rawCarb + d.rawProtein
 
       return {
         date: d.date,
@@ -68,16 +68,16 @@ const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
         fat,
         carbStack,
         proteinStack,
-      };
+      }
     })
-    .sort((a: any, b: any) => a.xIndex - b.xIndex);
+    .sort((a: any, b: any) => a.xIndex - b.xIndex)
 
   if (!font)
     return (
       <View style={{ height: 250 }}>
         <Text style={{ color: 'white' }}>Loading...</Text>
       </View>
-    );
+    )
 
   return (
     <View style={styles.chartContainer}>
@@ -91,9 +91,9 @@ const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
           lineColor: theme.buttonText,
           labelColor: theme.buttonText,
           tickCount: 7,
-          formatXLabel: value => {
-            const index = Math.round(value);
-            return chartData[index]?.date || '';
+          formatXLabel: (value) => {
+            const index = Math.round(value)
+            return chartData[index]?.date || ''
           },
         }}
       >
@@ -124,10 +124,10 @@ const MacroAreaChart: React.FC<Props> = ({ trackerItems }) => {
         )}
       </CartesianChart>
     </View>
-  );
-};
+  )
+}
 
-export default MacroAreaChart;
+export default MacroAreaChart
 
 const styles = StyleSheet.create({
   chartContainer: {
@@ -136,4 +136,4 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 10,
   },
-});
+})
