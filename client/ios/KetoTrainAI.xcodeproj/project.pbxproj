@@ -11,6 +11,7 @@
 		1C144C2C361CDAA13C276B81 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		2C5123182F0B04D1002B0BAD /* GoogleService-InfoRelease.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C5123172F0B04D1002B0BAD /* GoogleService-InfoRelease.plist */; };
 		2C5123192F0B04D1002B0BAD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C5123162F0B04D1002B0BAD /* GoogleService-Info.plist */; };
+		2C7D07612F10594E0096533B /* Karla-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C7D07602F10594E0096533B /* Karla-Light.ttf */; };
 		4079972C0E0747458443C9E3 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0A8195F87424ECDA5DB8570 /* BootSplash.storyboard */; };
 		547659F68B1286C7E1AE0E5C /* Pods_KetoTrainAI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B06C42A74B47F29E68A0CD75 /* Pods_KetoTrainAI.framework */; };
 		6099B360EAD3463FBE283952 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22E8ADA09C2C4E0D80949418 /* Colors.xcassets */; };
@@ -27,6 +28,7 @@
 		2C5123162F0B04D1002B0BAD /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2C5123172F0B04D1002B0BAD /* GoogleService-InfoRelease.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-InfoRelease.plist"; sourceTree = "<group>"; };
 		2C6CBAEB2F0EF9A900ACB926 /* KetoTrainAI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = KetoTrainAI.entitlements; path = KetoTrainAI/KetoTrainAI.entitlements; sourceTree = "<group>"; };
+		2C7D07602F10594E0096533B /* Karla-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Karla-Light.ttf"; path = "../assets/fonts/Karla-Light.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-KetoTrainAI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KetoTrainAI.debug.xcconfig"; path = "Target Support Files/Pods-KetoTrainAI/Pods-KetoTrainAI.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-KetoTrainAI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KetoTrainAI.release.xcconfig"; path = "Target Support Files/Pods-KetoTrainAI/Pods-KetoTrainAI.release.xcconfig"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = KetoTrainAI/AppDelegate.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				2C7D07602F10594E0096533B /* Karla-Light.ttf */,
 				13B07FAE1A68108700A75B9A /* KetoTrainAI */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -174,6 +177,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C7D07612F10594E0096533B /* Karla-Light.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				2C5123182F0B04D1002B0BAD /* GoogleService-InfoRelease.plist in Resources */,
@@ -322,6 +326,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = KetoTrainAI/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Keto Train";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -333,7 +338,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.buachaillmaith.ketolimit;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.KetoLimit;
 				PRODUCT_NAME = KetoTrainAI;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -352,6 +357,7 @@
 				DEVELOPMENT_TEAM = P42X2655GH;
 				INFOPLIST_FILE = KetoTrainAI/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Keto Train";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -363,7 +369,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.buachaillmaith.ketolimit;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.KetoLimit;
 				PRODUCT_NAME = KetoTrainAI;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

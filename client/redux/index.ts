@@ -1,7 +1,3 @@
-// export * as actionCreators from './action-creators/index';
-// export * from './store';
-// export * from './reducers/index';
-
 // Export the Store and Persistor
 export * from './store'
 
@@ -12,6 +8,6 @@ export * from './reducers/index'
 import * as actionCreators from './action-creators/index'
 export { actionCreators }
 
-// Export Actions/Types (if needed by your old code)
+// Export Actions/Types
 export * from './actions/index'
 export * from './action-types/index'
