@@ -4,19 +4,19 @@ import React, {
   useMemo,
   useEffect,
   useRef,
-} from 'react';
-import { StyleSheet, View, FlatList, Text } from 'react-native';
-import GlycemicItem, { TOTAL_ITEM_HEIGHT } from '../components/GlycemicItem';
-import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import { RFPercentage } from 'react-native-responsive-fontsize';
-import { ThemeContext } from '../state/ThemeContext';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+} from 'react'
+import { StyleSheet, View, FlatList, Text } from 'react-native'
+import GlycemicItem, { TOTAL_ITEM_HEIGHT } from '../components/GlycemicItem'
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
+import { RFPercentage } from 'react-native-responsive-fontsize'
+import { ThemeContext } from '../state/ThemeContext'
+import { useSelector } from 'react-redux'
+import { RootState } from '../redux/store'
 
 interface Props {
-  searchPhraseNew: string;
-  jumpToLetter: string;
-  onItemPress: (item: any) => void;
+  searchPhraseNew: string
+  jumpToLetter: string
+  onItemPress: (item: any) => void
 }
 
 const SearchFoodFlatlistFilter = ({
@@ -24,54 +24,51 @@ const SearchFoodFlatlistFilter = ({
   jumpToLetter,
   onItemPress,
 }: Props) => {
-  const searchFoodList = useSelector(
-    (state: RootState) => state.searchFoodList,
-  );
-  const favFoodList =
-    useSelector((state: RootState) => state.favFoodList) || [];
+  const searchFoodList = useSelector((state: RootState) => state.searchFoodList)
+  const favFoodList = useSelector((state: RootState) => state.favFoodList) || []
 
-  const context = useContext(ThemeContext);
-  if (!context) throw new Error('No Theme Context');
-  const { theme } = context;
-  const styles = getStyles(theme);
+  const context = useContext(ThemeContext)
+  if (!context) throw new Error('No Theme Context')
+  const { theme } = context
+  const styles = getStyles(theme)
 
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<FlatList>(null)
 
-  // 1. Create Set for O(1) Lookup
+  // Create set for O(1) Lookup
   const favSet = useMemo(() => {
-    const set = new Set();
-    favFoodList.forEach((item: any) => set.add(item.foodName));
-    return set;
-  }, [favFoodList]);
+    const set = new Set()
+    favFoodList.forEach((item: any) => set.add(item.foodName))
+    return set
+  }, [favFoodList])
 
-  // 2. Filter Logic
+  // Filter logic
   const filteredList = useMemo(() => {
-    const term = searchPhraseNew.toUpperCase();
-    if (!term) return searchFoodList;
+    const term = searchPhraseNew.toUpperCase()
+    if (!term) return searchFoodList
 
     return searchFoodList.filter((item: any) => {
-      if (!item.foodName) return false;
-      return item.foodName.toUpperCase().includes(term);
-    });
-  }, [searchFoodList, searchPhraseNew]);
+      if (!item.foodName) return false
+      return item.foodName.toUpperCase().includes(term)
+    })
+  }, [searchFoodList, searchPhraseNew])
 
-  // 3. Scroll / Jump Logic
+  // Scroll / Jump Logic
   useEffect(() => {
     if (jumpToLetter && filteredList.length > 0) {
       const index = filteredList.findIndex(
         (item: any) =>
-          item.foodName && item.foodName.toUpperCase().startsWith(jumpToLetter),
-      );
+          item.foodName && item.foodName.toUpperCase().startsWith(jumpToLetter)
+      )
 
       if (index !== -1 && flatListRef.current) {
         flatListRef.current.scrollToIndex({
           index,
           animated: true,
           viewPosition: 0,
-        });
+        })
       }
     }
-  }, [jumpToLetter, filteredList]);
+  }, [jumpToLetter, filteredList])
 
   const renderItem = useCallback(
     ({ item }: { item: any }) => {
@@ -83,28 +80,28 @@ const SearchFoodFlatlistFilter = ({
           isFavourite={favSet.has(item.foodName)}
           onPressDetail={() => onItemPress(item)}
         />
-      );
+      )
     },
-    [favSet, onItemPress],
-  );
+    [favSet, onItemPress]
+  )
 
   const keyExtractor = useCallback(
     (item: any) =>
       item.publicFoodKey?.toString() ||
       item.id?.toString() ||
       Math.random().toString(),
-    [],
-  );
+    []
+  )
 
-  // 4. Layout Optimization (Critical for Speed)
+  // Layout optimization
   const getItemLayout = useCallback(
     (data: any, index: number) => ({
       length: TOTAL_ITEM_HEIGHT,
       offset: TOTAL_ITEM_HEIGHT * index,
       index,
     }),
-    [],
-  );
+    []
+  )
 
   return (
     <View style={styles.container}>
@@ -134,10 +131,10 @@ const SearchFoodFlatlistFilter = ({
         </View>
       )}
     </View>
-  );
-};
+  )
+}
 
-export default SearchFoodFlatlistFilter;
+export default SearchFoodFlatlistFilter
 
 const getStyles = (theme: any) =>
   StyleSheet.create({
@@ -157,4 +154,4 @@ const getStyles = (theme: any) =>
       textAlign: 'center',
       marginTop: 10,
     },
-  });
+  })

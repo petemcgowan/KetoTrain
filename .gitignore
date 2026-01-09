@@ -91,3 +91,4 @@ client/ios/KetoTrainAI/GoogleService-Info.plist
 client/ios/sentry.properties
 client/ios/KetoTrainAI/GoogleService-InfoRelease.plist
 server/connection.json
+client/android/gradle.properties

@@ -61,7 +61,7 @@ const SearchBar = memo(
       <View style={styles.container}>
         <TouchableWithoutFeedback onPress={handleSearchBarPress}>
           <View style={styles.searchBar__unclicked}>
-            {/* Search Icon (Optional, adds context) */}
+            {/* Search Icon */}
             <View style={{ paddingLeft: 10 }}>
               <FontAwesome6
                 name="magnifying-glass"

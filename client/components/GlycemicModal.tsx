@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  Modal,
-  Alert,
-  // ImageBackground,
-} from 'react-native'
+import { StyleSheet, Text, View, Pressable, Modal, Alert } from 'react-native'
 
 interface GlycemicModalProps {
   modalVisible: boolean
