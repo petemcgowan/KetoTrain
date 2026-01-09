@@ -1,6 +1,12 @@
-import React, { useEffect, useContext } from 'react'
-import { View, StyleSheet, Text, Dimensions, Alert } from 'react-native'
-import LottieView from 'lottie-react-native'
+import React, { useEffect, useContext, useState } from 'react'
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  Alert,
+  Platform,
+} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import TrackerContext from '../state/TrackerContext'
 import UserContext from '../state/UserContext'
@@ -12,47 +18,44 @@ import { initSearchFoodList, initFavFoodList } from '../redux/action-creators'
 import { PURGE } from 'redux-persist'
 import { store } from '../redux/store'
 import { getTotalCarbsForSpecificDayGU } from '../components/GlycemicUtils'
-import { RootState } from '../redux/reducers/index'
-
-const { height, width } = Dimensions.get('screen')
+import { RootState } from '../redux/store'
+import Config from 'react-native-config'
+import GradientBackground from '../components/GradientBackground'
+import { BioLoader } from '../components/BioLoader'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
 export default function LoadingScreen() {
-  const navigation = useNavigation()
-  const { setTrackerItems, trackerItems, setTotalCarbs, totalCarbs } =
-    useContext(TrackerContext)
-  const { setFoodData } = useContext(FoodContext)
-  const { /*emailAddress,*/ consumptionDate, setUserId } =
-    useContext(UserContext)
-  const emailAddress = useSelector((state: RootState) => state.emailAddress)
+  const navigation = useNavigation<any>()
 
-  const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useContext was used outside of the theme provider')
-  }
-  const { theme } = context
-  const styles = getStyles(theme)
+  // Contexts
+  const { setTrackerItems, setTotalCarbs } = useContext(TrackerContext)
+  const { setFoodData } = useContext(FoodContext)
+  const { consumptionDate, setUserId } = useContext(UserContext)
+
+  // Redux
+  const emailAddress = useSelector((state: RootState) => state.emailAddress)
   const dispatch = useDispatch()
+
+  const { theme } = useContext(ThemeContext)!
+  const styles = getStyles(theme)
+
+  const [statusText, setStatusText] = useState('Connecting to server...')
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      // if (emailAddress) {
-      console.log(`User ID is ${emailAddress}`)
-      // }
-      console.log(`Consumption date is ${consumptionDate}`)
+      console.log(
+        `[Loading] Fetching for: ${emailAddress} at ${Config.GRAPHQL_URL}`
+      )
 
-      // ************
-      // Redux store dispatch purge
-      store.dispatch({
-        type: PURGE,
-        key: 'root',
-        result: () => null,
-      })
+      // Purge to prevent stale state conflicts
+      store.dispatch({ type: PURGE, key: 'root', result: () => null })
 
       const getUserDashboardData = async () => {
         try {
-          const userDashboardDataResponse = await axios({
-            // url: 'http://localhost:4001/keto-graphql',
-            url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
+          setStatusText('Syncing profile data...')
+
+          const response = await axios({
+            url: Config.GRAPHQL_URL,
             method: 'post',
             data: {
               query: `
@@ -109,10 +112,17 @@ export default function LoadingScreen() {
             },
           })
 
-          // augment the return  with calculated values
-          const foodFacts =
-            userDashboardDataResponse.data.data.getUserDashboardData.foodFacts
-          const processedFoodData = foodFacts.map((item) => ({
+          if (response.data.errors) {
+            console.error('GraphQL Errors:', response.data.errors)
+            return false
+          }
+
+          setStatusText('Processing database...')
+          const data = response.data.data.getUserDashboardData
+          const foodFacts = data.foodFacts
+
+          // Process Food Facts & Colors
+          const processedFoodData = foodFacts.map((item: any) => ({
             ...item,
             carbBackgroundColor:
               item.carbohydrates > 22
@@ -124,7 +134,8 @@ export default function LoadingScreen() {
           }))
           setFoodData(processedFoodData)
 
-          const searchFoodList = processedFoodData.map((item) => ({
+          // Redux Lists
+          const searchFoodList = processedFoodData.map((item: any) => ({
             foodName: item.foodName,
             foodFactsId: item.foodFactsId,
             publicFoodKey: item.publicFoodKey,
@@ -132,163 +143,102 @@ export default function LoadingScreen() {
             carbBackgroundColor: item.carbBackgroundColor,
             carbohydrates: item.carbohydrates,
           }))
-
           dispatch(initSearchFoodList(searchFoodList))
 
           const favFoodList = processedFoodData.filter(
-            (item) => item.isFavourite
+            (item: any) => item.isFavourite
           )
           dispatch(initFavFoodList(favFoodList))
-          // Create favourites view array
 
-          setUserId(
-            parseInt(
-              userDashboardDataResponse.data.data.getUserDashboardData.user
-                .userId,
-              10
-            )
-          )
-          const consumptionLogWithFoodFacts =
-            userDashboardDataResponse.data.data.getUserDashboardData
-              .consumptionLogWithFoodFacts
+          // User ID
+          setUserId(parseInt(data.user.userId, 10))
 
-          // add isFavourite values to the tracker items
-          const updatedConsumptionLogWithFoodFacts =
-            consumptionLogWithFoodFacts.map((consumptionItem) => {
-              const correspondingSearchItem = searchFoodList.find(
-                (searchItem) =>
-                  searchItem.foodName === consumptionItem.food_name
-              )
+          // Tracker Logs
+          const consumptionLog = data.consumptionLogWithFoodFacts
+          const favSet = new Set(favFoodList.map((f: any) => f.foodName))
 
-              if (correspondingSearchItem) {
-                return {
-                  ...consumptionItem,
-                  isFavourite: correspondingSearchItem.isFavourite,
-                }
-              }
+          if (Array.isArray(consumptionLog)) {
+            const newTrackerItems = consumptionLog.map((item: any) => ({
+              id: item.consumption_log_id.toString(),
+              foodFactsId: item.food_facts_id,
+              description: item.food_name,
+              carbAmt: item.carbohydrates,
+              fiberAmt: item.total_dietary_fibre,
+              proteinAmt: item.protein,
+              fatAmt: item.fat_total,
+              energyAmt: item.energy,
+              sugarsAmt: item.total_sugars,
+              sodiumAmt: item.sodium,
+              carbBackgroundColor:
+                item.carbohydrates > 22
+                  ? theme.badBackground
+                  : item.carbohydrates > 11
+                  ? theme.middlingBackground
+                  : theme.tableBackground,
+              portionCount: item.portion_count,
+              defaultFl: item.default_fl,
+              consumptionDate: new Date(parseInt(item.consumption_date, 10)),
+              isFavourite: favSet.has(item.food_name),
+            }))
 
-              return {
-                ...consumptionItem,
-                isFavourite: false,
-              }
-            })
-
-          // set Tracker items (for tracker screen)
-          if (Array.isArray(updatedConsumptionLogWithFoodFacts)) {
-            setTrackerItems(
-              updatedConsumptionLogWithFoodFacts.map((item) => {
-                return {
-                  id: item.consumption_log_id.toString(),
-                  foodFactsId: item.food_facts_id,
-                  description: item.food_name,
-                  carbAmt: item.carbohydrates,
-                  fiberAmt: item.total_dietary_fibre,
-                  proteinAmt: item.protein,
-                  fatAmt: item.fat_total,
-                  energyAmt: item.energy,
-                  sugarsAmt: item.total_sugars,
-                  sodiumAmt: item.sodium,
-                  carbBackgroundColor:
-                    item.carbohydrates > 22
-                      ? theme.badBackground
-                      : item.carbohydrates > 11
-                      ? theme.middlingBackground
-                      : theme.tableBackground,
-                  portionCount: item.portion_count,
-                  defaultFl: item.default_fl,
-                  consumptionDate: new Date(
-                    parseInt(item.consumption_date, 10)
-                  ),
-                  isFavourite: item.isFavourite,
-                }
-              })
-            )
-
+            setTrackerItems(newTrackerItems)
             getTotalCarbsForSpecificDayGU(
-              trackerItems,
+              newTrackerItems,
               new Date(),
               setTotalCarbs
             )
           }
-        } catch (error) {
-          console.error('Error fetching food facts:', error)
-          console.log(
-            'Error details:',
-            error.config,
-            error.request,
-            error.message,
-            error.response
-          )
+          return true
+        } catch (error: any) {
+          console.error('Error fetching data:', error)
           return false
         }
-        return true
       }
 
       const returnSuccess = await getUserDashboardData()
-      if (returnSuccess) {
-        const timeoutId = setTimeout(() => {
-          console.log('about to navigate to MainApp')
-          navigation.navigate('MainApp')
-        }, 1000) // wait
 
-        // cleanup will be executed when the component unmounts
-        return () => clearTimeout(timeoutId)
+      if (returnSuccess) {
+        setStatusText('Ready!')
+        setTimeout(() => navigation.navigate('MainApp'), 500)
       } else {
-        Alert.alert(
-          'Oops',
-          'Cannot connect to the server!  Try again but contact support if it persists!'
-        )
-        navigation.navigate('OnboardingDeck')
+        Alert.alert('Connection Error', 'Cannot reach the metabolic server.', [
+          { text: 'Retry', onPress: () => fetchDashboardData() },
+        ])
       }
     }
 
-    fetchDashboardData()
+    setTimeout(() => fetchDashboardData(), 100)
   }, [navigation])
 
   return (
-    <View style={styles.container}>
-      <View style={styles.lottieContainer}>
-        <LottieView
-          ref={(animation) => {
-            this.animation = animation
-          }}
-          source={require('../assets/lottie/97930-loading.json')}
-          autoPlay
-          loop
-          onAnimationFinish={() => {}}
-          style={{ width: width * 0.6, height: height * 0.3 }}
-        />
+    <GradientBackground>
+      <View style={styles.container}>
+        <View style={{ marginBottom: 40 }}>
+          <BioLoader />
+        </View>
+        <View style={{ alignItems: 'center' }}>
+          <Text style={styles.titleText}>SYNCING</Text>
+          <Text style={styles.statusText}>{statusText}</Text>
+        </View>
       </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.settingUpText}>Setting up your data...</Text>
-      </View>
-    </View>
+    </GradientBackground>
   )
 }
 
-const getStyles = (theme) =>
+const getStyles = (theme: any) =>
   StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: 'column',
-      backgroundColor: theme.viewBackground,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    textContainer: {
-      height: 80,
-      backgroundColor: theme.buttonBackground,
-      justifyContent: 'center',
-      paddingHorizontal: 20,
-      borderRadius: 80,
-    },
-    settingUpText: {
+    container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    titleText: {
       color: theme.buttonText,
-      fontSize: 20,
-      fontWeight: '500',
-      textAlign: 'center',
+      fontSize: RFPercentage(2.5),
+      fontWeight: '900',
+      letterSpacing: 4,
+      marginBottom: 10,
     },
-    lottieContainer: {
-      height: 200,
+    statusText: {
+      color: theme.buttonText,
+      opacity: 0.6,
+      fontSize: RFPercentage(1.8),
+      fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
     },
   })
