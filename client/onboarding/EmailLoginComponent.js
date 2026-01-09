@@ -29,7 +29,6 @@ const EmailLoginComponent = ({
             placeholderTextColor="gray"
             placeholder="Email"
             style={styles.emailText}
-            autoCapitalize="none"
           />
           <TextInput
             value={password}
@@ -38,7 +37,6 @@ const EmailLoginComponent = ({
             placeholderTextColor="gray"
             secureTextEntry
             style={styles.passwordText}
-            autoCapitalize="none"
           />
           <TouchableOpacity
             onPress={() => handleEmailLogin(email, password)}

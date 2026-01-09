@@ -1,41 +1,69 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet } from 'react-native'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+  Dimensions,
+} from 'react-native'
 
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
-const EmailSignInButton = ({ onPress, disabled }) => (
-  <TouchableOpacity
-    style={[styles.button, disabled && styles.disabledButton]}
-    onPress={onPress}
-    disabled={disabled}
-  >
-    <FontAwesome5 name="user" size={RFPercentage(3.2)} color={'black'} />
-    <Text style={styles.text}>Sign in with Email</Text>
-  </TouchableOpacity>
-)
+const { width, height } = Dimensions.get('window')
 
-const styles = StyleSheet.create({
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#4285F4',
-    borderRadius: 30,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-  },
-  disabledButton: {
-    backgroundColor: '#A9A9A9',
-  },
-  text: {
-    color: '#ffffff',
-    marginLeft: 10,
-    fontSize: RFPercentage(2.5),
-  },
-  icon: {
-    width: 20,
-    height: 20,
-  },
-})
+const EmailSignInButton = ({ onPress, disabled }) => {
+  return (
+    <TouchableOpacity
+      style={[styles.buttonContainer, disabled && styles.disabled]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      <View style={styles.iconWrapper}>
+        <FontAwesome6
+          name="envelope"
+          size={RFPercentage(2.8)}
+          color="white"
+          iconStyle="solid"
+        />
+      </View>
+      <Text style={styles.btnText}>Sign in with Email</Text>
+    </TouchableOpacity>
+  )
+}
 
 export default EmailSignInButton
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    marginTop: 10,
+    width: width * 0.85, // Consistent width with Google/Apple buttons
+    height: 50,
+    backgroundColor: '#555555', // Dark Grey for Email
+    borderRadius: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  iconWrapper: {
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  btnText: {
+    color: 'white',
+    fontSize: RFPercentage(2.2),
+    fontWeight: 'bold',
+    flex: 1, // Centers text relative to remaining space
+    textAlign: 'center',
+  },
+  disabled: {
+    opacity: 0.6,
+  },
+})

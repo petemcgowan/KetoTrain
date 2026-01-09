@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import {
   View,
   Text,
@@ -9,37 +9,31 @@ import {
   Platform,
 } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
-import BottomSheet from 'reanimated-bottom-sheet'
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet'
+
 import hands_logging_in from '../assets/images/login_hands_logging_in_2.png'
 import AppleSignInButton from './AppleSignInButton'
 import GoogleSignInButton from './GoogleSignInButton'
 import EmailSignInButton from './EmailSignInButton'
 import EmailLoginComponent from './EmailLoginComponent'
 
-const { height, width } = Dimensions.get('screen')
+const { height, width } = Dimensions.get('window')
 
-export default function LoginBottomSheet({
-  sheetRef,
-  onStartNowPress,
-  handleGoogleLogin,
-  onAppleButtonPress,
-  isSigninInProgress,
-  handleEmailLogin,
-  signupCreateUser,
-  handleForgotPasswordPress,
-  setIsLoginFormVisible,
-  isLoginFormVisible,
-}) {
+export default function LoginBottomSheet(props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const snapPoints = useMemo(() => ['85%'], [])
 
   const renderContent = () => {
-    if (isLoginFormVisible) {
+    if (props.isLoginFormVisible) {
       return (
-        <View style={styles.panel}>
+        <View>
           <View style={styles.panelHeader}>
             <Text style={styles.panelTitle}>Sign Up</Text>
-            <TouchableOpacity style={styles.buttonX} onPress={onStartNowPress}>
+            <TouchableOpacity
+              style={styles.buttonX}
+              onPress={props.onStartNowPress}
+            >
               <Text style={styles.xButtonText}>X</Text>
             </TouchableOpacity>
           </View>
@@ -48,43 +42,43 @@ export default function LoginBottomSheet({
             setEmail={setEmail}
             password={password}
             setPassword={setPassword}
-            handleEmailLogin={handleEmailLogin}
-            signupCreateUser={signupCreateUser}
-            handleForgotPasswordPress={handleForgotPasswordPress}
-            isLoginFormVisible={isLoginFormVisible}
+            handleEmailLogin={() => props.handleEmailLogin(email, password)}
+            signupCreateUser={() => props.signupCreateUser(email, password)}
+            isLoginFormVisible={props.isLoginFormVisible}
           />
         </View>
       )
     } else {
       return (
-        <View style={styles.panel}>
+        <View>
           <View style={styles.panelHeader}>
             <Text style={styles.panelTitle}>Sign In</Text>
-            <TouchableOpacity style={styles.buttonX} onPress={onStartNowPress}>
+            <TouchableOpacity
+              style={styles.buttonX}
+              onPress={props.onStartNowPress}
+            >
               <Text style={styles.xButtonText}>X</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.imageContainer}>
-            <Image style={styles.image} source={hands_logging_in}></Image>
+            <Image style={styles.image} source={hands_logging_in} />
           </View>
           <View style={styles.buttonContainer}>
             {Platform.OS === 'ios' && (
-              <View style={styles.appleButtonContainer}>
-                <AppleSignInButton onPress={onAppleButtonPress} />
+              <View style={styles.mb}>
+                <AppleSignInButton onPress={props.onAppleButtonPress} />
               </View>
             )}
-            <View style={styles.googleButtonContainer}>
+            <View style={styles.mb}>
               <GoogleSignInButton
-                onPress={handleGoogleLogin}
-                disabled={isSigninInProgress}
+                onPress={props.handleGoogleLogin}
+                disabled={props.isSigninInProgress}
               />
             </View>
-            <View style={styles.plainButtonContainer}>
+            <View style={styles.plainBtn}>
               <EmailSignInButton
-                onPress={() => {
-                  setIsLoginFormVisible(true)
-                }}
-                disabled={isSigninInProgress}
+                onPress={() => props.setIsLoginFormVisible(true)}
+                disabled={props.isSigninInProgress}
               />
             </View>
           </View>
@@ -95,77 +89,28 @@ export default function LoginBottomSheet({
 
   return (
     <BottomSheet
-      ref={sheetRef}
-      snapPoints={[0, isLoginFormVisible ? height * 0.6 : height * 0.6]}
-      borderRadius={10}
-      renderContent={renderContent}
-    />
+      ref={props.sheetRef}
+      index={-1}
+      snapPoints={snapPoints}
+      enablePanDownToClose={true}
+      backgroundStyle={styles.sheetBackground}
+      handleIndicatorStyle={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+    >
+      <BottomSheetScrollView contentContainerStyle={styles.scrollContent}>
+        {renderContent()}
+      </BottomSheetScrollView>
+    </BottomSheet>
   )
 }
 
 const styles = StyleSheet.create({
-  panel: {
-    backgroundColor: 'rgb(32, 32, 32)',
-    height: height * 0.6,
-    padding: 10,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-  },
-  appleButtonContainer: {
-    marginBottom: 10,
-  },
-  googleButtonContainer: {
-    marginBottom: 10,
-  },
-  plainButtonContainer: {
-    width: '80%',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  passwordText: { fontSize: RFPercentage(2.5), borderRadius: 8 },
-  emailText: { fontSize: RFPercentage(2.5), borderRadius: 8 },
-  forgotButton: {
-    width: '47.5%',
-    marginLeft: 5,
-    borderRadius: 15,
-  },
-  signupButton: {
-    width: '47.5%',
-    marginRight: 5,
-    borderRadius: 15,
-  },
-  loginButton: {
-    width: '100%',
-    borderRadius: 15,
-    marginBottom: 5,
-  },
+  sheetBackground: { backgroundColor: 'rgb(32, 32, 32)', borderRadius: 30 },
+  scrollContent: { paddingTop: 10, paddingHorizontal: 20, paddingBottom: 50 },
   panelHeader: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 10,
-    marginTop: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
     marginBottom: 20,
-  },
-  buttonX: {
-    position: 'absolute',
-    right: 10,
-    top: 0,
-    backgroundColor: 'rgb(50, 75, 98)',
-    borderRadius: 15,
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  xButtonText: {
-    fontSize: RFPercentage(2.5),
-    color: 'white',
-    textTransform: 'uppercase',
+    marginTop: 10,
   },
   panelTitle: {
     fontSize: RFPercentage(3.7),
@@ -173,15 +118,30 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
+  buttonX: {
+    position: 'absolute',
+    right: 0,
+    top: 5,
+    backgroundColor: 'rgb(50, 75, 98)',
+    borderRadius: 20,
+    width: 35,
+    height: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  xButtonText: {
+    fontSize: RFPercentage(2.0),
+    color: 'white',
+    fontWeight: 'bold',
+  },
   imageContainer: {
     width: width * 0.6,
     height: height * 0.2,
     alignSelf: 'center',
-    marginBottom: 15,
+    marginBottom: 30,
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
+  image: { width: '100%', height: '100%', resizeMode: 'contain' },
+  buttonContainer: { alignItems: 'center' },
+  mb: { marginBottom: 15 },
+  plainBtn: { width: '80%', alignItems: 'center' },
 })

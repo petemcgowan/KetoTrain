@@ -34,7 +34,7 @@ const slides = [
     title: 'Stay Informed & Motivated',
     description:
       'This app empowers you with knowledge about ketosis and the ketogenic diet. \n\nTrack your progress, set goals, and gain insights that keep you motivated on your journey towards improved health.',
-    image: require('../assets/images/stay_informed_and_motivated.png'),
+    image: require('../assets/images/stay_informed_and_motivated2.jpeg'),
     color: 'rgb(38, 27, 21)',
   },
   {
@@ -42,7 +42,7 @@ const slides = [
     title: 'Extensive Food Database',
     description:
       'With access to an extensive list of over 2000 foods, finding and tracking the carbohydrate content of what you eat is effortless. \n\nMake informed choices and easily manage your daily intake.',
-    image: require('../assets/images/extensive_food_database_4.png'),
+    image: require('../assets/images/extensive_food_database1.jpeg'),
     color: 'rgb(9, 21, 39)',
   },
   {
@@ -65,7 +65,7 @@ const slides = [
     title: 'Achieve Ketosis Naturally',
     description:
       'Track your carbohydrate intake and stay within your limits to achieve ketosis. \n\nIn ketosis, your body switches to burning fat as its primary fuel source, promoting natural weight loss and a boost in energy levels.',
-    image: require('../assets/images/achieve_ketosis_naturally_3.png'),
+    image: require('../assets/images/achieve_ketosis_naturally.jpeg'),
     color: 'rgb(38, 27, 21)',
   },
 ]
@@ -84,7 +84,7 @@ const OnboardingDeck = () => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      // iosClientId is vital for iOS. Android reads from google-services.json
+      // iosClientId for iOS. Android reads from google-services.json
       iosClientId: Config.IOS_CLIENT_ID,
     })
   }, [])
@@ -106,10 +106,11 @@ const OnboardingDeck = () => {
   }, [])
 
   const onScroll = (event: any) => {
-    const slide = Math.ceil(
+    const slide = Math.round(
       event.nativeEvent.contentOffset.x /
         event.nativeEvent.layoutMeasurement.width
     )
+
     if (slide !== activeSlide && slide < slides.length) {
       setActiveSlide(slide)
       if (slides[slide]) {
@@ -364,14 +365,14 @@ const OnboardingDeck = () => {
 
 const styles = StyleSheet.create({
   topContainer: { flex: 1 },
-  scrollView: { flex: 0.55, paddingTop: 20 },
+  scrollView: { flex: 0.55, paddingTop: height * 0.02 },
   bottomContainer: {
-    height: height * 0.15,
+    height: height * 0.11,
     justifyContent: 'center',
     alignItems: 'center',
   },
   pagination: {
-    height: 50,
+    height: height * 0.06,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
