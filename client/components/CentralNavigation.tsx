@@ -1,29 +1,44 @@
 import * as React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { DrawerContent } from './DrawerContent'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { useSelector } from 'react-redux'
 
+// Navigation Utilities
 import { navigationRef } from './RootNavigation'
 
+// Components & Screens
+import { CustomDrawer } from './CustomDrawer'
+import DeleteAccountScreen from './DeleteAccountScreen'
 import BottomTabNavigator from '../screens/BottomTabNavigator'
 import LoadingScreen from '../onboarding/LoadingScreen'
 import OnboardingDeck from '../onboarding/OnboardingDeck'
-import { useSelector } from 'react-redux'
-import { actionCreators } from '../redux/index'
-import { useDispatch } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { RootState } from '../redux/index'
-import { DeleteAccountScreen } from './DeleteAccountScreen'
 
-const Stack = createStackNavigator()
+// State
+import { RootState } from '../redux/store'
+
+const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
+
+// Drawer Structure
+const DrawerNavigator = () => {
+  return (
+    <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawer {...props} />}
+      screenOptions={{
+        headerShown: false,
+        drawerType: 'front',
+        drawerStyle: { backgroundColor: 'transparent' }, // let CustomDrawer handle background
+      }}
+    >
+      <Drawer.Screen name="Home" component={BottomTabNavigator} />
+      <Drawer.Screen name="DeleteAccount" component={DeleteAccountScreen} />
+    </Drawer.Navigator>
+  )
+}
 
 export default function CentralNavigation() {
   const hasSeenIntro = useSelector((state: RootState) => state.hasSeenIntro)
-  // const hasSeenIntro = false
-  const dispatch = useDispatch()
-  // const { updateHasSeenIntro } = bindActionCreators(actionCreators, dispatch)
 
   const initialRoute = hasSeenIntro ? 'LoadingScreen' : 'OnboardingDeck'
 
@@ -33,26 +48,9 @@ export default function CentralNavigation() {
         initialRouteName={initialRoute}
         screenOptions={{ headerShown: false }}
       >
-        {/* {!hasSeenIntro && ( */}
         <Stack.Screen name="OnboardingDeck" component={OnboardingDeck} />
-        {/* )} */}
         <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
-        {/* {hasSeenIntro && ( */}
-        <Stack.Screen name="MainApp" options={{ headerShown: false }}>
-          {() => (
-            <Drawer.Navigator
-              drawerContent={(props) => <DrawerContent {...props} />}
-              screenOptions={{ headerShown: false }}
-            >
-              <Drawer.Screen name="Home" component={BottomTabNavigator} />
-              <Drawer.Screen
-                name="DeleteAccount"
-                component={DeleteAccountScreen}
-              />
-            </Drawer.Navigator>
-          )}
-        </Stack.Screen>
-        {/* )} */}
+        <Stack.Screen name="MainApp" component={DrawerNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -1,26 +1,24 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { AnimatedTabBar } from '../tabbar/AnimatedTabBar'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { StyleSheet, TouchableOpacity, View, Platform } from 'react-native'
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
 import Svg from 'react-native-svg'
 import Animated from 'react-native-reanimated'
 import TrackerContext from '../state/TrackerContext'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
 import { actionCreators } from '../redux/index'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import Lottie from 'lottie-react-native'
 import SearchScreen from './SearchScreen'
 import KetoTrackerScreen from './KetoTrackerScreen'
 import ChartsScreen from './ChartsScreen'
-import LearnDeck from './LearnDeck'
+import AIBioHackerScreen from './AIBioHackerScreen'
 import { ThemeContext } from '../state/ThemeContext'
-import { RootState } from '../redux/reducers/index'
-import { useSelector } from 'react-redux'
 import { updateSearchFoodList } from '../redux/action-creators'
 
 const Tab = createBottomTabNavigator()
@@ -29,18 +27,56 @@ export const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 const BottomTabNavigator = () => {
   const { setTheme, setNextTheme } = useContext(ThemeContext)
   const dispatch = useDispatch()
+
   const { updateHasSeenIntro } = bindActionCreators(actionCreators, dispatch)
 
   const { totalCarbs, trackerItems, setTrackerItems } =
     useContext(TrackerContext)
+  const searchFoodList = useSelector((state) => state.searchFoodList)
 
-  const searchFoodList = useSelector((state: RootState) => state.searchFoodList)
   const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useContext was used outside of the theme provider')
-  }
+  if (!context) throw new Error('No Theme Context')
   const { theme } = context
   const styles = getStyles(theme)
+
+  // Common Header Styles (Fixes clipping and alignment)
+  const commonScreenOptions = ({ navigation }) => ({
+    headerTitleAlign: 'center',
+    headerShadowVisible: false,
+    headerStyle: {
+      backgroundColor: theme.tabHeaderBackground,
+      height: Platform.OS === 'ios' ? 120 : 100, // Taller header
+    },
+    headerTitleStyle: {
+      color: theme.tabHeaderText,
+      fontSize: RFPercentage(4.5),
+      fontWeight: '300',
+      paddingBottom: 10,
+    },
+    headerRightContainerStyle: { paddingRight: 15, paddingBottom: 10 },
+    headerLeftContainerStyle: { paddingLeft: 15, paddingBottom: 10 },
+
+    headerRight: () => (
+      <TouchableOpacity
+        onPress={() =>
+          setNextTheme(
+            trackerItems,
+            setTrackerItems,
+            searchFoodList,
+            updateSearchFoodList,
+            dispatch
+          )
+        }
+      >
+        <FontAwesome6
+          name="palette"
+          size={RFPercentage(3.5)}
+          color={theme.tabHeaderText}
+          iconStyle="solid"
+        />
+      </TouchableOpacity>
+    ),
+  })
 
   useEffect(() => {
     // Has seen intro, now turn off onboarding
@@ -49,7 +85,10 @@ const BottomTabNavigator = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Tab.Navigator tabBar={(props) => <AnimatedTabBar {...props} />}>
+      <Tab.Navigator
+        tabBar={(props) => <AnimatedTabBar {...props} />}
+        screenOptions={commonScreenOptions}
+      >
         <Tab.Screen
           name="Track"
           component={KetoTrackerScreen}
@@ -63,53 +102,16 @@ const BottomTabNavigator = () => {
               />
             ),
             tabBarBadge: trackerItems.length,
-            headerTitleStyle: {
-              color: theme.tabHeaderText,
-              fontSize: RFPercentage(4.8),
-              fontWeight: '300',
-            },
-            headerStyle: {
-              backgroundColor: theme.tabHeaderBackground,
-            },
-            tabBarItemStyle: {
-              backgroundColor: 'rgba(59, 73, 55, 1)',
-            },
-            tabBarBadgeStyle: {
-              backgroundColor: '#453749',
-              color: '#BBBccc',
-              fontSize: RFPercentage(1.8),
-            },
+            tabBarBadgeStyle: styles.badge,
             headerLeft: () => (
-              <View style={styles.settingsButton}>
-                <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                  <FontAwesome5
-                    name="cog"
-                    size={RFPercentage(3.7)}
-                    color={theme.tabHeaderText}
-                  />
-                </TouchableOpacity>
-              </View>
-            ),
-            headerRight: () => (
-              <View style={styles.colourSchemeButton}>
-                <TouchableOpacity
-                  onPress={() =>
-                    setNextTheme(
-                      trackerItems,
-                      setTrackerItems,
-                      searchFoodList,
-                      updateSearchFoodList,
-                      dispatch
-                    )
-                  }
-                >
-                  <FontAwesome5
-                    name="palette"
-                    size={RFPercentage(3.7)}
-                    color={theme.tabHeaderText}
-                  />
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                <FontAwesome6
+                  name="gear" // FA6 Name
+                  size={RFPercentage(3.5)}
+                  color={theme.tabHeaderText}
+                  iconStyle="solid"
+                />
+              </TouchableOpacity>
             ),
           })}
         />
@@ -125,35 +127,6 @@ const BottomTabNavigator = () => {
                 style={styles.icon}
               />
             ),
-            headerTitleStyle: {
-              color: theme.tabHeaderText,
-              fontSize: RFPercentage(4.8),
-              fontWeight: '300',
-            },
-            headerStyle: {
-              backgroundColor: theme.tabHeaderBackground,
-            },
-            headerRight: () => (
-              <View style={styles.colourSchemeButton}>
-                <TouchableOpacity
-                  onPress={() =>
-                    setNextTheme(
-                      trackerItems,
-                      setTrackerItems,
-                      searchFoodList,
-                      updateSearchFoodList,
-                      dispatch
-                    )
-                  }
-                >
-                  <FontAwesome5
-                    name="palette"
-                    size={RFPercentage(3.7)}
-                    color={theme.tabHeaderText}
-                  />
-                </TouchableOpacity>
-              </View>
-            ),
           }}
         />
         <Tab.Screen
@@ -168,51 +141,13 @@ const BottomTabNavigator = () => {
                 style={styles.icon}
               />
             ),
-            tabBarBadge: totalCarbs,
-            headerStyle: {
-              opacity: 0.9,
-              backgroundColor: theme.tabHeaderBackground,
-            },
-            headerTitleStyle: {
-              color: theme.tabHeaderText,
-              fontSize: RFPercentage(4.8),
-              fontWeight: '300',
-            },
-            tabBarItemStyle: {
-              backgroundColor: 'rgba(59, 73, 55, 1)',
-              color: '#BBBccc',
-            },
-            tabBarBadgeStyle: {
-              backgroundColor: '#2196F3',
-              color: '#BBBccc',
-              fontSize: RFPercentage(1.8),
-            },
-            headerRight: () => (
-              <View style={styles.colourSchemeButton}>
-                <TouchableOpacity
-                  onPress={() =>
-                    setNextTheme(
-                      trackerItems,
-                      setTrackerItems,
-                      searchFoodList,
-                      updateSearchFoodList,
-                      dispatch
-                    )
-                  }
-                >
-                  <FontAwesome5
-                    name="palette"
-                    size={RFPercentage(3.7)}
-                    color={theme.tabHeaderText}
-                  />
-                </TouchableOpacity>
-              </View>
-            ),
+            tabBarBadge: Math.round(totalCarbs),
+            tabBarBadgeStyle: styles.badge,
           }}
         />
         <Tab.Screen
-          name="Learn"
-          component={LearnDeck}
+          name="Keto AI"
+          component={AIBioHackerScreen}
           options={{
             tabBarIcon: ({ ref }) => (
               <Lottie
@@ -221,43 +156,6 @@ const BottomTabNavigator = () => {
                 source={require('../assets/lottie/33101-light-bulb-animation.json')}
                 style={styles.icon}
               />
-            ),
-            headerTitle: {
-              paddingHorizontal: 20,
-              paddingBottom: 20,
-              padding: 10,
-            },
-            headerTitleStyle: {
-              color: theme.tabHeaderText,
-              fontSize: RFPercentage(4.8),
-              fontWeight: '300',
-            },
-            headerStyle: {
-              backgroundColor: theme.tabHeaderBackground,
-            },
-            tabBarItemStyle: {
-              backgroundColor: 'rgba(59, 73, 55, 1)',
-            },
-            headerRight: () => (
-              <View style={styles.colourSchemeButton}>
-                <TouchableOpacity
-                  onPress={() =>
-                    setNextTheme(
-                      trackerItems,
-                      setTrackerItems,
-                      searchFoodList,
-                      updateSearchFoodList,
-                      dispatch
-                    )
-                  }
-                >
-                  <FontAwesome5
-                    name="palette"
-                    size={RFPercentage(3.7)}
-                    color={theme.tabHeaderText}
-                  />
-                </TouchableOpacity>
-              </View>
             ),
           }}
         />
@@ -270,21 +168,10 @@ export default BottomTabNavigator
 
 const getStyles = (theme) =>
   StyleSheet.create({
-    component: {
-      height: 60,
-      width: 60,
-      marginTop: -5,
-    },
-    icon: {
-      height: 55,
-      width: 55,
-    },
-    colourSchemeButton: {
-      marginRight: 10,
-      marginBottom: 5,
-    },
-    settingsButton: {
-      marginLeft: 10,
-      marginBottom: 5,
+    icon: { height: 55, width: 55 },
+    badge: {
+      backgroundColor: '#453749',
+      color: '#BBBccc',
+      fontSize: RFPercentage(1.5),
     },
   })
