@@ -1,13 +1,15 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
+import Config from 'react-native-config'
 
-const httpLink = new HttpLink({
-  // uri: 'http://192.168.68.103:4001/keto-graphql',
-  // uri: 'http://localhost:4001/keto-graphql',
-  uri: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
+// Fallback to localhost if Config fails
+const uri = Config.GRAPHQL_URL || 'http://localhost:4001/keto-graphql'
+
+const link = new HttpLink({
+  uri: uri,
 })
 
 const client = new ApolloClient({
-  link: httpLink,
+  link,
   cache: new InMemoryCache(),
 })
 

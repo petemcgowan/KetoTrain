@@ -1,6 +1,6 @@
 import axios from 'axios'
-
-import { REACT_APP_BACKEND_HOST, REACT_APP_BACKEND_PORT } from '@env'
+import Config from 'react-native-config'
+const uri = Config.GRAPHQL_URL || 'http://localhost:4001/keto-graphql'
 
 export async function updatePortionAmountApi(
   userId: string,
@@ -16,7 +16,7 @@ export async function updatePortionAmountApi(
         portionAmount
     )
     const response = /*await*/ axios({
-      url: `${REACT_APP_BACKEND_HOST}:${REACT_APP_BACKEND_PORT}/keto-graphql`,
+      url: uri,
       method: 'post',
       data: {
         query: `
@@ -27,7 +27,7 @@ export async function updatePortionAmountApi(
         variables: {
           userId: userId,
           consumptionDate: consumptionDate,
-          foodFactsId: parseInt(foodFactsId, 10), // or directly parseInt(foodFactsId, 10)
+          foodFactsId: parseInt(foodFactsId, 10),
           portionAmount: portionAmount,
         },
       },
