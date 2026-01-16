@@ -1,167 +1,182 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import {
-  Modal,
   View,
   Text,
+  Modal,
   TouchableOpacity,
+  StyleSheet,
   FlatList,
   Dimensions,
-  StyleSheet,
-  Button,
-  SafeAreaView,
 } from 'react-native'
-import { FoodDataType } from '../types/FoodDataType'
-import { useSelector } from 'react-redux'
-import { RootState } from '../redux/reducers'
-import { ThemeContext, themes } from '../state/ThemeContext'
+import { ThemeContext } from '../state/ThemeContext'
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
 import { RFPercentage } from 'react-native-responsive-fontsize'
+import { useSelector } from 'react-redux'
+import { RootState } from '../redux/store'
+import GlycemicItem from '../components/GlycemicItem'
 
-const { height } = Dimensions.get('window')
+const { width, height } = Dimensions.get('window')
 
-const FavFoodModal: React.FC<{
+interface Props {
   isVisible: boolean
   onClose: () => void
-  onSave: (selectedFoods: FoodDataType[]) => void
-}> = ({ isVisible, onClose, onSave }) => {
-  const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useContext was used outside of the theme provider')
-  }
-  const { theme } = context
+  onSave: (selectedFoods: any[]) => void
+}
+
+export default function FavFoodModal({ isVisible, onClose, onSave }: Props) {
+  const { theme } = useContext(ThemeContext)!
   const styles = getStyles(theme)
 
-  const favFoodList = useSelector((state: RootState) => state.favFoodList)
+  const favFoodList = useSelector((state: RootState) => state.favFoodList) || []
+  const [selectedItems, setSelectedItems] = useState<any[]>([])
 
-  const [selectedFoods, setSelectedFoods] = useState<Set<number>>(new Set())
-  const toggleFoodSelection = (foodId: number) => {
-    const newSet = new Set(selectedFoods)
-    if (newSet.has(foodId)) {
-      newSet.delete(foodId)
+  // Reset selection when modal opens
+  useEffect(() => {
+    if (isVisible) setSelectedItems([])
+  }, [isVisible])
+
+  const toggleSelection = (item: any) => {
+    if (selectedItems.find((i) => i.publicFoodKey === item.publicFoodKey)) {
+      setSelectedItems((prev) =>
+        prev.filter((i) => i.publicFoodKey !== item.publicFoodKey)
+      )
     } else {
-      newSet.add(foodId)
+      setSelectedItems((prev) => [...prev, item])
     }
-    setSelectedFoods(newSet)
   }
 
-  const handleSave = () => {
-    onSave(
-      Array.from(selectedFoods).map(
-        (id) => favFoodList.find((food) => food.foodFactsId === id)!
-      )
+  const renderItem = ({ item }: { item: any }) => {
+    const isSelected = selectedItems.some(
+      (i) => i.publicFoodKey === item.publicFoodKey
     )
-    onClose()
+    return (
+      <TouchableOpacity
+        onPress={() => toggleSelection(item)}
+        style={[styles.row, isSelected && styles.selectedRow]}
+      >
+        <View style={{ flex: 1, pointerEvents: 'none' }}>
+          <GlycemicItem
+            descriptionGI={item.foodName}
+            carbAmt={item.carbohydrates}
+            carbBackgroundColor={item.carbBackgroundColor}
+            isFavourite={true}
+            onPressDetail={() => {}} // No detail sheet inside modal
+          />
+        </View>
+        {isSelected && (
+          <View style={styles.checkIcon}>
+            <FontAwesome6
+              name="check"
+              size={20}
+              color="white"
+              iconStyle="solid"
+            />
+          </View>
+        )}
+      </TouchableOpacity>
+    )
   }
 
   return (
-    <Modal visible={isVisible} transparent={true} animationType="slide">
-      <SafeAreaView style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalHeaderText}>Add Food To Track</Text>
+    <Modal
+      visible={isVisible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Add from Favorites</Text>
+            <TouchableOpacity onPress={onClose}>
+              <FontAwesome6
+                name="xmark"
+                size={24}
+                color={theme.buttonText}
+                iconStyle="solid"
+              />
+            </TouchableOpacity>
           </View>
+
           <FlatList
             data={favFoodList}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => toggleFoodSelection(item.foodFactsId)}
-                style={{
-                  backgroundColor: selectedFoods.has(item.foodFactsId)
-                    ? theme.tabBackground
-                    : theme.navigationBackground,
-                  padding: 10,
-                }}
-              >
-                <Text
-                  style={[
-                    {
-                      color: selectedFoods.has(item.foodFactsId)
-                        ? 'white'
-                        : 'white',
-                    },
-                    styles.tableText,
-                  ]}
-                >
-                  {item.foodName}
-                </Text>
-              </TouchableOpacity>
-            )}
-            keyExtractor={(item) => item.foodFactsId.toString()}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.publicFoodKey || item.id}
+            contentContainerStyle={{ paddingBottom: 20 }}
           />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={onClose} style={styles.buttonTouchable}>
-              <View style={styles.innerButtonView}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                handleSave()
-                setSelectedFoods(new Set())
-              }}
-              style={styles.buttonTouchable}
-            >
-              <View style={styles.innerButtonView}>
-                <Text style={styles.buttonText}>OK</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+
+          <TouchableOpacity
+            style={[
+              styles.saveButton,
+              selectedItems.length === 0 && styles.disabledButton,
+            ]}
+            onPress={() => {
+              onSave(selectedItems)
+              onClose()
+            }}
+            disabled={selectedItems.length === 0}
+          >
+            <Text style={styles.saveText}>
+              ADD SELECTED ({selectedItems.length})
+            </Text>
+          </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     </Modal>
   )
 }
 
-export default FavFoodModal
-
-const getStyles = (theme) => {
-  return StyleSheet.create({
-    centeredView: {
+const getStyles = (theme: any) =>
+  StyleSheet.create({
+    modalOverlay: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'transparent',
+      backgroundColor: 'rgba(0,0,0,0.7)',
+      justifyContent: 'flex-end',
     },
-    modalView: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '80%',
-      height: '60%',
+    modalContent: {
+      height: '80%',
       backgroundColor: theme.viewBackground,
+      borderTopLeftRadius: 25,
+      borderTopRightRadius: 25,
+      padding: 20,
     },
-    modalHeaderText: {
-      color: theme.buttonText,
-      fontSize: RFPercentage(3.0),
-    },
-    tableText: {
-      color: theme.buttonText,
-      fontSize: RFPercentage(2.7),
-    },
-    modalHeader: {
-      width: '100%',
-      backgroundColor: theme.viewBackground,
-      padding: 10,
-      alignItems: 'center',
-    },
-    buttonText: {
-      color: theme.buttonText,
-      fontSize: RFPercentage(2.7),
-      textAlign: 'center',
-    },
-    buttonTouchable: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '50%',
-      height: '100%',
-      backgroundColor: theme.buttonBackground,
-    },
-    innerButtonView: {
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    buttonContainer: {
-      height: height * 0.1,
+    header: {
       flexDirection: 'row',
-      width: '100%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    title: {
+      color: theme.buttonText,
+      fontSize: RFPercentage(3),
+      fontWeight: 'bold',
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 10,
+      borderRadius: 10,
+      overflow: 'hidden',
+    },
+    selectedRow: { borderColor: theme.buttonBackground, borderWidth: 2 },
+    checkIcon: {
+      position: 'absolute',
+      right: 10,
+      backgroundColor: theme.buttonBackground,
+      borderRadius: 15,
+      padding: 5,
+    },
+    saveButton: {
+      backgroundColor: theme.buttonBackground,
+      padding: 20,
+      borderRadius: 15,
+      alignItems: 'center',
+      marginTop: 10,
+    },
+    disabledButton: { opacity: 0.5 },
+    saveText: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: RFPercentage(2.2),
     },
   })
-}

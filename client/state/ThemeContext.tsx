@@ -1,43 +1,43 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState } from 'react';
 
 type Theme = {
-  viewBackground: string
-  buttonBackground: string
-  buttonText: string
-  iconFill: string
-  tableBackground: string
-  tableLineColor: string
-  navigationBackground: string
-  navigationIcon: string
-  middlingBackground: string
-  badBackground: string
-  tabBackground: string
-  activeTabBackground: string
-  inactiveTabIcon: string
-  activeTabIcon: string
-  tabHeaderText: string
-  tabHeaderBackground: string
-  tabIconCircleBackground: string
-  tabIconBorderFill: string
-  goodText: string
-  middlingText: string
-  badText: string
-}
+  viewBackground: string;
+  buttonBackground: string;
+  buttonText: string;
+  iconFill: string;
+  tableBackground: string;
+  tableLineColor: string;
+  navigationBackground: string;
+  navigationIcon: string;
+  middlingBackground: string;
+  badBackground: string;
+  tabBackground: string;
+  activeTabBackground: string;
+  inactiveTabIcon: string;
+  activeTabIcon: string;
+  tabHeaderText: string;
+  tabHeaderBackground: string;
+  tabIconCircleBackground: string;
+  tabIconBorderFill: string;
+  goodText: string;
+  middlingText: string;
+  badText: string;
+};
 
 type ThemeStyles = {
-  analogous2: Theme
-  complementary: Theme
-  earthy: Theme
-  splitComplementary2: Theme
-  sunset: Theme
-  triadic: Theme
-  monochromatic: Theme
+  analogous2: Theme;
+  complementary: Theme;
+  earthy: Theme;
+  splitComplementary2: Theme;
+  sunset: Theme;
+  triadic: Theme;
+  monochromatic: Theme;
   // analogous: Theme
   // monochromatic2: Theme
   // splitComplementary: Theme
-  tetradic: Theme
-  analogous3: Theme
-}
+  tetradic: Theme;
+  analogous3: Theme;
+};
 
 export const themes: ThemeStyles = {
   analogous2: {
@@ -320,80 +320,80 @@ export const themes: ThemeStyles = {
     middlingText: 'rgb(200, 140, 60)',
     badText: 'rgb(200, 40, 40)',
   },
-}
+};
 
 type ThemeContextProps = {
-  theme: Theme
-  setTheme: (Theme) => void
-  setNextTheme: React.Dispatch<React.SetStateAction<Theme>>
-}
+  theme: Theme;
+  setTheme: (Theme) => void;
+  setNextTheme: React.Dispatch<React.SetStateAction<Theme>>;
+};
 
 export const ThemeContext = createContext<ThemeContextProps>({
   theme: themes.monochromatic,
-  setTheme: (theme) => console.warn('no theme provider'),
+  setTheme: theme => console.warn('no theme provider'),
   setNextTheme: () => console.warn('no theme provider'),
-})
+});
 
 export const ThemeProvider: React.FC = ({ children }) => {
-  const themesArray = Object.values(themes)
-  const initialThemeIndex = themesArray.indexOf(themes.monochromatic)
+  const themesArray = Object.values(themes);
+  const initialThemeIndex = themesArray.indexOf(themes.monochromatic);
   // sets the index of the theme we're using app-wide
-  const [themeIndex, setThemeIndex] = useState(initialThemeIndex)
-  const [theme, setTheme] = useState<Theme>(themesArray[themeIndex])
+  const [themeIndex, setThemeIndex] = useState(initialThemeIndex);
+  const [theme, setTheme] = useState<Theme>(themesArray[themeIndex]);
 
   const setNextTheme = (
     trackerItems,
     setTrackerItems,
     searchFoodList,
     setSearchFoodList,
-    dispatch
+    dispatch,
   ) => {
-    let nextIndex = themeIndex + 1
-    if (nextIndex >= themesArray.length) nextIndex = 0
+    let nextIndex = themeIndex + 1;
+    if (nextIndex >= themesArray.length) nextIndex = 0;
 
-    setThemeIndex(nextIndex)
-    setTheme(themesArray[nextIndex])
-    const currentTheme = themesArray[nextIndex]
+    setThemeIndex(nextIndex);
+    setTheme(themesArray[nextIndex]);
+    const currentTheme = themesArray[nextIndex];
 
     // set the carbBackgroundColor for trackerItems
-    const newTrackerItems = [...trackerItems]
-    const updatedItems = newTrackerItems.map((item) => {
+    const newTrackerItems = [...trackerItems];
+    const updatedItems = newTrackerItems.map(item => {
       const newColor =
         item.carbAmt > 22
           ? currentTheme.badBackground
           : item.carbAmt > 11
           ? currentTheme.middlingBackground
-          : currentTheme.tableBackground
+          : currentTheme.tableBackground;
 
       return {
         ...item,
         carbBackgroundColor: newColor,
-      }
-    })
+      };
+    });
 
-    setTrackerItems(updatedItems)
+    setTrackerItems(updatedItems);
 
     // set the carbBackgroundColor for searchFoodList
-    const newFoodList = [...searchFoodList]
-    const updatedFoodItems = newFoodList.map((item) => {
+    const newFoodList = [...searchFoodList];
+    const updatedFoodItems = newFoodList.map(item => {
       const newColor =
         item.carbohydrates > 22
           ? currentTheme.badBackground
           : item.carbohydrates > 11
           ? currentTheme.middlingBackground
-          : currentTheme.tableBackground
+          : currentTheme.tableBackground;
 
       return {
         ...item,
         carbBackgroundColor: newColor,
-      }
-    })
-    dispatch(setSearchFoodList(updatedFoodItems))
-  }
+      };
+    });
+    dispatch(setSearchFoodList(updatedFoodItems));
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, setNextTheme }}>
       {children}
     </ThemeContext.Provider>
-  )
-}
+  );
+};

@@ -17,13 +17,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="launch_screen" translatesAutoresizingMaskIntoConstraints="NO" id="jwy-8W-lND">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_screen" translatesAutoresizingMaskIntoConstraints="NO" id="jwy-8W-lND">
+                                <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" name="BootSplashBackground-1260ff"/>
+                        <constraints>
+                            <constraint firstItem="jwy-8W-lND" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="3th-EI-fgl"/>
+                            <constraint firstAttribute="trailing" secondItem="jwy-8W-lND" secondAttribute="trailing" id="5M2-gt-YAi"/>
+                            <constraint firstItem="jwy-8W-lND" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="WzE-SS-wB6"/>
+                            <constraint firstAttribute="bottom" secondItem="jwy-8W-lND" secondAttribute="bottom" id="vWm-kk-zCT"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
