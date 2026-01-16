@@ -67,13 +67,13 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: 'center',
-    paddingBottom: 20,
+    paddingBottom: height * 0.02,
   },
   imageContainer: {
     width: width * 0.9,
     height: height * 0.4,
     alignSelf: 'center',
-    marginTop: height * 0.05,
+    marginTop: height * 0.05, // to prevent image from being pushed too far down
     marginBottom: height * 0.02,
   },
   image: {
@@ -82,25 +82,25 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   titleBox: {
-    paddingHorizontal: 20,
-    marginBottom: 10,
+    paddingHorizontal: width * 0.02,
+    marginBottom: height * 0.02,
   },
   titleText: {
     color: 'white',
     textAlign: 'center',
     fontWeight: '700',
-    fontSize: RFPercentage(3.2),
+    fontSize: RFPercentage(3.0),
   },
   textBox: {
-    paddingHorizontal: 25,
+    paddingHorizontal: width * 0.02,
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: height * 0.01,
   },
   text: {
     color: 'rgb(240, 240, 240)', // Slightly off-white for readability
     textAlign: 'center',
-    fontSize: RFPercentage(2.4),
-    lineHeight: RFPercentage(3.2),
+    fontSize: RFPercentage(2.1),
+    lineHeight: RFPercentage(2.5), // line-height for easier reading
   },
   referenceView: {
     justifyContent: 'center',

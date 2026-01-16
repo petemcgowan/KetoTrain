@@ -1,41 +1,42 @@
 import React, { useContext, useState, useEffect, useRef } from 'react'
 import {
   StyleSheet,
-  SafeAreaView,
-  ScrollView,
   FlatList,
   View,
   Dimensions,
   Text,
   TouchableOpacity,
 } from 'react-native'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { useNavigation } from '@react-navigation/native'
+import BottomSheet from '@gorhom/bottom-sheet'
+
+// State & contexts
 import TrackerContext from '../state/TrackerContext'
-import TrackerItem from '../components/TrackerItem'
-import CarbCircleChart from '../charting/CarbCircleChart'
-import NutrientBottomSheet from './NutrientBottomSheet'
-import BottomSheet from 'reanimated-bottom-sheet'
-import { TrackerItemType } from '../types/TrackerItemType'
+import UserContext, { UserContextProps } from '../state/UserContext'
 import { ThemeContext } from '../state/ThemeContext'
 import { TrackerContextType } from '../types/TrackerContextType'
+import { TrackerItemType } from '../types/TrackerItemType'
 import { FoodDataType } from '../types/FoodDataType'
+
+// components
+import TrackerItem from '../components/TrackerItem'
+import CarbCircleChart from '../charting/CarbCircleChart'
+import NutrientBottomSheet from '../components/NutrientBottomSheet'
 import FavFoodModal from './FavFoodModal'
+import GradientBackground from '../components/GradientBackground'
+
+// utils
 import {
   saveConsumptionLogs,
   getTotalCarbsForSpecificDayGU,
 } from '../components/GlycemicUtils'
-import UserContext, { UserContextProps } from '../state/UserContext'
 import {
   normalizeDate,
   isSameDay,
   formatDateToYYYYMMDD,
 } from '../utils/DateUtils'
-
-type TrackerItemProps = {
-  item: TrackerItemType
-}
 
 const { width, height } = Dimensions.get('screen')
 
@@ -44,22 +45,24 @@ const KetoTrackerScreen = () => {
   const [itemsForSelectedDate, setItemsForSelectedDate] = useState<
     TrackerItemType[]
   >([])
+
   const { userId } = useContext<UserContextProps>(UserContext)
   const { trackerItems, totalCarbs, setTotalCarbs, setTrackerItems } =
     useContext<TrackerContextType>(TrackerContext)
-  const [modalVisible, setModalVisible] = useState(false)
 
+  const [modalVisible, setModalVisible] = useState(false)
   const [trackerSelected, setTrackerSelected] = useState(0)
   const sheetRef = useRef<BottomSheet>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [focused, setFocused] = useState(false)
+
   const navigation = useNavigation()
   const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useContext was used outside of the theme provider')
-  }
+  if (!context) throw new Error('No Theme Context')
   const { theme } = context
   const styles = getStyles(theme)
+
+  // --- HANDLERS ---
 
   const handleSave = (selectedFoods: FoodDataType[]) => {
     const updatedItemsForSelectedDate = [...itemsForSelectedDate]
@@ -67,20 +70,19 @@ const KetoTrackerScreen = () => {
     const normalizedSelectedDate = normalizeDate(selectedDate)
 
     selectedFoods.forEach((food) => {
-      // Check if the food is already in itemsForSelectedDate for the selected date
+      // Check for existing item to increment count
       const existingItemIndex = updatedItemsForSelectedDate.findIndex(
         (item) =>
           item.foodFactsId === food.foodFactsId &&
           normalizeDate(new Date(item.consumptionDate)).getTime() ===
             normalizedSelectedDate.getTime()
       )
+
       if (existingItemIndex > -1) {
-        // Increment the portionCount of the existing item
         updatedItemsForSelectedDate[existingItemIndex].portionCount++
       } else {
-        // Create a new tracker item for the food
         const newItem = {
-          id: Date.now().toString(),
+          id: Date.now().toString() + Math.random(), // Unique ID
           foodFactsId: food.foodFactsId,
           description: food.foodName,
           carbAmt: food.carbohydrates,
@@ -106,27 +108,25 @@ const KetoTrackerScreen = () => {
     const uniqueNewTrackerItems = newTrackerItems.filter(
       (item) => !existingFoodFactsIds.includes(item.foodFactsId)
     )
-    // Update trackerItems with a callback to ensure the latest state
+
+    // Update Context
     setTrackerItems((prevTrackerItems) => {
       const updatedTrackerItems = [
         ...prevTrackerItems,
         ...uniqueNewTrackerItems,
       ]
-
-      // Update totalCarbs after updating trackerItems
+      // Calc totals immediately for responsiveness
       getTotalCarbsForSpecificDayGU(
         updatedTrackerItems,
         normalizedSelectedDate,
         setTotalCarbs
       )
-
       return updatedTrackerItems
     })
 
-    // Update itemsForSelectedDate
     setItemsForSelectedDate([...itemsForSelectedDate, ...uniqueNewTrackerItems])
 
-    // Save the new tracker items
+    // Save to DB
     const addedItems = updatedItemsForSelectedDate.map((item) => ({
       foodFactsId: item.foodFactsId,
       consumptionDate: formatDateToYYYYMMDD(item.consumptionDate),
@@ -136,11 +136,16 @@ const KetoTrackerScreen = () => {
     }))
 
     const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
-
     saveConsumptionLogs(addedItems, dayToUpdate, true, true)
   }
 
-  const renderTrackerItem = ({ item, index }: TrackerItemProps) => {
+  const renderTrackerItem = ({
+    item,
+    index,
+  }: {
+    item: TrackerItemType
+    index: number
+  }) => {
     return (
       <TrackerItem
         item={item}
@@ -157,42 +162,21 @@ const KetoTrackerScreen = () => {
     )
   }
 
+  // --- NAVIGATION & DATE LOGIC ---
+
   const handlePrevDayTrack = () => {
     setSelectedDate((prevDate) => {
       const newDate = new Date(prevDate)
       newDate.setDate(prevDate.getDate() - 1)
-      const normalizedNewDate = normalizeDate(newDate)
-
-      console.log('Previous Date:', prevDate)
-      console.log('Selected Date (Previous Day):', normalizedNewDate)
-
-      getTotalCarbsForSpecificDayGU(
-        trackerItems,
-        normalizedNewDate,
-        setTotalCarbs
-      )
-
-      return normalizedNewDate
+      return normalizeDate(newDate)
     })
   }
 
   const handleNextDayTrack = () => {
-    console.log('trackerItems:' + JSON.stringify(trackerItems))
     setSelectedDate((prevDate) => {
       const newDate = new Date(prevDate)
       newDate.setDate(prevDate.getDate() + 1)
-      const normalizedNewDate = normalizeDate(newDate)
-
-      console.log('Previous Date:', prevDate)
-      console.log('Selected Date (Next Day):', normalizedNewDate)
-
-      getTotalCarbsForSpecificDayGU(
-        trackerItems,
-        normalizedNewDate,
-        setTotalCarbs
-      )
-
-      return normalizedNewDate
+      return normalizeDate(newDate)
     })
   }
 
@@ -200,38 +184,28 @@ const KetoTrackerScreen = () => {
     if (index > -1) {
       setTrackerSelected(index)
     }
-
     if (isSheetOpen) {
-      sheetRef.current?.snapTo(0)
+      sheetRef.current?.close()
     } else {
-      sheetRef.current?.snapTo(1)
+      sheetRef.current?.expand()
     }
     setIsSheetOpen(!isSheetOpen)
   }
 
+  // --- EFFECTS ---
+
   useEffect(() => {
-    const unsubscribeFocus = navigation.addListener('focus', () => {
+    const unsubscribeFocus = navigation.addListener('focus', () =>
       setFocused(true)
-    })
-    const unsubscribeBlur = navigation.addListener('blur', () => {
+    )
+    const unsubscribeBlur = navigation.addListener('blur', () =>
       setFocused(false)
-    })
+    )
 
-    // Normalize selected date before comparison
+    // DATE CHANGED: Recalculate everything here safely
     const normalizedSelectedDate = normalizeDate(selectedDate)
-    console.log('Normalized Selected Date:', normalizedSelectedDate)
 
-    // trackerItems.forEach((item, index) => {
-    //   const itemDate = new Date(item.consumptionDate)
-    //   const normalizedItemDate = normalizeDate(itemDate)
-    //   console.log(`Tracker Item ${index}:`, {
-    //     description: item.description,
-    //     originalDate: item.consumptionDate,
-    //     normalizedDate: normalizedItemDate,
-    //   })
-    // })
-
-    // Update items for selected date
+    // 1. Filter List
     setItemsForSelectedDate(
       trackerItems.filter((item) => {
         const itemDate = normalizeDate(new Date(item.consumptionDate))
@@ -239,89 +213,86 @@ const KetoTrackerScreen = () => {
       })
     )
 
-    // setItemsForSelectedDate(
-    //   trackerItems.filter((item) => {
-    //     const itemDate = new Date(item.consumptionDate)
-    //     const selected = new Date(selectedDate)
-    //     return (
-    //       itemDate.getFullYear() === selected.getFullYear() &&
-    //       itemDate.getMonth() === selected.getMonth() &&
-    //       itemDate.getDate() === selected.getDate()
-    //     )
-    //   })
-    // )
+    // 2. Update Totals (Fixes the crash)
+    getTotalCarbsForSpecificDayGU(
+      trackerItems,
+      normalizedSelectedDate,
+      setTotalCarbs
+    )
 
     return () => {
       unsubscribeFocus()
       unsubscribeBlur()
     }
-  }, [navigation, trackerItems, totalCarbs, selectedDate])
+  }, [navigation, trackerItems, selectedDate, setTotalCarbs])
 
   return (
-    <View style={styles.trackerContainer}>
-      <View style={styles.dateHeader}>
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={handlePrevDayTrack}
-        >
-          <FontAwesome5
-            name="chevron-left"
-            size={RFPercentage(3.2)}
-            color={theme.buttonText}
+    <GradientBackground>
+      <View style={styles.trackerContainer}>
+        {/* Main Content */}
+        <View style={{ flex: 1 }}>
+          {/* Date Header */}
+          <View style={styles.dateHeader}>
+            <TouchableOpacity
+              style={styles.dateButton}
+              onPress={handlePrevDayTrack}
+            >
+              <FontAwesome6
+                name="chevron-left"
+                size={RFPercentage(3.2)}
+                color={theme.buttonText}
+                iconStyle="solid"
+              />
+            </TouchableOpacity>
+            <View style={styles.dateDisplayContainer}>
+              <Text style={styles.dateDisplayText}>
+                {selectedDate.toUTCString().split(' ').slice(0, 4).join(' ')}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.dateButton}
+              onPress={handleNextDayTrack}
+            >
+              <FontAwesome6
+                name="chevron-right"
+                size={RFPercentage(3.2)}
+                color={theme.buttonText}
+                iconStyle="solid"
+              />
+            </TouchableOpacity>
+          </View>
+
+          {/* Modals */}
+          <FavFoodModal
+            isVisible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onSave={handleSave}
           />
-        </TouchableOpacity>
-        <View style={styles.dateDisplayContainer}>
-          <Text style={styles.dateDisplayText}>
-            {selectedDate.toUTCString().split(' ').slice(0, 4).join(' ')}
-          </Text>
+
+          {/* Chart (Passes totalCarbs directly) */}
+          <CarbCircleChart
+            focused={focused}
+            selectedDate={selectedDate}
+            totalCarbs={totalCarbs}
+          />
+
+          {/* Add Button */}
+          <View style={styles.addButtonContainer}>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <Text style={styles.addButtonText}>Add Food</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* List */}
+          <FlatList
+            data={itemsForSelectedDate}
+            renderItem={renderTrackerItem}
+            keyExtractor={(item) => item.description + item.id} // Ensure uniqueness
+            contentContainerStyle={{ paddingBottom: 100 }}
+          />
         </View>
-        <TouchableOpacity
-          style={styles.dateButton}
-          onPress={handleNextDayTrack}
-        >
-          <FontAwesome5
-            name="chevron-right"
-            size={RFPercentage(3.2)}
-            color={theme.buttonText}
-          />
-        </TouchableOpacity>
-      </View>
-      <FavFoodModal
-        isVisible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSave={handleSave}
-      />
-      <CarbCircleChart
-        focused={focused}
-        selectedDate={selectedDate}
-        totalCarbs={totalCarbs}
-      />
-      <View
-        style={{
-          width: width,
-          height: height * 0.05,
-          backgroundColor: theme.buttonBackground,
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: 35,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            setModalVisible(true)
-          }}
-        >
-          <Text style={{ color: 'white', fontSize: RFPercentage(3.1) }}>
-            Add Food
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={itemsForSelectedDate}
-        renderItem={renderTrackerItem}
-        keyExtractor={(item) => item.description}
-      />
-      <View style={{ flex: 1 }}>
+
+        {/* Bottom Sheet (Sibling, not nested) */}
         <NutrientBottomSheet
           sheetRef={sheetRef}
           clickNutrientPanel={clickNutrientPanel}
@@ -329,36 +300,29 @@ const KetoTrackerScreen = () => {
           itemsForSelectedDate={itemsForSelectedDate}
         />
       </View>
-    </View>
+    </GradientBackground>
   )
 }
 
 export default KetoTrackerScreen
 
-const getStyles = (theme) =>
+const getStyles = (theme: any) =>
   StyleSheet.create({
     trackerContainer: {
       flex: 1,
-      backgroundColor: theme.viewBackground,
-      color: theme.buttonText,
     },
     dateHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: 5,
-      backgroundColor: theme.viewBackground,
+      marginBottom: 10,
     },
     dateButton: {
       backgroundColor: theme.buttonBackground,
       paddingVertical: 10,
       paddingHorizontal: 18,
       borderRadius: 20,
-    },
-    dateButtonText: {
-      color: theme.buttonText,
-      fontSize: RFPercentage(3.3),
-      fontWeight: 'bold',
     },
     dateDisplayContainer: {
       flex: 1,
@@ -367,5 +331,18 @@ const getStyles = (theme) =>
     dateDisplayText: {
       color: theme.buttonText,
       fontSize: RFPercentage(3.3),
+    },
+    addButtonContainer: {
+      width: width,
+      height: height * 0.05,
+      backgroundColor: theme.buttonBackground,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 35,
+      marginVertical: 10,
+    },
+    addButtonText: {
+      color: 'white',
+      fontSize: RFPercentage(3.1),
     },
   })

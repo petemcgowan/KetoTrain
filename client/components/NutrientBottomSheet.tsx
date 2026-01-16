@@ -1,24 +1,24 @@
-import React, { useMemo, useContext } from 'react';
+import React, { useMemo, useContext } from 'react'
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-} from 'react-native';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import NutritionItem from '../components/NutritionItem';
-import { TrackerItemType } from '../types/TrackerItemType';
-import { ThemeContext } from '../state/ThemeContext';
-import { RFPercentage } from 'react-native-responsive-fontsize';
+} from 'react-native'
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import NutritionItem from '../components/NutritionItem'
+import { TrackerItemType } from '../types/TrackerItemType'
+import { ThemeContext } from '../state/ThemeContext'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window')
 
 interface NutrientBottomSheetProps {
-  sheetRef: React.RefObject<BottomSheet>;
-  trackerSelected: number;
-  itemsForSelectedDate: TrackerItemType | null[];
-  clickNutrientPanel: (item?: any, index?: number) => void;
+  sheetRef: React.RefObject<BottomSheet>
+  trackerSelected: number
+  itemsForSelectedDate: TrackerItemType | null[]
+  clickNutrientPanel: (item?: any, index?: number) => void
 }
 
 export default function NutrientBottomSheet({
@@ -27,17 +27,17 @@ export default function NutrientBottomSheet({
   itemsForSelectedDate,
   clickNutrientPanel,
 }: NutrientBottomSheetProps) {
-  const context = useContext(ThemeContext);
-  if (!context) throw new Error('No Theme Context');
-  const { theme } = context;
-  const styles = getStyles(theme);
+  const context = useContext(ThemeContext)
+  if (!context) throw new Error('No Theme Context')
+  const { theme } = context
+  const styles = getStyles(theme)
 
-  const snapPoints = useMemo(() => ['60%'], []);
+  const snapPoints = useMemo(() => ['60%'], [])
 
   const currentItem =
     itemsForSelectedDate && itemsForSelectedDate[trackerSelected]
       ? itemsForSelectedDate[trackerSelected]
-      : null;
+      : null
 
   return (
     <BottomSheet
@@ -117,7 +117,7 @@ export default function NutrientBottomSheet({
         )}
       </BottomSheetScrollView>
     </BottomSheet>
-  );
+  )
 }
 
 const getStyles = (theme: any) =>
@@ -180,4 +180,4 @@ const getStyles = (theme: any) =>
       justifyContent: 'center',
       alignItems: 'center',
     },
-  });
+  })

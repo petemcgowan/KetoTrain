@@ -90,7 +90,6 @@ const TrackerItem = ({
           new Date(item.consumptionDate)
         )
       ) {
-        // Increment the portionCount here
         const updatedItem = { ...item, portionCount: item.portionCount + 1 }
 
         // Update the portion amount in the database
@@ -246,7 +245,7 @@ const TrackerItem = ({
         <TouchableOpacity onPress={incrementPortionCount}>
           <FontAwesome6
             name="plus"
-            size={RFPercentage(3.3)}
+            size={RFPercentage(3.1)}
             color={theme.iconFill}
             iconStyle="solid"
           />
@@ -259,7 +258,7 @@ const TrackerItem = ({
         <TouchableOpacity onPress={decrementPortionCount}>
           <FontAwesome6
             name="minus"
-            size={RFPercentage(3.3)}
+            size={RFPercentage(3.1)}
             color={theme.iconFill}
             iconStyle="solid"
           />
@@ -272,7 +271,7 @@ const TrackerItem = ({
         <TouchableOpacity onPress={() => clickNutrientPanel(item, index)}>
           <FontAwesome6
             name="circle-info"
-            size={RFPercentage(3.9)}
+            size={RFPercentage(3.5)}
             color={theme.iconFill}
             iconStyle="solid"
           />
@@ -282,7 +281,7 @@ const TrackerItem = ({
         <TouchableOpacity onPress={favouriteTrackerItem}>
           <FontAwesome6
             name="heart"
-            size={RFPercentage(3.9)}
+            size={RFPercentage(3.5)}
             color={theme.iconFill}
             // solid={itemIsFavourite ? true : false}
             iconStyle={itemIsFavourite ? 'solid' : 'regular'}
@@ -294,7 +293,7 @@ const TrackerItem = ({
         <TouchableOpacity onPress={deleteTrackerItem}>
           <FontAwesome6
             name="trash-can"
-            size={RFPercentage(3.9)}
+            size={RFPercentage(3.5)}
             color={theme.iconFill}
             iconStyle="solid"
           />
@@ -317,7 +316,7 @@ const getStyles = (theme) =>
     foodDescriptionText: {
       color: theme.buttonText,
       alignItems: 'center',
-      fontSize: RFPercentage(3.0),
+      fontSize: RFPercentage(2.2),
       fontWeight: '300',
       marginLeft: 3,
     },
