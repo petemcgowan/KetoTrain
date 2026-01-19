@@ -31,13 +31,13 @@ Keto Train is a full-stack React Native / TypeScript app that provides tools and
 
 <div align="center">
   <h3>Onboarding & Sign-in</h3>
-  <img src="gifs/KTAndroidOnboarding.gif" width="30%" padding="10px"  />
+  <img src="gifs/KTAndroidOnboarding.gif" width="35%" padding="10px"  />
   
   <h3>Search & Track</h3>
-  <img src="gifs/KTiPhoneSearchTrack.gif" width="30%" padding="10px"  />
+  <img src="gifs/KTiPhoneSearchTrack.gif" width="35%" padding="10px"  />
 
   <h3>Charts and AI chatbot</h3>
-  <img src="gifs/KTiPhoneChartsAI.gif" width="30%" padding="10px" />
+  <img src="gifs/KTiPhoneChartsAI.gif" width="35%" padding="10px" />
 </div>
 
 # System Architecture
