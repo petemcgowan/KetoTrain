@@ -29,12 +29,27 @@ Keto Train is a full-stack React Native / TypeScript app that provides tools and
 
 ## Videos
 
-<div align="center" width="60%" height="10vw">
-      <h3>Onboarding & Sign-in</h3>
-      <img src="gifs/Onboarding_Signin500.gif" alt="Onboarding Sign-in" style="width: 100%;">
+<div align="center">
+  <h3>Onboarding & Sign-in</h3>
+  <img src="gifs/KTAndroidOnboarding.gif" width="30%" padding="10px"  />
+  
+  <h3>Search & Track</h3>
+  <img src="gifs/KTiPhoneSearchTrack.gif" width="30%" padding="10px"  />
+
+  <h3>Charts and AI chatbot</h3>
+  <img src="gifs/KTiPhoneChartsAI.gif" width="30%" padding="10px" />
 </div>
 
+# System Architecture
 
-## Architecture
-![Keto Arch Diagram 2](https://github.com/petemcgowan/KetoTrain/assets/43282635/00d741cc-ef80-499f-a49d-7228066db1b4)
+<p align="center">
+  <picture>
+    <!-- Image for Dark Mode -->
+    <source media="(prefers-color-scheme: dark)" srcset="./img/KetoTrain_SD_dark_mode.png">
+    <!-- Image for Light Mode -->
+    <source media="(prefers-color-scheme: light)" srcset="./img/KetoTrain_SD_light_mode.png">
+    <!-- Fallback Image (Default) -->
+    <img alt="System Architecture Diagram" src="./img/KetoTrain_SD_dark_mode.png">
+  </picture>
+</p>
 
