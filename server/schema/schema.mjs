@@ -120,6 +120,20 @@ export const schema = buildSchema(`
     foodFactsId: Int!
     isFavourite: Boolean!
   }
+  type SemanticFoodResult {
+    food_facts_id: Int
+    food_name: String
+    public_food_key: String
+    carbohydrates: Float
+    energy: Float
+    fat_total: Float
+    protein: Float
+    sodium: Float
+    total_dietary_fibre: Float
+    total_sugars: Float
+    isFavourite: Boolean
+    similarity: Float
+  }
   type Query {
     hello: String
     test: String
@@ -127,6 +141,7 @@ export const schema = buildSchema(`
     getFavFoods(favFoodsInput: FavFoodsInput!): FavFoodsData
     getUserDashboardData(userDashboardInput: UserDashboardInput!): UserDashboardData
     consumptionLogWithFoodFacts(consumptioninput: ConsumptionLogFoodFactsInput!): [ConsumptionLogWithFoodFacts]
+    semanticFoodSearch(query: String!, userId: Int!, limit: Int): [SemanticFoodResult]
   }
   type Mutation {
     analyzeSubstance(query: String!): BioAnalysis

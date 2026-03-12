@@ -7,10 +7,10 @@ import {
   getAllFoodFactsFavs,
   replaceConsumptionLogs,
   setFavouriteFoodsDB,
-  createLogsForPastWeek,
   updatePortionAmount,
   setupFavouriteFoods,
   deleteUserFunction,
+  semanticFoodSearch,
   // getWaterConsumptions,
   // getWeightLogs,
   getUserInfo,
@@ -94,18 +94,8 @@ export const resolvers = {
       // Retrieve food facts
       const foodFacts = await getAllFoodFacts(user.user_id)
 
-      if (wasUserCreated) {
-        const loginConsumptionLogs = await createLogsForPastWeek(
-          user.user_id,
-          consumptionDate,
-          foodFacts,
-          wasUserCreated
-        )
-        console.log(
-          'Created consumption records for new user (loginConsumptionLogs):' +
-            JSON.stringify(loginConsumptionLogs)
-        )
-      }
+      // Sample data is now generated client-side (see client/data/sampleData.ts)
+      // so we no longer seed consumption logs on the server for new users.
 
       const consumptionLogWithFoodFacts = await getConsumptionLogWithFoodFacts(
         consumptionDate,
@@ -124,6 +114,10 @@ export const resolvers = {
       console.error('Error retrieving dashboard data:', error)
       throw error
     }
+  },
+  semanticFoodSearch: async (args) => {
+    console.log('semanticFoodSearch, query:', args.query, 'userId:', args.userId)
+    return await semanticFoodSearch(args.query, args.userId, args.limit || 20)
   },
   consumptionLogWithFoodFacts: async (args, context, info) => {
     console.log(

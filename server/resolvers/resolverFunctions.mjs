@@ -460,6 +460,62 @@ export async function setFavouriteFoodsDB(favouriteFoods, userId) {
   }
 }
 
+const EMBED_DIMENSIONS = 768
+
+async function embedQuery(text) {
+  const apiKey = process.env.GEMINI_API_KEY
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${apiKey}`
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      content: { parts: [{ text }] },
+      outputDimensionality: EMBED_DIMENSIONS,
+    }),
+  })
+  if (!resp.ok) throw new Error(`Embedding API error: ${resp.status}`)
+  const data = await resp.json()
+  return data.embedding.values
+}
+
+export async function semanticFoodSearch(query, userId, limit = 20) {
+  try {
+    const queryVector = await embedQuery(query)
+    const vectorStr = `[${queryVector.join(',')}]`
+
+    const results = await sequelize.query(
+      `SELECT
+        f.food_facts_id,
+        f.food_name,
+        f.public_food_key,
+        f.carbohydrates,
+        f.energy,
+        f.fat_total,
+        f.protein,
+        f.sodium,
+        f.total_dietary_fibre,
+        f.total_sugars,
+        CASE WHEN ff.favourite_foods_id IS NOT NULL THEN true ELSE false END AS "isFavourite",
+        ROUND((1 - (f.embedding <=> :vec))::numeric, 4) AS similarity
+      FROM food_facts f
+      LEFT JOIN favourite_foods ff
+        ON f.food_facts_id = ff.food_facts_id AND ff.user_id = :userId
+      WHERE f.embedding IS NOT NULL
+      ORDER BY f.embedding <=> :vec
+      LIMIT :limit`,
+      {
+        replacements: { vec: vectorStr, userId, limit },
+        type: Sequelize.QueryTypes.SELECT,
+      }
+    )
+
+    return results
+  } catch (error) {
+    console.error('semanticFoodSearch error:', error)
+    throw error
+  }
+}
+
 export async function setWaterConsumptions(waterConsumptions) {
   try {
     const result = []
