@@ -86,8 +86,8 @@ android {
         applicationId "com.buachaillmaith.ketolimit"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 24
-        versionName "3.05"
+        versionCode 26
+        versionName "3.06"
 
         // Ensure your 16KB support block is here if you kept it
         externalNativeBuild {
