@@ -7,6 +7,9 @@ import UserContext, { UserContextProps } from '../state/UserContext'
 import { FoodDataType } from '../types/FoodDataType'
 import { SearchListType } from '../types/SearchListType'
 import { normalizeDate } from '../utils/DateUtils'
+import Config from 'react-native-config'
+
+const GRAPHQL_URL = Config.GRAPHQL_URL || 'http://localhost:4001/keto-graphql'
 
 export const favouriteFoodItem = (
   descriptionGI: string,
@@ -95,8 +98,7 @@ export const saveConsumptionLogs = async (
 ) => {
   try {
     const consumptionResponse = await axios({
-      // url: 'http://localhost:4001/keto-graphql',
-      url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
+      url: GRAPHQL_URL,
       method: 'post',
       data: {
         query: `
@@ -126,9 +128,7 @@ export const saveConsumptionLogs = async (
 export const getFavouriteFoods = async (userId: number | null, theme) => {
   try {
     const favouriteFoodResponse = await axios({
-      // url: 'http://192.168.68.103:4001/keto-graphql',
-      // url: 'http://localhost:4001/keto-graphql',
-      url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
+      url: GRAPHQL_URL,
       method: 'post',
       data: {
         query: `
@@ -187,9 +187,7 @@ export const saveFavouriteFoods = async (
 ) => {
   try {
     const favouriteFoodResponse = await axios({
-      // url: 'http://192.168.68.103:4001/keto-graphql',
-      // url: 'http://localhost:4001/keto-graphql',
-      url: 'http://ec2-52-23-111-225.compute-1.amazonaws.com:4001/keto-graphql',
+      url: GRAPHQL_URL,
       method: 'post',
       data: {
         query: `
@@ -209,6 +207,43 @@ export const saveFavouriteFoods = async (
     return favouriteFoodResponse.data
   } catch (error) {
     console.error('Error fetching favourite foods:', error)
+  }
+}
+
+export const semanticFoodSearch = async (
+  query: string,
+  userId: number | null,
+  limit: number = 15
+) => {
+  try {
+    const response = await axios({
+      url: GRAPHQL_URL,
+      method: 'post',
+      data: {
+        query: `
+          query SemanticFoodSearch($query: String!, $userId: Int!, $limit: Int) {
+            semanticFoodSearch(query: $query, userId: $userId, limit: $limit) {
+              food_facts_id
+              food_name
+              public_food_key
+              carbohydrates
+              energy
+              fat_total
+              protein
+              sodium
+              total_dietary_fibre
+              total_sugars
+              isFavourite
+              similarity
+            }
+          }`,
+        variables: { query, userId, limit },
+      },
+    })
+    return response.data.data.semanticFoodSearch || []
+  } catch (error) {
+    console.error('semanticFoodSearch error:', error)
+    return []
   }
 }
 

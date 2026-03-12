@@ -234,7 +234,6 @@ const TrackerItem = ({
       },
     ]
     const dayToUpdate = formatDateToYYYYMMDD(selectedDate)
-    console.log('dayToUpdate:' + dayToUpdate)
     // Save to the database (including the delete)
     saveConsumptionLogs(itemsToSerialize, dayToUpdate, true, false)
   }

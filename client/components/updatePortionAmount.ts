@@ -9,12 +9,6 @@ export async function updatePortionAmountApi(
   portionAmount: number
 ): Promise<boolean> {
   try {
-    console.log(
-      'updatePortionAmountApi, consumptionDate:' +
-        consumptionDate +
-        ', portionAmount:' +
-        portionAmount
-    )
     const response = /*await*/ axios({
       url: uri,
       method: 'post',
