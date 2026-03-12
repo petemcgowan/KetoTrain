@@ -39,3 +39,8 @@ export const updateEmailAddress = (email: string | null) => {
     })
   }
 }
+
+export const setHasEverLoggedRealFood = (value: boolean) => ({
+  type: ActionType.SET_HAS_EVER_LOGGED_REAL_FOOD,
+  payload: value,
+})

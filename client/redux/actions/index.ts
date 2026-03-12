@@ -20,8 +20,14 @@ interface UpdateEmailAddressAction {
   payload: string | null
 }
 
+interface SetHasEverLoggedRealFoodAction {
+  type: ActionType.SET_HAS_EVER_LOGGED_REAL_FOOD
+  payload: boolean
+}
+
 export type Action =
   | HasSeenIntroAction
   | searchFoodListReducer
   | favFoodListReducer
   | UpdateEmailAddressAction
+  | SetHasEverLoggedRealFoodAction
