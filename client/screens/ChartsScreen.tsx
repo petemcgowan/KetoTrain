@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native'
 import { ThemeContext } from '../state/ThemeContext'
 import { RFPercentage } from 'react-native-responsive-fontsize'
@@ -8,21 +9,39 @@ import EnergyChart from '../charting/EnergyChart'
 import MacroPieChart from '../charting/MacroPieChart'
 import MacroAreaChart from '../charting/MacroAreaChart'
 import TrackerContext from '../state/TrackerContext'
+import FoodContext from '../state/FoodContext'
+import { FoodContextType } from '../types/FoodContextType'
 import GradientBackground from '../components/GradientBackground'
 import NutritionItem from '../components/NutritionItem'
+import { generateSampleData } from '../data/sampleData'
+import { SampleBadge } from '../components/SampleBadge'
+import { RootState } from '../redux/reducers'
 
 const { width, height } = Dimensions.get('window')
 
 const ChartsScreen = () => {
   const { trackerItems } = useContext(TrackerContext)
+  const { foodData } = useContext<FoodContextType>(FoodContext)
   const { theme } = useContext(ThemeContext)!
   const styles = getStyles(theme)
+  const hasEverLoggedRealFood = useSelector(
+    (state: RootState) => state.hasEverLoggedRealFood
+  )
+
+  const sampleItems = useMemo(() => generateSampleData(foodData), [foodData])
+  const hasRealData = trackerItems.length > 0
+  const isSampleData = !hasRealData && !hasEverLoggedRealFood
+  const displayItems = hasRealData
+    ? trackerItems
+    : isSampleData
+    ? sampleItems
+    : []
 
   const today = new Date()
   const oneWeekAgo = new Date(today)
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
 
-  const filteredItems = trackerItems.filter(
+  const filteredItems = displayItems.filter(
     (item) => new Date(item.consumptionDate) >= oneWeekAgo
   )
 
@@ -40,6 +59,7 @@ const ChartsScreen = () => {
 
   return (
     <GradientBackground>
+      <SampleBadge visible={isSampleData} />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
@@ -102,7 +122,7 @@ const ChartsScreen = () => {
                 />
                 <Text style={styles.cardTitle}>MACRO RATIOS</Text>
               </View>
-              <MacroPieChart trackerItems={trackerItems} />
+              <MacroPieChart trackerItems={displayItems} />
             </View>
 
             <View style={styles.glassCard}>
@@ -115,7 +135,7 @@ const ChartsScreen = () => {
                 />
                 <Text style={styles.cardTitle}>CALORIC TREND</Text>
               </View>
-              <EnergyChart trackerItems={trackerItems} />
+              <EnergyChart trackerItems={displayItems} />
             </View>
 
             <View style={styles.glassCard}>
@@ -128,7 +148,7 @@ const ChartsScreen = () => {
                 />
                 <Text style={styles.cardTitle}>MACRO STACK</Text>
               </View>
-              <MacroAreaChart trackerItems={trackerItems} />
+              <MacroAreaChart trackerItems={displayItems} />
             </View>
           </>
         )}
