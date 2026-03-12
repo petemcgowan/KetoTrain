@@ -203,6 +203,7 @@ export default function LoadingScreen() {
       } else {
         Alert.alert('Connection Error', 'Cannot reach the metabolic server.', [
           { text: 'Retry', onPress: () => fetchDashboardData() },
+          { text: 'Cancel', style: 'cancel', onPress: () => {} },
         ])
       }
     }

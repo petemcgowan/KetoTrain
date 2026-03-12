@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback } from 'react'
 import {
   View,
   Text,
@@ -10,23 +10,23 @@ import {
   ActivityIndicator,
   Keyboard,
   Platform,
-} from 'react-native';
-import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import { ThemeContext } from '../state/ThemeContext';
-import { RFPercentage } from 'react-native-responsive-fontsize';
+} from 'react-native'
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
+import { ThemeContext } from '../state/ThemeContext'
+import { RFPercentage } from 'react-native-responsive-fontsize'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   FadeInDown,
   FadeOutUp,
-} from 'react-native-reanimated';
-import { useFocusEffect } from '@react-navigation/native';
-import { useMutation } from '@apollo/client/react';
-import { gql } from '@apollo/client';
-import GradientBackground from '../components/GradientBackground';
+} from 'react-native-reanimated'
+import { useFocusEffect } from '@react-navigation/native'
+import { useMutation } from '@apollo/client/react'
+import { gql } from '@apollo/client'
+import GradientBackground from '../components/GradientBackground'
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window')
 
 // Extended Master List for Shuffling
 const MASTER_DB = [
@@ -55,7 +55,7 @@ const MASTER_DB = [
   'Aerobic Exercise',
   'Weight Lifting',
   'Meditation',
-];
+]
 
 // GraphQL Mutation
 const ANALYZE_MUTATION = gql`
@@ -68,82 +68,81 @@ const ANALYZE_MUTATION = gql`
       icon
     }
   }
-`;
+`
 
 export default function AIBioHackerScreen() {
-  const context = useContext(ThemeContext);
-  if (!context) throw new Error('No Theme Context');
-  const { theme } = context;
-  const styles = getStyles(theme);
+  const context = useContext(ThemeContext)
+  if (!context) throw new Error('No Theme Context')
+  const { theme } = context
+  const styles = getStyles(theme)
 
-  const [query, setQuery] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [query, setQuery] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<any>(null)
 
   // Quick Chips State (Slice 8 items)
   const [quickOptions, setQuickOptions] = useState<string[]>(
-    MASTER_DB.slice(0, 8),
-  );
+    MASTER_DB.slice(0, 8)
+  )
 
   // Animation Values
-  const meterWidth = useSharedValue(0);
+  const meterWidth = useSharedValue(0)
 
   // API Hook
-  const [analyzeMutation] = useMutation(ANALYZE_MUTATION);
+  const [analyzeMutation] = useMutation(ANALYZE_MUTATION)
 
   // Auto-Reset when leaving tab
   useFocusEffect(
     useCallback(() => {
       return () => {
-        setResult(null);
-        setQuery('');
-        setLoading(false);
-      };
-    }, []),
-  );
+        setResult(null)
+        setQuery('')
+        setLoading(false)
+      }
+    }, [])
+  )
 
   const shuffleOptions = () => {
-    const shuffled = [...MASTER_DB].sort(() => 0.5 - Math.random());
-    setQuickOptions(shuffled.slice(0, 8));
-  };
+    const shuffled = [...MASTER_DB].sort(() => 0.5 - Math.random())
+    setQuickOptions(shuffled.slice(0, 8))
+  }
 
   const analyzeSubstance = async (inputTerm: string) => {
-    Keyboard.dismiss();
-    setQuery(inputTerm);
-    setLoading(true);
-    setResult(null);
-    meterWidth.value = 0;
+    Keyboard.dismiss()
+    setQuery(inputTerm)
+    setLoading(true)
+    setResult(null)
+    meterWidth.value = 0
 
     try {
-      console.log('Analyzing:', inputTerm);
       const { data } = await analyzeMutation({
         variables: { query: inputTerm },
-      });
+      })
 
-      const apiResult = data.analyzeSubstance;
+      const apiResult = data.analyzeSubstance
 
-      setResult(apiResult);
-      setLoading(false);
+      setResult(apiResult)
+      setLoading(false)
 
       // Animate meter based on insulin spike (0-100)
-      meterWidth.value = withTiming(apiResult.insulinSpike, { duration: 1000 });
+      meterWidth.value = withTiming(apiResult.insulinSpike, { duration: 1000 })
     } catch (error) {
-      console.error('AI Error', error);
-      setLoading(false);
+      console.error('AI Error', error)
+      setLoading(false)
     }
-  };
+  }
 
   const resetSearch = () => {
-    setResult(null);
-    setQuery('');
-    setLoading(false);
-    meterWidth.value = 0;
-  };
+    setResult(null)
+    setQuery('')
+    setLoading(false)
+    meterWidth.value = 0
+  }
 
   const animatedMeterStyle = useAnimatedStyle(() => ({
     width: `${meterWidth.value}%`,
     backgroundColor: meterWidth.value > 20 ? '#ff6b6b' : '#4ecdc4',
-  }));
+  }))
 
   return (
     <GradientBackground>
@@ -216,7 +215,7 @@ export default function AIBioHackerScreen() {
               </View>
 
               <View style={styles.chipContainer}>
-                {quickOptions.map(item => (
+                {quickOptions.map((item) => (
                   <TouchableOpacity
                     key={item}
                     style={styles.chip}
@@ -325,7 +324,7 @@ export default function AIBioHackerScreen() {
         )}
       </ScrollView>
     </GradientBackground>
-  );
+  )
 }
 
 const getStyles = (theme: any) =>
@@ -547,4 +546,4 @@ const getStyles = (theme: any) =>
       fontSize: RFPercentage(1.8),
       letterSpacing: 1,
     },
-  });
+  })

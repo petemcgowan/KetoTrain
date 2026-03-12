@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -6,54 +6,78 @@ import {
   TouchableOpacity,
   Text,
   ScrollView,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useSelector } from 'react-redux';
-import BottomSheet from '@gorhom/bottom-sheet';
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useSelector } from 'react-redux'
+import BottomSheet from '@gorhom/bottom-sheet'
 
-import FavFoodList from '../components/FavFoodList';
-import SearchBar from '../components/SearchBar';
-import SearchFoodFlatlistFilter from '../components/SearchFoodFlatlistFilter';
-import GradientBackground from '../components/GradientBackground';
-import NutrientBottomSheet from '../components/NutrientBottomSheet';
-import { PulsingHint } from '../components/PulsingHint';
+import FavFoodList from '../components/FavFoodList'
+import SearchBar from '../components/SearchBar'
+import SearchFoodFlatlistFilter from '../components/SearchFoodFlatlistFilter'
+import GradientBackground from '../components/GradientBackground'
+import NutrientBottomSheet from '../components/NutrientBottomSheet'
+import { PulsingHint } from '../components/PulsingHint'
 
-import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import { RFPercentage } from 'react-native-responsive-fontsize';
-import { ThemeContext } from '../state/ThemeContext';
-import { RootState } from '../redux/store';
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
+import { RFPercentage } from 'react-native-responsive-fontsize'
+import { ThemeContext } from '../state/ThemeContext'
+import { RootState } from '../redux/store'
 
-const { width, height } = Dimensions.get('window');
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const { width, height } = Dimensions.get('window')
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
-type Props = NativeStackScreenProps<any, 'SearchScreen'>;
+const SEMANTIC_CATEGORIES: { id: string; icon: string; term: string }[] = [
+  { id: 'all', icon: 'list', term: '' },
+  { id: 'vegetables', icon: 'carrot', term: 'vegetables' },
+  { id: 'breakfast', icon: 'egg', term: 'breakfast' },
+  { id: 'nuts', icon: 'seedling', term: 'nuts' },
+  { id: 'fruit', icon: 'apple-whole', term: 'fruit' },
+  { id: 'meat', icon: 'bacon', term: 'meat' },
+  { id: 'drinks', icon: 'bottle-droplet', term: 'drinks' },
+  { id: 'berries', icon: 'lemon', term: 'berries' },
+  { id: 'sweets', icon: 'cake-candles', term: 'sweets' },
+  { id: 'cheese', icon: 'cheese', term: 'cheese' },
+]
+
+type Props = NativeStackScreenProps<any, 'SearchScreen'>
 
 const SearchScreen = ({ route }: Props) => {
-  const context = useContext(ThemeContext);
-  if (!context) throw new Error('No Theme Context');
-  const { theme } = context;
-  const styles = getStyles(theme);
+  const context = useContext(ThemeContext)
+  if (!context) throw new Error('No Theme Context')
+  const { theme } = context
+  const styles = getStyles(theme)
 
-  const [searchPhraseNew, setSearchPhraseNew] = useState('');
-  const [jumpToLetter, setJumpToLetter] = useState('');
-  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
-  const [clicked, setClicked] = useState(false);
+  const [searchPhraseNew, setSearchPhraseNew] = useState('')
+  const [jumpToLetter, setJumpToLetter] = useState('')
+  const [selectedLetter, setSelectedLetter] = useState('')
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
+  const [clicked, setClicked] = useState(false)
 
-  const sheetRef = useRef<BottomSheet>(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const sheetRef = useRef<BottomSheet>(null)
+  const [selectedItem, setSelectedItem] = useState(null)
 
-  const favFoodList =
-    useSelector((state: RootState) => state.favFoodList) || [];
-  const hasFavorites = favFoodList.length > 0;
+  const favFoodList = useSelector((state: RootState) => state.favFoodList) || []
+  const hasFavorites = favFoodList.length > 0
 
-  const favouriteAction = () => setShowOnlyFavorites(!showOnlyFavorites);
+  const favouriteAction = () => setShowOnlyFavorites(!showOnlyFavorites)
+
+  useEffect(() => {
+    if (searchPhraseNew) setSelectedLetter('')
+  }, [searchPhraseNew])
 
   const handleLetterPress = (letter: string) => {
-    setSearchPhraseNew('');
-    setJumpToLetter(letter);
-    setTimeout(() => setJumpToLetter(''), 500);
-  };
+    setSearchPhraseNew('')
+    setSelectedLetter(letter)
+    setJumpToLetter(letter)
+    setTimeout(() => setJumpToLetter(''), 500)
+  }
+
+  const handleSemanticPress = (term: string) => {
+    setSearchPhraseNew(term)
+    setSelectedLetter('')
+    setJumpToLetter('')
+  }
 
   const handleItemPress = (item: any) => {
     // Map data for sheet
@@ -69,12 +93,12 @@ const SearchScreen = ({ route }: Props) => {
       consumptionDate: new Date(),
       portionCount: 1,
       foodFactsId: item.foodFactsId || 0,
-    };
-    setSelectedItem(adaptedItem);
-    sheetRef.current?.expand();
-  };
+    }
+    setSelectedItem(adaptedItem)
+    sheetRef.current?.expand()
+  }
 
-  const closeSheet = () => sheetRef.current?.close();
+  const closeSheet = () => sheetRef.current?.close()
 
   return (
     <GradientBackground>
@@ -110,23 +134,71 @@ const SearchScreen = ({ route }: Props) => {
         </View>
 
         {!showOnlyFavorites && (
-          <View style={styles.alphabetContainer}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 10 }}
-            >
-              {ALPHABET.map(letter => (
-                <TouchableOpacity
-                  key={letter}
-                  style={styles.letterTile}
-                  onPress={() => handleLetterPress(letter)}
-                >
-                  <Text style={styles.letterText}>{letter}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+          <>
+            <View style={styles.alphabetContainer}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: 10 }}
+              >
+                {ALPHABET.map((letter) => {
+                  const isLetterActive = selectedLetter === letter
+                  return (
+                    <TouchableOpacity
+                      key={letter}
+                      style={[
+                        styles.letterTile,
+                        isLetterActive && styles.letterTileActive,
+                      ]}
+                      onPress={() => handleLetterPress(letter)}
+                    >
+                      <Text
+                        style={[
+                          styles.letterText,
+                          isLetterActive && styles.letterTextActive,
+                        ]}
+                      >
+                        {letter}
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                })}
+              </ScrollView>
+            </View>
+            <View style={styles.barDivider} />
+            <View style={styles.semanticContainer}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: 10 }}
+              >
+                {SEMANTIC_CATEGORIES.map((cat) => {
+                  const isActive =
+                    (cat.term === '' && searchPhraseNew === '') ||
+                    (cat.term !== '' && searchPhraseNew === cat.term)
+                  return (
+                    <TouchableOpacity
+                      key={cat.id}
+                      style={[
+                        styles.semanticTile,
+                        isActive && styles.semanticTileActive,
+                      ]}
+                      onPress={() => handleSemanticPress(cat.term)}
+                    >
+                      <FontAwesome6
+                        name={cat.icon as any}
+                        size={RFPercentage(2.2)}
+                        color={
+                          isActive ? 'rgba(76,187,23, 0.95)' : theme.iconFill
+                        }
+                        iconStyle="solid"
+                      />
+                    </TouchableOpacity>
+                  )
+                })}
+              </ScrollView>
+            </View>
+          </>
         )}
 
         <View style={{ flex: 1 }}>
@@ -152,10 +224,10 @@ const SearchScreen = ({ route }: Props) => {
         />
       </SafeAreaView>
     </GradientBackground>
-  );
-};
+  )
+}
 
-export default SearchScreen;
+export default SearchScreen
 
 const getStyles = (theme: any) =>
   StyleSheet.create({
@@ -186,7 +258,29 @@ const getStyles = (theme: any) =>
     },
     touchableArea: { padding: 5 },
     hintWrapper: { position: 'absolute', top: -10, left: -8 },
-    alphabetContainer: { height: 40, marginBottom: 5 },
+    alphabetContainer: { height: 40, marginBottom: 0 },
+    barDivider: {
+      height: 1,
+      marginHorizontal: 12,
+      marginVertical: 2,
+      backgroundColor: 'rgba(255,255,255,0.06)',
+    },
+    semanticContainer: { height: 40, marginBottom: 6 },
+    semanticTile: {
+      width: 36,
+      height: 36,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(255,255,255,0.06)',
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: 'rgba(255,255,255,0.05)',
+      marginHorizontal: 3,
+    },
+    semanticTileActive: {
+      backgroundColor: 'rgba(76,187,23,0.15)',
+      borderColor: 'rgba(76,187,23,0.4)',
+    },
     letterTile: {
       width: 35,
       height: 35,
@@ -198,9 +292,16 @@ const getStyles = (theme: any) =>
       borderWidth: 1,
       borderColor: 'rgba(255,255,255,0.05)',
     },
+    letterTileActive: {
+      backgroundColor: 'rgba(76,187,23,0.15)',
+      borderColor: 'rgba(76,187,23,0.4)',
+    },
     letterText: {
       color: theme.buttonText,
       fontWeight: 'bold',
       fontSize: RFPercentage(1.8),
     },
-  });
+    letterTextActive: {
+      color: 'rgba(76,187,23, 0.95)',
+    },
+  })

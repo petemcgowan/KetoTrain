@@ -1,4 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react'
 import {
   View,
   Text,
@@ -6,16 +12,18 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  Dimensions,
 } from 'react-native'
 import { ThemeContext } from '../state/ThemeContext'
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import GlycemicItem from '../components/GlycemicItem'
+import FavouriteRow from '../components/FavouriteRow'
 
-const { width, height } = Dimensions.get('window')
+
+// Stable unique key; avoids undefined publicFoodKey matching multiple items
+const getItemKey = (item: any) =>
+  item.publicFoodKey ?? String(item.foodFactsId ?? item.id ?? '')
 
 interface Props {
   isVisible: boolean
@@ -25,57 +33,53 @@ interface Props {
 
 export default function FavFoodModal({ isVisible, onClose, onSave }: Props) {
   const { theme } = useContext(ThemeContext)!
-  const styles = getStyles(theme)
+  const styles = useMemo(() => getStyles(theme), [theme])
 
   const favFoodList = useSelector((state: RootState) => state.favFoodList) || []
-  const [selectedItems, setSelectedItems] = useState<any[]>([])
+  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
 
   // Reset selection when modal opens
   useEffect(() => {
-    if (isVisible) setSelectedItems([])
+    if (isVisible) setSelectedKeys(new Set())
   }, [isVisible])
 
-  const toggleSelection = (item: any) => {
-    if (selectedItems.find((i) => i.publicFoodKey === item.publicFoodKey)) {
-      setSelectedItems((prev) =>
-        prev.filter((i) => i.publicFoodKey !== item.publicFoodKey)
-      )
-    } else {
-      setSelectedItems((prev) => [...prev, item])
-    }
-  }
+  const toggleSelection = useCallback((item: { publicFoodKey?: string; foodFactsId?: number; id?: string }) => {
+    const key = getItemKey(item)
+    setSelectedKeys((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }, [])
 
-  const renderItem = ({ item }: { item: any }) => {
-    const isSelected = selectedItems.some(
-      (i) => i.publicFoodKey === item.publicFoodKey
-    )
-    return (
-      <TouchableOpacity
-        onPress={() => toggleSelection(item)}
-        style={[styles.row, isSelected && styles.selectedRow]}
-      >
-        <View style={{ flex: 1, pointerEvents: 'none' }}>
-          <GlycemicItem
-            descriptionGI={item.foodName}
-            carbAmt={item.carbohydrates}
+  const selectedItems = useMemo(
+    () =>
+      favFoodList.filter((item: any) => selectedKeys.has(getItemKey(item))),
+    [favFoodList, selectedKeys]
+  )
+
+  const renderItem = useCallback(
+    ({ item }: { item: any }) => {
+      const key = getItemKey(item)
+      const isSelected = selectedKeys.has(key)
+      return (
+        <TouchableOpacity
+          onPress={() => toggleSelection(item)}
+          style={[styles.row, isSelected && styles.selectedRow]}
+          activeOpacity={0.7}
+        >
+          <FavouriteRow
+            foodName={item.foodName}
+            carbohydrates={item.carbohydrates}
             carbBackgroundColor={item.carbBackgroundColor}
-            isFavourite={true}
-            onPressDetail={() => {}} // No detail sheet inside modal
+            isSelected={isSelected}
           />
-        </View>
-        {isSelected && (
-          <View style={styles.checkIcon}>
-            <FontAwesome6
-              name="check"
-              size={20}
-              color="white"
-              iconStyle="solid"
-            />
-          </View>
-        )}
-      </TouchableOpacity>
-    )
-  }
+        </TouchableOpacity>
+      )
+    },
+    [selectedKeys, toggleSelection, styles]
+  )
 
   return (
     <Modal
@@ -101,23 +105,24 @@ export default function FavFoodModal({ isVisible, onClose, onSave }: Props) {
           <FlatList
             data={favFoodList}
             renderItem={renderItem}
-            keyExtractor={(item) => item.publicFoodKey || item.id}
+            keyExtractor={(item) => getItemKey(item)}
+            extraData={selectedKeys}
             contentContainerStyle={{ paddingBottom: 20 }}
           />
 
           <TouchableOpacity
             style={[
               styles.saveButton,
-              selectedItems.length === 0 && styles.disabledButton,
+              selectedKeys.size === 0 && styles.disabledButton,
             ]}
             onPress={() => {
               onSave(selectedItems)
               onClose()
             }}
-            disabled={selectedItems.length === 0}
+            disabled={selectedKeys.size === 0}
           >
             <Text style={styles.saveText}>
-              ADD SELECTED ({selectedItems.length})
+              ADD SELECTED ({selectedKeys.size})
             </Text>
           </TouchableOpacity>
         </View>
@@ -156,7 +161,7 @@ const getStyles = (theme: any) =>
       alignItems: 'center',
       marginBottom: 10,
       borderRadius: 10,
-      overflow: 'hidden',
+      backgroundColor: 'rgba(255,255,255,0.08)',
     },
     selectedRow: { borderColor: theme.buttonBackground, borderWidth: 2 },
     checkIcon: {
