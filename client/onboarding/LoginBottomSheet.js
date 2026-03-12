@@ -18,33 +18,53 @@ import EmailSignInButton from './EmailSignInButton'
 import EmailLoginComponent from './EmailLoginComponent'
 
 const { height, width } = Dimensions.get('window')
+const v = (percent) => Math.round((height * percent) / 100)
+const buttonWidth = width * 0.88
+const imageWidth = width * 0.72
+const imageHeight = height * 0.24
 
 export default function LoginBottomSheet(props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [emailFormMode, setEmailFormMode] = useState('login') // 'login' | 'signup'
   const snapPoints = useMemo(() => ['85%'], [])
+
+  const handleShowEmailForm = () => {
+    setEmailFormMode('login')
+    props.setIsLoginFormVisible(true)
+  }
+
+  const handleBackToProviders = () => {
+    props.setIsLoginFormVisible(false)
+  }
 
   const renderContent = () => {
     if (props.isLoginFormVisible) {
       return (
-        <View>
-          <View style={styles.panelHeader}>
-            <Text style={styles.panelTitle}>Sign Up</Text>
+        <View style={styles.formWrapper}>
+          <View style={[styles.panelHeader, { marginBottom: v(2) }]}>
+            <Text style={styles.panelTitle}>
+              {emailFormMode === 'login' ? 'Login' : 'Sign Up'}
+            </Text>
             <TouchableOpacity
               style={styles.buttonX}
-              onPress={props.onStartNowPress}
+              onPress={handleBackToProviders}
             >
               <Text style={styles.xButtonText}>X</Text>
             </TouchableOpacity>
           </View>
           <EmailLoginComponent
+            mode={emailFormMode}
             email={email}
             setEmail={setEmail}
             password={password}
             setPassword={setPassword}
-            handleEmailLogin={() => props.handleEmailLogin(email, password)}
-            signupCreateUser={() => props.signupCreateUser(email, password)}
-            isLoginFormVisible={props.isLoginFormVisible}
+            onSignIn={() => props.handleEmailLogin(email, password)}
+            onSignUp={() => props.signupCreateUser(email, password)}
+            onForgotPassword={() => props.handleForgotPasswordPress(email)}
+            onSwitchMode={() =>
+              setEmailFormMode((m) => (m === 'login' ? 'signup' : 'login'))
+            }
           />
         </View>
       )
@@ -55,29 +75,29 @@ export default function LoginBottomSheet(props) {
             <Text style={styles.panelTitle}>Sign In</Text>
             <TouchableOpacity
               style={styles.buttonX}
-              onPress={props.onStartNowPress}
+              onPress={() => props.onStartNowPress()}
             >
               <Text style={styles.xButtonText}>X</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.imageContainer}>
+          <View style={[styles.imageContainer, { width: imageWidth, height: imageHeight }]}>
             <Image style={styles.image} source={hands_logging_in} />
           </View>
           <View style={styles.buttonContainer}>
             {Platform.OS === 'ios' && (
-              <View style={styles.mb}>
+              <View style={[styles.mb, styles.buttonWrapper]}>
                 <AppleSignInButton onPress={props.onAppleButtonPress} />
               </View>
             )}
-            <View style={styles.mb}>
+            <View style={[styles.mb, styles.buttonWrapper]}>
               <GoogleSignInButton
                 onPress={props.handleGoogleLogin}
                 disabled={props.isSigninInProgress}
               />
             </View>
-            <View style={styles.plainBtn}>
+            <View style={[styles.mb, styles.buttonWrapper]}>
               <EmailSignInButton
-                onPress={() => props.setIsLoginFormVisible(true)}
+                onPress={handleShowEmailForm}
                 disabled={props.isSigninInProgress}
               />
             </View>
@@ -105,12 +125,17 @@ export default function LoginBottomSheet(props) {
 
 const styles = StyleSheet.create({
   sheetBackground: { backgroundColor: 'rgb(32, 32, 32)', borderRadius: 30 },
-  scrollContent: { paddingTop: 10, paddingHorizontal: 20, paddingBottom: 50 },
+  scrollContent: {
+    paddingTop: v(1.5),
+    paddingHorizontal: 20,
+    paddingBottom: v(6),
+    flexGrow: 1,
+  },
+  formWrapper: { flex: 1, minHeight: height * 0.5 },
   panelHeader: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 20,
-    marginTop: 10,
+    marginTop: v(1),
   },
   panelTitle: {
     fontSize: RFPercentage(3.7),
@@ -135,13 +160,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   imageContainer: {
-    width: width * 0.6,
-    height: height * 0.2,
     alignSelf: 'center',
-    marginBottom: 30,
+    marginBottom: v(3.5),
   },
   image: { width: '100%', height: '100%', resizeMode: 'contain' },
   buttonContainer: { alignItems: 'center' },
-  mb: { marginBottom: 15 },
-  plainBtn: { width: '80%', alignItems: 'center' },
+  buttonWrapper: {
+    width: buttonWidth,
+    alignSelf: 'center',
+  },
+  mb: { marginBottom: v(2) },
 })
