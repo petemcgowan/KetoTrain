@@ -3,7 +3,6 @@
 This is the main code project for Keto Train. You can find the separate design/release project for Keto Train here:
 https://github.com/petemcgowan/KetoTrain_Design_Release
 
-
 <div align="center">
 
 ![Keto Train Logo](/img/01_Logo_Keto_Train.jpeg)
@@ -17,7 +16,7 @@ https://github.com/petemcgowan/KetoTrain_Design_Release
 
 </div>
 
-Keto Train is a full-stack React Native / TypeScript app that provides tools and resources for monitoring daily keto limit. It uses Open Food Facts for nutritional information and features carb limit tracking, D3 charting, Lottie animations, custom motion design, and a Dockerized backend.  
+Keto Train is a full-stack React Native / TypeScript app that provides tools and resources for monitoring daily keto limit. It uses Open Food Facts for nutritional information and features carb limit tracking, D3 charting, Lottie animations, custom motion design, and a Dockerized backend.
 
 <p align="center">
   <img src="/img/projects/KL_1_Track_iPhone_13.jpeg" width="18%" />
@@ -30,26 +29,36 @@ Keto Train is a full-stack React Native / TypeScript app that provides tools and
 ## Videos
 
 <div align="center">
-  <h3>Onboarding & Sign-in</h3>
-  <img src="gifs/KTAndroidOnboarding.gif" width="35%" padding="10px"  />
-  
-  <h3>Search & Track</h3>
-  <img src="gifs/KTiPhoneSearchTrack.gif" width="35%" padding="10px"  />
+  <h3>Onboarding &amp; Sign-in</h3>
+  <img src="gifs/KTAndroidOnboarding.gif" width="35%" padding="10px" />
+
+  <h3>Search &amp; Track</h3>
+  <img src="gifs/KTiPhoneSearchTrack.gif" width="35%" padding="10px" />
 
   <h3>Charts and AI chatbot</h3>
   <img src="gifs/KTiPhoneChartsAI.gif" width="35%" padding="10px" />
 </div>
 
-# System Architecture
+## System Architecture
 
 <p align="center">
   <picture>
     <!-- Image for Dark Mode -->
-    <source media="(prefers-color-scheme: dark)" srcset="./img/KetoTrain_SD_dark_mode.png">
+    <source media="(prefers-color-scheme: dark)" srcset="./img/KetoTrain_SD_dark_mode_v2.png">
     <!-- Image for Light Mode -->
-    <source media="(prefers-color-scheme: light)" srcset="./img/KetoTrain_SD_light_mode.png">
+    <source media="(prefers-color-scheme: light)" srcset="./img/KetoTrain_SD_light_mode_v2.png">
     <!-- Fallback Image (Default) -->
-    <img alt="System Architecture Diagram" src="./img/KetoTrain_SD_dark_mode.png">
+    <img alt="System Architecture Diagram" src="./img/KetoTrain_SD_dark_mode_v2.png">
   </picture>
 </p>
+
+## Semantic search & vector DB (pgvector)
+
+Under the hood, Keto Train now uses **PostgreSQL with pgvector** to power semantic food search:
+
+- Food rows in `food_facts` have an `embedding vector(768)` column populated via a Gemini embedding model (`generateEmbeddings.mjs`).
+- The GraphQL API exposes a `semanticFoodSearch` query that embeds the user query and performs similarity search over `embedding` using pgvector.
+- In production, the KetoLimit API server runs in Docker on EC2, connecting to the shared Postgres instance (with pgvector + IVFFlat index) that also backs the HealthyCalc app.
+
+From the client’s perspective this shows up as a smarter search experience: fuzzy queries like “grilled chicken” or “salami snack” return relevant foods even when they don’t exactly match the original Open Food Facts names.
 

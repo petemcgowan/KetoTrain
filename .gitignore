@@ -92,3 +92,8 @@ client/ios/sentry.properties
 client/ios/KetoTrainAI/GoogleService-InfoRelease.plist
 server/connection.json
 client/android/gradle.properties
+
+# DB backups
+ketotrain_full_backup.dump
+healthy_full_backup.dump
+
