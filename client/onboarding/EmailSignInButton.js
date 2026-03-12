@@ -6,28 +6,32 @@ import {
   View,
   Dimensions,
 } from 'react-native'
-
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
 const { width, height } = Dimensions.get('window')
+const iconSize = Math.round(Math.min(width * 0.055, height * 0.028))
+const padV = Math.round(height * 0.014)
+const padH = Math.round(width * 0.07)
+const gap = Math.round(width * 0.025)
+const radius = Math.round(Math.min(padV * 3, 32))
 
 const EmailSignInButton = ({ onPress, disabled }) => {
   return (
     <TouchableOpacity
-      style={[styles.buttonContainer, disabled && styles.disabled]}
+      style={[styles.button, disabled && styles.disabled]}
       onPress={onPress}
       disabled={disabled}
     >
       <View style={styles.iconWrapper}>
         <FontAwesome6
           name="envelope"
-          size={RFPercentage(2.8)}
+          size={iconSize}
           color="white"
           iconStyle="solid"
         />
       </View>
-      <Text style={styles.btnText}>Sign in with Email</Text>
+      <Text style={styles.text}>Sign in with Email</Text>
     </TouchableOpacity>
   )
 }
@@ -35,35 +39,20 @@ const EmailSignInButton = ({ onPress, disabled }) => {
 export default EmailSignInButton
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    marginTop: 10,
-    width: width * 0.85, // Consistent width with Google/Apple buttons
-    height: 50,
-    backgroundColor: '#555555', // Dark Grey for Email
-    borderRadius: 5,
+  button: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 15,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  iconWrapper: {
-    width: 30,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
+    backgroundColor: '#555555',
+    borderRadius: radius,
+    paddingVertical: padV,
+    paddingHorizontal: padH,
   },
-  btnText: {
+  iconWrapper: { marginRight: gap },
+  text: {
     color: 'white',
-    fontSize: RFPercentage(2.2),
     fontWeight: 'bold',
-    flex: 1, // Centers text relative to remaining space
-    textAlign: 'center',
+    fontSize: RFPercentage(2.5),
   },
-  disabled: {
-    opacity: 0.6,
-  },
+  disabled: { opacity: 0.6 },
 })

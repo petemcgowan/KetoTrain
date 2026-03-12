@@ -1,7 +1,20 @@
 import React from 'react'
-import { TouchableOpacity, Text, Image, View, StyleSheet } from 'react-native'
+import {
+  TouchableOpacity,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+} from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import appleIcon from '../assets/images/appleIcon.png'
+
+const { width, height } = Dimensions.get('window')
+const iconSize = Math.round(Math.min(width * 0.055, height * 0.03))
+const padV = Math.round(height * 0.014)
+const padH = Math.round(width * 0.07)
+const gap = Math.round(width * 0.025)
+const radius = Math.round(Math.min(padV * 3, 32))
 
 const AppleSignInButton = ({ onPress }) => {
   return (
@@ -16,17 +29,16 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'white',
-    borderRadius: 30,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    // width: 240,
-    // height: 45,
+    borderRadius: radius,
+    paddingVertical: padV,
+    paddingHorizontal: padH,
   },
   logo: {
-    marginRight: 10,
-    width: 20,
-    height: 20,
+    marginRight: gap,
+    width: iconSize,
+    height: iconSize,
   },
   text: {
     color: 'black',
